@@ -1,0 +1,39 @@
+.recipe-text {
+  background: url("../assets/images/angry-hd.png");
+  background-position: center;
+  background-size: cover;
+
+  height: 100vh;
+  font-size: 1rem;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+  align-items: center;
+  line-height: 10px;
+  padding-bottom: 2rem;
+
+  button {
+    cursor: pointer;
+    margin: 10px 0;
+    padding: 8px 15px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 2px;
+
+    // color: #1ed760;
+    background-color: #1ed760;
+  }
+}
+
+@media screen and (max-width: 1200px) {
+}
+@media screen and (max-width: 1024px) {
+}
+@media screen and (max-width: 480px) {
+}
+@media screen and (max-width: 768px) {
+}
+@media screen and (max-width: 320px) {
+}

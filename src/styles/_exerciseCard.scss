@@ -1,0 +1,118 @@
+.exercise-card {
+  width: 400px;
+  height: 445px;
+  background: #fff;
+  border-top: 4px solid var(--background-theme-primary);
+  border-bottom-left-radius: 20px;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-bottom: 10px;
+  transform: scale(1, 1);
+  transition: 0.3s all ease-in-out;
+
+  background: #191919;
+
+  img {
+    height: 326px;
+    cursor: pointer;
+    filter: invert(90%);
+  }
+
+  .card-info {
+    display: flex;
+
+    .exercise-button {
+      cursor: pointer;
+
+      margin-left: 21px;
+      padding: 10px;
+      color: var(--background-theme-secondary);
+      background-color: var(--background-theme-primary);
+      font-size: 14px;
+      border-radius: 20px;
+      text-transform: capitalize;
+    }
+
+    .exercise-button:nth-child(2) {
+      border-color: var(--background-theme-primary);
+      color: var(--background-theme-primary);
+      background-color: var(--background-theme-secondary);
+    }
+  }
+
+  .exercise-name {
+    color: lightgray;
+
+    font-weight: bold;
+    margin-top: 11px;
+    padding-bottom: 10px;
+
+    text-transform: capitalize;
+  }
+}
+
+.exercise-card:hover,
+.bodyPart-card:hover {
+  transform: scale(1.1, 1.1);
+}
+
+@media screen and (max-width: 1200px) {
+}
+@media screen and (max-width: 1024px) {
+  .exercise-card {
+    width: 330px;
+    height: 400px;
+
+    img {
+      height: 250px;
+    }
+
+    .card-info {
+      padding-top: 0.5rem;
+    }
+  }
+}
+@media screen and (max-width: 768px) {
+  .exercise-card {
+    width: 330px;
+    height: 400px;
+
+    img {
+      height: 250px;
+    }
+
+    .card-info {
+      padding-top: 0.5rem;
+    }
+  }
+}
+@media screen and (max-width: 480px) {
+  .exercise-card {
+    width: 300px;
+    height: 380px;
+
+    img {
+      height: 250px;
+    }
+
+    .card-info {
+      padding-top: 0.5rem;
+    }
+  }
+}
+@media screen and (max-width: 320px) {
+  .exercise-card {
+    width: 290px;
+    height: 365px;
+
+    img {
+      height: 250px;
+    }
+
+    .card-info {
+      padding-top: 0.5rem;
+    }
+  }
+}

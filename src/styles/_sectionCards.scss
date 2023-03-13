@@ -1,0 +1,13 @@
+.exercise-card-div {
+  width: 100vw;
+  margin-top: 50px;
+  display: flex;
+  justify-content: space-around;
+}
+
+@media screen and (max-width: 320px) {
+  .exercise-card-div {
+    margin-top: 30px;
+    // flex-direction: column;
+  }
+}

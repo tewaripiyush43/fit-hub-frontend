@@ -1,0 +1,58 @@
+import React from "react";
+
+import { Swiper, SwiperSlide } from "swiper/react";
+
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import { EffectCoverflow, Pagination, Navigation } from "swiper";
+
+const Carousel = ({ carouselData, setSearchByCarousel, carouselTitle }) => {
+  const handleCarouselClick = (value) => {
+    // console.log(value);
+    setSearchByCarousel(value);
+  };
+
+  return (
+    <div className="exercises-carousel-container">
+      <h1 className="carousel-title">{carouselTitle}</h1>
+      {carouselData.length > 0 && (
+        <Swiper
+          data-aos="fade-in"
+          effect={"coverflow"}
+          grabCursor={true}
+          centeredSlides={true}
+          slidesPerView={"auto"}
+          loop={true}
+          coverflowEffect={{
+            rotate: 50,
+            stretch: 0,
+            depth: 100,
+            modifier: 1,
+            slideShadows: true,
+          }}
+          pagination={{
+            clickable: "true",
+          }}
+          navigation={true}
+          modules={[EffectCoverflow, Pagination, Navigation]}
+          className="mySwiper"
+        >
+          {carouselData.map((data, index) => {
+            return (
+              <SwiperSlide
+                onClick={() => handleCarouselClick(data.part)}
+                key={index}
+              >
+                <h3 className="carousel-slide-text">{data.part}</h3>
+                <img className="slider-img" alt="slider-img" src={data.url} />
+              </SwiperSlide>
+            );
+          })}
+        </Swiper>
+      )}
+    </div>
+  );
+};
+
+export default Carousel;
