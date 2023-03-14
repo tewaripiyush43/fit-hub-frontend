@@ -12,6 +12,8 @@ import SearchIcon from "@mui/icons-material/Search";
 /* Todays workout eg. if monday back bi, tuesday chest tri */
 
 const Exercises = ({ searchByCarousel }) => {
+  const REACT_APP_BASE_URL = process.env.REACT_APP_BASE_URL;
+
   const [searchValue, setSearchValue] = useState("");
   const [suggestion, setSuggestion] = useState([]);
   const [exercises, setExercises] = useState([]);
@@ -24,7 +26,7 @@ const Exercises = ({ searchByCarousel }) => {
   useEffect(() => {
     const getNames = async () => {
       await axios
-        .get("http://localhost:9000/fetchnames")
+        .get(`${REACT_APP_BASE_URL}/fetchnames`)
         .then((res) => setSuggestion(res.data))
         .catch((err) => console.log(err.message));
     };
@@ -48,7 +50,7 @@ const Exercises = ({ searchByCarousel }) => {
     const fetchSearchResult = async () => {
       await axios
         .get(
-          `http://localhost:9000/exercises?exercise=${searchValue}&page=${currentPage}`
+          `${REACT_APP_BASE_URL}/exercises?exercise=${searchValue}&page=${currentPage}`
         )
         .then((res) => setExercises(res.data))
         .catch((err) => console.log(err.message));
@@ -59,7 +61,7 @@ const Exercises = ({ searchByCarousel }) => {
   useEffect(() => {
     const fetchCount = async () => {
       await axios
-        .get(`http://localhost:9000/fetchCount?exercise=${searchValue}`)
+        .get(`${REACT_APP_BASE_URL}/fetchCount?exercise=${searchValue}`)
         .then((res) => setTotalPages(Math.ceil(res.data / 9)))
         .catch((err) => console.log(err.message));
     };
@@ -67,7 +69,7 @@ const Exercises = ({ searchByCarousel }) => {
     const fetchSearchResult = async () => {
       await axios
         .get(
-          `http://localhost:9000/exercises?exercise=${searchValue}&page=${currentPage}`
+          `${REACT_APP_BASE_URL}/exercises?exercise=${searchValue}&page=${currentPage}`
         )
         .then((res) => setExercises(res.data))
         .catch((err) => console.log(err.message));

@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import DetailSection from "../components/DetailsSection";
 import FormatQuoteOutlinedIcon from "@mui/icons-material/FormatQuoteOutlined";
 const ExercisePage = () => {
+  const REACT_APP_BASE_URL = process.env.REACT_APP_BASE_URL;
+
   const { id } = useParams();
   const [ex, setex] = useState("");
   const [exercisesForBodyPart, setExercisesForBodyPart] = useState([]);
@@ -10,7 +12,7 @@ const ExercisePage = () => {
 
   useEffect(() => {
     const findExercise = () => {
-      fetch(`http://localhost:9000/findex/${id}`)
+      fetch(`${REACT_APP_BASE_URL}/findex/${id}`)
         .then((res) => res.json())
         .then((data) => {
           setex(data);
@@ -25,7 +27,7 @@ const ExercisePage = () => {
     findExercise();
 
     const findExercisesByBodyPart = (bodyPart) => {
-      fetch(`http://localhost:9000/exercises/bodyParts/${bodyPart}`)
+      fetch(`${REACT_APP_BASE_URL}/exercises/bodyParts/${bodyPart}`)
         .then((res) => res.json())
         .then((data) => {
           // console.log(data);
@@ -37,7 +39,7 @@ const ExercisePage = () => {
     };
 
     const findExercisesByMuscle = (muscle) => {
-      fetch(`http://localhost:9000/exercises/${muscle}`)
+      fetch(`${REACT_APP_BASE_URL}/exercises/${muscle}`)
         .then((res) => res.json())
         .then((data) => {
           // console.log(data);

@@ -10,6 +10,11 @@ import SectionCards from "../components/SectionCards";
 import axios from "axios";
 
 export default function Home() {
+  const REACT_APP_BASE_URL = process.env.REACT_APP_BASE_URL;
+  // console.log(BASE_URL);
+
+  // console.log(process.env);
+
   const [carouselData, setCarouselData] = useState([]);
   const [searchByCarousel, setSearchByCarousel] = useState("");
 
@@ -23,7 +28,7 @@ export default function Home() {
 
     const getCarouselHomeData = async () => {
       await axios
-        .get("http://localhost:9000/fetchCarouselDataHome")
+        .get(`${REACT_APP_BASE_URL}/fetchCarouselDataHome`)
         .then((res) => setCarouselData(res.data))
         .catch((err) => console.log(err.message));
     };

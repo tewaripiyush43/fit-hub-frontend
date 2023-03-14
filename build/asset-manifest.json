@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "/static/css/main.7fa08d24.css",
+    "main.js": "/static/js/main.3e452d76.js",
+    "static/media/angry-hd.png": "/static/media/angry-hd.490b2c792372a82fb9bb.png",
+    "static/media/home-img-4.jpg": "/static/media/home-img-4.cbf06b4ae431a06ee0be.jpg",
+    "static/media/food-img-1.jpg": "/static/media/food-img-1.67692e8ee156493309e0.jpg",
+    "static/media/back-2.jpeg": "/static/media/back-2.5ff9f902b9a47f7d14c5.jpeg",
+    "index.html": "/index.html",
+    "main.7fa08d24.css.map": "/static/css/main.7fa08d24.css.map",
+    "main.3e452d76.js.map": "/static/js/main.3e452d76.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.7fa08d24.css",
+    "static/js/main.3e452d76.js"
+  ]
+}
