@@ -1,6 +1,10 @@
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+// import LoginModal from "./LoginModal";
+import Portal from "./Portal.jsx";
 
 const Navbar = () => {
+  const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
   const takeToHomePage = () => {
@@ -14,6 +18,17 @@ const Navbar = () => {
   const takeToRecipesPage = () => {
     navigate(`/recipes`);
   };
+
+  function handleOpen() {
+    setIsOpen(true);
+    document.documentElement.classList.add("modal-open");
+  }
+
+  function handleClose() {
+    console.log("yo");
+    setIsOpen(false);
+    document.documentElement.classList.remove("modal-open");
+  }
 
   return (
     <>
@@ -29,6 +44,22 @@ const Navbar = () => {
           <h3 onClick={takeToRecipesPage} className="link">
             Recipes
           </h3>
+          <button
+            onClick={() => {
+              setIsOpen(true);
+              handleOpen();
+            }}
+            className="login-btn"
+          >
+            Login
+          </button>
+          <Portal
+            open={isOpen}
+            onClose={() => {
+              setIsOpen(false);
+              handleClose();
+            }}
+          />
         </div>
       </nav>
     </>

@@ -14,21 +14,16 @@ body {
   // font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
   //   Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
   font-family: "Roboto", sans-serif;
-  scroll-behavior: smooth !important;
-  // overflow: hidden;
-  // box-shadow: inset 0 0 2000px 2000px #000;
-
-  // background: radial-gradient(#ffffffba, #070606ba);
+  scroll-behavior: smooth;
   background-color: #292929;
-  // background: linear-gradient(180deg, #020102, #070606);
-  // background-image: url("../assets/images/anime-girl.jpg");
-  // background-size: contain;
-  // background-position-y: top;
-  // background-attachment: fixed;
-  // backdrop-filter: brightness(60%);
-  // background-repeat: no-repeat;
 
   overflow-x: hidden;
+  user-select: none;
+}
+
+body.modal-open {
+  overflow-y: hidden !important;
+  // position: fixed;
 }
 
 a {
@@ -38,6 +33,10 @@ a {
 
 * {
   box-sizing: border-box;
+}
+
+html.modal-open {
+  overflow-y: hidden;
 }
 
 // .container {
@@ -86,3 +85,5 @@ a {
 @import "_recipe.scss";
 @import "_detailsSection.scss";
 @import "_exercisesPage";
+@import "_loginModal.scss";
+@import "_portal.scss";

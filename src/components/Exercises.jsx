@@ -38,7 +38,6 @@ const Exercises = ({ searchByCarousel }) => {
   const handleInputChange = (e) => {
     const value = e.target.value;
     setSearchValue(value);
-    // console.log(searchByCarousel);
     searchByCarousel = "";
   };
 
