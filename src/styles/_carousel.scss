@@ -33,13 +33,13 @@
     padding-bottom: 50px;
 
     .swiper-pagination-bullet {
-      background-color: var(--background-theme-primary) !important;
+      background-color: $background-theme-primary !important;
     }
   }
 
   .swiper-slide {
     background-color: #181818;
-    color: var(--text-theme);
+    color: $text-theme;
     background-position: center;
     background-size: cover;
     width: 325px;
@@ -47,7 +47,7 @@
     text-transform: capitalize;
     margin: 0px;
     cursor: pointer;
-    box-shadow: 0px 0px 3px 3px var(--background-theme-primary);
+    box-shadow: 0px 0px 3px 3px $background-theme-primary;
 
     img {
       opacity: 0.9;
@@ -59,7 +59,7 @@
     }
 
     .carousel-slide-text {
-      text-shadow: 1px 1px 7px var(--background-theme-primary);
+      text-shadow: 1px 1px 7px $background-theme-primary;
       margin: 0;
       padding: 0;
       padding-top: 20px;
@@ -68,15 +68,15 @@
   }
 
   .swiper-button-prev {
-    color: var(--background-theme-primary);
+    color: $background-theme-primary;
   }
 
   .swiper-button-next {
-    color: var(--background-theme-primary);
+    color: $background-theme-primary;
   }
 
   .swiper-pagination-bullet-active {
-    background-color: var(--background-theme-secondary) !important;
+    background-color: $background-theme-secondary !important;
   }
 }
 

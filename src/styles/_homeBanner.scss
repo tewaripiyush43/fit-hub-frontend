@@ -17,29 +17,30 @@
     transform: translate(-50%, -50%);
 
     .home-banner-text {
-      font-size: 2.5rem;
+      font-size: 3.5rem;
       letter-spacing: 0.8px;
       text-transform: capitalize;
       font-family: "Roboto", sans-serif;
       font-weight: 900;
       // font-size: clamp(3.4375rem, 3.25rem + 0.75vw, 3rem);
-      text-shadow: 2px 2px 0 #3ea968, 4px 4px 0 #2e8f57, 6px 6px 0 #207b47,
-        8px 8px 0 #136836, 10px 10px 0 #084c26, 12px 12px 0 #003215,
-        14px 14px 6px rgba(0, 0, 0, 0.3);
-      animation: neon 1.5s ease-in-out infinite alternate;
+      // text-shadow: 2px 2px 0 #3ea968, 4px 4px 0 #2e8f57, 6px 6px 0 #207b47,
+      //   8px 8px 0 #136836, 10px 10px 0 #084c26, 12px 12px 0 #003215,
+      //   14px 14px 6px rgba(0, 0, 0, 0.3);
+      // animation: neon 1.5s ease-in-out infinite alternate;
+      color: rgb(230, 230, 230) !important;
 
-      @keyframes neon {
-        from {
-          text-shadow: 2px 2px 5px #3ea968, 4px 4px 5px #2e8f57,
-            6px 6px 5px #207b47, 8px 8px 5px #136836, 10px 10px 5px #084c26,
-            12px 12px 5px #003215, 14px 14px 10px rgba(0, 0, 0, 0.6);
-        }
-        to {
-          text-shadow: 2px 2px 15px #3ea968, 4px 4px 15px #2e8f57,
-            6px 6px 15px #207b47, 8px 8px 15px #136836, 10px 10px 15px #084c26,
-            12px 12px 15px #003215, 14px 14px 20px rgba(0, 0, 0, 0.9);
-        }
-      }
+      // @keyframes neon {
+      //   from {
+      //     text-shadow: 2px 2px 5px #3ea968, 4px 4px 5px #2e8f57,
+      //       6px 6px 5px #207b47, 8px 8px 5px #136836, 10px 10px 5px #084c26,
+      //       12px 12px 5px #003215, 14px 14px 10px rgba(0, 0, 0, 0.6);
+      //   }
+      //   to {
+      //     text-shadow: 2px 2px 15px #3ea968, 4px 4px 15px #2e8f57,
+      //       6px 6px 15px #207b47, 8px 8px 15px #136836, 10px 10px 15px #084c26,
+      //       12px 12px 15px #003215, 14px 14px 20px rgba(0, 0, 0, 0.9);
+      //   }
+      // }
     }
   }
 
@@ -48,14 +49,14 @@
     display: inline-block;
     padding: 12px 24px;
     background-color: #1ed760;
-    color: var(--background-theme-secondary);
+    color: $background-theme-secondary;
     border-radius: 6px;
     text-align: center;
     text-transform: uppercase;
     font-weight: bold;
     text-decoration: none;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    // box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
     transform-style: preserve-3d;
   }
 
@@ -80,8 +81,8 @@
 
   .find-exercise-btn:hover {
     background-color: #0f8c3f;
-    color: var(--text-theme);
-    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.3);
+    color: $text-theme;
+    // box-shadow: 0 8px 12px rgba(0, 0, 0, 0.3);
     transform: translateY(-2px) translateZ(2px);
   }
 
@@ -92,7 +93,7 @@
 
   .find-exercise-btn:focus {
     outline: none;
-    box-shadow: 0 0 0 2px #000, 0 0 0 4px #1ed760;
+    // box-shadow: 0 0 0 2px #000, 0 0 0 4px #1ed760;
     transform: translateY(0px) translateZ(2px);
   }
 

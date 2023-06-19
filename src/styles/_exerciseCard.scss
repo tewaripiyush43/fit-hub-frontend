@@ -2,7 +2,7 @@
   width: 400px;
   height: 445px;
   background: #fff;
-  border-top: 4px solid var(--background-theme-primary);
+  border-top: 4px solid $background-theme-primary;
   border-bottom-left-radius: 20px;
   text-decoration: none;
   display: flex;
@@ -20,6 +20,14 @@
     filter: invert(90%);
   }
 
+  .exercise-card-favorite-icon {
+    cursor: pointer;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    color: $background-theme-primary;
+  }
+
   .card-info {
     display: flex;
 
@@ -28,17 +36,17 @@
 
       margin-left: 21px;
       padding: 10px;
-      color: var(--background-theme-secondary);
-      background-color: var(--background-theme-primary);
+      color: $background-theme-secondary;
+      background-color: $background-theme-primary;
       font-size: 14px;
       border-radius: 20px;
       text-transform: capitalize;
     }
 
     .exercise-button:nth-child(2) {
-      border-color: var(--background-theme-primary);
-      color: var(--background-theme-primary);
-      background-color: var(--background-theme-secondary);
+      border-color: $background-theme-primary;
+      color: $background-theme-primary;
+      background-color: $background-theme-secondary;
     }
   }
 

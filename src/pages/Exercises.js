@@ -1,9 +1,7 @@
-import React, { useEffect } from "react";
-// import backgroundImg from "../assets/images/anime-girl.jpg";
-import Exercises from "../components/Exercises";
-
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { useState } from "react";
+
+import Exercises from "../components/Exercises";
 
 const ExercisesPage = () => {
   const [searchData, setsearchData] = useState("");

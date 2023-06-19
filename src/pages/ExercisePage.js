@@ -2,53 +2,48 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import DetailSection from "../components/DetailsSection";
 import FormatQuoteOutlinedIcon from "@mui/icons-material/FormatQuoteOutlined";
+
+import axios from "axios";
 const ExercisePage = () => {
   const REACT_APP_BASE_URL = process.env.REACT_APP_BASE_URL;
 
   const { id } = useParams();
+  // console.log(id);
   const [ex, setex] = useState("");
   const [exercisesForBodyPart, setExercisesForBodyPart] = useState([]);
   const [exercisesForMuscle, setExercisesForMuscle] = useState([]);
 
+  const findExercise = async () => {
+    await axios
+      .get(`${REACT_APP_BASE_URL}/exercise/findex/${id}`)
+      .then((res) => {
+        setex(res.data);
+        findExercisesByBodyPart(res.data.bodyPart);
+        findExercisesByMuscle(res.data.target);
+      })
+      .catch((err) => console.log(err.message));
+  };
+
+  const findExercisesByBodyPart = async (bodyPart) => {
+    await axios
+      .get(`${REACT_APP_BASE_URL}/exercise/exercises/bodyParts/${bodyPart}`)
+      .then((res) => {
+        setExercisesForBodyPart(res.data);
+      })
+      .catch((err) => console.log(err.message));
+  };
+
+  const findExercisesByMuscle = async (muscle) => {
+    await axios
+      .get(`${REACT_APP_BASE_URL}/exercise/exercises/${muscle}`)
+      .then((res) => {
+        setExercisesForMuscle(res.data);
+      })
+      .catch((err) => console.log(err.message));
+  };
+
   useEffect(() => {
-    const findExercise = () => {
-      fetch(`${REACT_APP_BASE_URL}/findex/${id}`)
-        .then((res) => res.json())
-        .then((data) => {
-          setex(data);
-          // console.log(data);
-          findExercisesByBodyPart(data.bodyPart);
-          findExercisesByMuscle(data.target);
-        })
-        .catch((err) => {
-          console.log(err.message);
-        });
-    };
     findExercise();
-
-    const findExercisesByBodyPart = (bodyPart) => {
-      fetch(`${REACT_APP_BASE_URL}/exercises/bodyParts/${bodyPart}`)
-        .then((res) => res.json())
-        .then((data) => {
-          // console.log(data);
-          setExercisesForBodyPart(data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    };
-
-    const findExercisesByMuscle = (muscle) => {
-      fetch(`${REACT_APP_BASE_URL}/exercises/${muscle}`)
-        .then((res) => res.json())
-        .then((data) => {
-          // console.log(data);
-          setExercisesForMuscle(data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    };
   }, [id]);
 
   useEffect(() => {

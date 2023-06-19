@@ -16,10 +16,10 @@
       font-family: "Roboto", sans-serif;
       font-weight: 900;
       font-size: clamp(3.4375rem, 3.25rem + 0.75vw, 3rem);
-      background-color: var(--background-theme-primary-transparent);
+      background-color: $background-theme-primary-transparent;
       background-image: linear-gradient(
         45deg,
-        var(--background-theme-primary),
+        $background-theme-primary,
         #272424
       );
       background-size: 100%;
@@ -32,7 +32,7 @@
 
     hr {
       display: block;
-      background: var(--background-theme-primary);
+      background: $background-theme-primary;
       height: 0.25rem;
       width: 6.25rem;
       border: none;
@@ -56,8 +56,8 @@
       background: #fff;
       border-radius: 3.125rem;
       transition: 0.3s ease-in-out;
-      background-color: var(--background-theme-secondary);
-      color: var(--background-theme-primary);
+      background-color: $background-theme-secondary;
+      color: $background-theme-primary;
       margin-top: 2.188rem;
       padding: 0.625rem 1.875rem;
     }
@@ -99,7 +99,7 @@
     }
 
     .swiper-pagination-bullet {
-      background-color: var(--background-theme-primary) !important;
+      background-color: $background-theme-primary !important;
     }
   }
 }
@@ -154,7 +154,7 @@
       }
 
       .swiper-pagination-bullet {
-        background-color: var(--background-theme-primary) !important;
+        background-color: $background-theme-primary !important;
       }
     }
   }
@@ -195,7 +195,7 @@
       }
 
       .swiper-pagination-bullet {
-        background-color: var(--background-theme-primary) !important;
+        background-color: $background-theme-primary !important;
       }
     }
   }
@@ -235,7 +235,7 @@
       }
 
       .swiper-pagination-bullet {
-        background-color: var(--background-theme-primary) !important;
+        background-color: $background-theme-primary !important;
       }
     }
   }
@@ -277,7 +277,7 @@
       }
 
       .swiper-pagination-bullet {
-        background-color: var(--background-theme-primary) !important;
+        background-color: $background-theme-primary !important;
       }
     }
   }

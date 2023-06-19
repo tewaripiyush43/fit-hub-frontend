@@ -1,7 +1,7 @@
 .card {
   margin: 20px auto;
   border-radius: 10px;
-  box-shadow: 0 0 1px 3px var(--background-theme-primary);
+  box-shadow: 0 0 1px 3px $background-theme-primary;
   width: 37%;
   height: 350px;
 
@@ -16,7 +16,7 @@
 
   .card-title {
     text-align: center;
-    color: var(--text-theme);
+    color: $text-theme;
     opacity: 1;
     position: absolute;
     margin-top: 10px;
@@ -28,7 +28,7 @@
   }
 
   .card-content {
-    color: var(--text-theme);
+    color: $text-theme;
     padding: 10px 25px;
     position: relative;
     text-shadow: 0 5px 5px black;
@@ -51,7 +51,7 @@
       border-radius: 2px;
 
       // color: #1ed760;
-      background-color: var(--background-theme-primary);
+      background-color: $background-theme-primary;
     }
   }
 }

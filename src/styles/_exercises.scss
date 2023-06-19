@@ -14,10 +14,10 @@
       width: 30vw;
       padding: 10px 20px;
       border-radius: 50px;
-      border: 1px solid var(--background-theme-primary);
+      border: 1px solid $background-theme-primary;
 
       background-color: #000;
-      color: var(--background-theme-primary);
+      color: $background-theme-primary;
 
       font-size: medium;
     }
@@ -26,10 +26,10 @@
     }
     .search-icon {
       cursor: pointer;
-      color: var(--background-theme-secondary);
-      background-color: var(--background-theme-primary);
+      color: $background-theme-secondary;
+      background-color: $background-theme-primary;
 
-      border: 1px solid var(--background-theme-primary);
+      border: 1px solid $background-theme-primary;
       // border-left: none;
       border-radius: 50px;
       height: 40px;
@@ -42,30 +42,30 @@
     }
     .exercises-input-dropdown {
       z-index: 2;
-      // background-color: var(--background-theme-secondary);
+      // background-color: $background-theme-secondary;
 
       .drop-down {
         position: absolute;
 
         width: 30vw;
-        border: 1px solid var(--background-theme-primary);
-        background-color: var(--background-theme-secondary);
+        border: 1px solid $background-theme-primary;
+        background-color: $background-theme-secondary;
 
         border-radius: 10px;
 
         // opacity: 0;
         .drop-down-item {
           cursor: pointer;
-          border-bottom: 1px solid var(--background-theme-primary);
+          border-bottom: 1px solid $background-theme-primary;
           border-radius: 10px;
           padding-block: 8px;
-          background-color: var(--background-theme-secondary);
-          color: var(--background-theme-primary);
+          background-color: $background-theme-secondary;
+          color: $background-theme-primary;
           font-size: 1rem;
         }
 
         .drop-down-item:hover {
-          background-color: var(--background-theme-primary-transparent);
+          background-color: $background-theme-primary-transparent;
           color: #000;
         }
       }
@@ -78,7 +78,7 @@
       padding: 0;
       margin: 0;
       border: none;
-      // background-color: var(--background-theme-secondary);
+      // background-color: $background-theme-secondary;
       background-color: #292929;
     }
   }
@@ -100,30 +100,30 @@
   justify-content: center;
   margin: 10px;
 
-  // color: var(--background-theme-primary);
+  // color: $background-theme-primary;
 }
 
 .MuiPagination-root {
   button {
-    color: var(--background-theme-primary) !important;
+    color: $background-theme-primary !important;
   }
 }
 
 .MuiPaginationItem-root.Mui-selected:hover {
-  background-color: var(--background-theme-primary) !important;
+  background-color: $background-theme-primary !important;
 }
 
 .MuiPaginationItem-root:hover {
-  background-color: var(--background-theme-primary-transparent) !important;
+  background-color: $background-theme-primary-transparent !important;
 }
 
 .MuiPaginationItem-root.Mui-selected {
-  background-color: var(--background-theme-primary) !important;
-  color: var(--background-theme-secondary) !important;
+  background-color: $background-theme-primary !important;
+  color: $background-theme-secondary !important;
 }
 
 .MuiPaginationItem-ellipsis {
-  color: var(--background-theme-primary) !important;
+  color: $background-theme-primary !important;
 }
 
 @media screen and (max-width: 1200px) {

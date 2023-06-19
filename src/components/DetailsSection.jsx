@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 
 const DetailSection = ({ ex, data, type }) => {
   const navigate = useNavigate();
+  // console.log(data);
 
   const handleClick = () => {
     let search = type === "muscle" ? ex.target : ex.bodyPart;
@@ -51,7 +52,7 @@ const DetailSection = ({ ex, data, type }) => {
           cardsEffect={{}}
           className="mySwiper"
         >
-          {data.map((exercise, index) => {
+          {data?.map((exercise, index) => {
             return (
               <SwiperSlide
                 // onClick={() => handleCarouselClick(data.part)}

@@ -11,7 +11,7 @@
   top: 10px;
 
   text-shadow: 0 1px 10px #000;
-  color: var(--background-theme-primary);
+  color: $background-theme-primary;
 
   backdrop-filter: blur(5px);
 
@@ -57,22 +57,31 @@
     align-items: center;
     gap: 20px;
 
+    .profile-avatar {
+      // padding: 2px;
+      background-color: $background-theme-secondary;
+      color: $background-theme-primary;
+      border: 2px solid $background-theme-primary;
+      width: 40px;
+      height: 40px;
+    }
+
     .link {
-      color: var(--text-theme);
+      color: $text-theme;
       text-decoration: none;
       cursor: pointer;
     }
     .link:hover {
-      // color: var(--background-theme-primary);
+      // color: $background-theme-primary;
       text-decoration: underline;
-      text-decoration-color: var(--background-theme-primary);
+      text-decoration-color: $background-theme-primary;
     }
     .login-btn {
       cursor: pointer;
       position: relative;
       padding: 10px 20px;
       background-color: #1ed760;
-      color: var(--background-theme-secondary);
+      color: $background-theme-secondary;
       border-radius: 6px;
       text-align: center;
       text-transform: uppercase;
@@ -104,7 +113,7 @@
 
     .login-btn:hover {
       background-color: #0f8c3f;
-      color: var(--text-theme);
+      color: $text-theme;
       box-shadow: 0 8px 12px rgba(0, 0, 0, 0.3);
       transform: translateY(-2px) translateZ(2px);
     }
@@ -125,12 +134,25 @@
       transform: scaleY(1) rotateX(0deg);
     }
   }
+
+  .account-menu-custom-style {
+    padding: 0 !important;
+  }
+
+  .delete-account-text {
+    color: red;
+  }
+}
+.account-menu-dropdown-icon {
+  margin: 0 10px 0 -4px !important;
+  width: 23px !important;
+  height: 23px !important;
 }
 
 .line {
   width: 30px;
   height: 2px;
-  background: var(--background-theme-secondary);
+  background: $background-theme-secondary;
 }
 
 @media screen and (max-width: 1200px) {
@@ -160,7 +182,7 @@
     top: 10px;
 
     text-shadow: 0 1px 10px #000;
-    color: var(--background-theme-primary);
+    color: $background-theme-primary;
 
     backdrop-filter: blur(5px);
 
@@ -208,14 +230,14 @@
       font-size: 0.7rem;
 
       .link {
-        color: var(--text-theme);
+        color: $text-theme;
         text-decoration: none;
         cursor: pointer;
       }
       .link:hover {
-        // color: var(--background-theme-primary);
+        // color: $background-theme-primary;
         text-decoration: underline;
-        text-decoration-color: var(--background-theme-primary);
+        text-decoration-color: $background-theme-primary;
       }
     }
   }
@@ -223,6 +245,6 @@
   .line {
     width: 30px;
     height: 2px;
-    background: var(--background-theme-secondary);
+    background: $background-theme-secondary;
   }
 }

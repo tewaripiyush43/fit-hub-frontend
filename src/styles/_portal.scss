@@ -24,14 +24,14 @@
     span {
       font-size: 1.2rem;
       font-weight: 700;
-      color: var(--text-theme);
+      color: $text-theme;
     }
   }
 
   .login-selected {
     background-color: #252525ba;
-    border-right: 3px solid var(--background-theme-primary);
-    border-bottom: 3px solid var(--background-theme-primary);
+    border-right: 3px solid $background-theme-primary;
+    border-bottom: 3px solid $background-theme-primary;
     border-bottom-right-radius: 50px;
 
     span {
@@ -40,8 +40,8 @@
   }
   .signup-selected {
     background-color: #252525ba;
-    border-left: 3px solid var(--background-theme-primary);
-    border-bottom: 3px solid var(--background-theme-primary);
+    border-left: 3px solid $background-theme-primary;
+    border-bottom: 3px solid $background-theme-primary;
     border-bottom-left-radius: 50px;
 
     span {

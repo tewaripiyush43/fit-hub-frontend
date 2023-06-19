@@ -1,12 +1,10 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import Pagination from "@mui/material/Pagination";
 
 import ExerciseCard from "./ExerciseCard";
-
 import axios from "axios";
 
-// icon
+import Pagination from "@mui/material/Pagination";
 import SearchIcon from "@mui/icons-material/Search";
 
 /* Todays workout eg. if monday back bi, tuesday chest tri */
@@ -26,7 +24,7 @@ const Exercises = ({ searchByCarousel }) => {
   useEffect(() => {
     const getNames = async () => {
       await axios
-        .get(`${REACT_APP_BASE_URL}/fetchnames`)
+        .get(`${REACT_APP_BASE_URL}/exercise/fetchnames`)
         .then((res) => setSuggestion(res.data))
         .catch((err) => console.log(err.message));
     };
@@ -49,7 +47,7 @@ const Exercises = ({ searchByCarousel }) => {
     const fetchSearchResult = async () => {
       await axios
         .get(
-          `${REACT_APP_BASE_URL}/exercises?exercise=${searchValue}&page=${currentPage}`
+          `${REACT_APP_BASE_URL}/exercise/exercises?exercise=${searchValue}&page=${currentPage}`
         )
         .then((res) => setExercises(res.data))
         .catch((err) => console.log(err.message));
@@ -60,7 +58,9 @@ const Exercises = ({ searchByCarousel }) => {
   useEffect(() => {
     const fetchCount = async () => {
       await axios
-        .get(`${REACT_APP_BASE_URL}/fetchCount?exercise=${searchValue}`)
+        .get(
+          `${REACT_APP_BASE_URL}/exercise/fetchCount?exercise=${searchValue}`
+        )
         .then((res) => setTotalPages(Math.ceil(res.data / 9)))
         .catch((err) => console.log(err.message));
     };
@@ -68,7 +68,7 @@ const Exercises = ({ searchByCarousel }) => {
     const fetchSearchResult = async () => {
       await axios
         .get(
-          `${REACT_APP_BASE_URL}/exercises?exercise=${searchValue}&page=${currentPage}`
+          `${REACT_APP_BASE_URL}/exercise/exercises?exercise=${searchValue}&page=${currentPage}`
         )
         .then((res) => setExercises(res.data))
         .catch((err) => console.log(err.message));

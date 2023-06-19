@@ -16,7 +16,7 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  // background-color: var(--background-theme-secondary);
+  // background-color: $background-theme-secondary;
   background-color: #292929;
   padding: 20px;
   z-index: 1000;
@@ -31,7 +31,7 @@
     cursor: pointer;
     background: none;
     border: none;
-    color: var(--text-theme);
+    color: $text-theme;
     position: absolute;
     top: 10px;
     right: 10px;
@@ -44,7 +44,7 @@
   }
 
   .login-welcome {
-    color: var(--text-theme);
+    color: $text-theme;
     // font-size: 1.2rem;
     // font-style: 900;
   }
@@ -64,7 +64,7 @@
 
       .login-form-input {
         background-color: #606060;
-        color: var(--text-theme);
+        color: $text-theme;
         width: 85%;
         padding: 6px;
         border: none;
@@ -104,11 +104,11 @@
         margin-left: 2px;
         font-size: 0.8rem;
         letter-spacing: 1px;
-        color: var(--text-theme);
+        color: $text-theme;
       }
 
       .Mui-checked + .MuiSwitch-track {
-        background-color: var(--background-theme-primary);
+        background-color: $background-theme-primary;
       }
     }
 
@@ -118,7 +118,7 @@
       align-items: center;
       margin-block: 15px;
       font-size: 0.8rem;
-      color: var(--text-theme);
+      color: $text-theme;
 
       input {
         cursor: pointer;
@@ -126,7 +126,7 @@
 
       a:hover {
         cursor: pointer;
-        color: var(--background-theme-primary);
+        color: $background-theme-primary;
         text-decoration: underline;
       }
     }
@@ -135,8 +135,8 @@
       cursor: pointer;
       position: relative;
       padding: 10px 20px;
-      background-color: var(--background-theme-primary);
-      color: var(--background-theme-secondary);
+      background-color: $background-theme-primary;
+      color: $background-theme-secondary;
       border-radius: 6px;
       text-align: center;
       text-transform: uppercase;
@@ -168,7 +168,7 @@
 
     .login-submit-btn:hover {
       background-color: #0f8c3f;
-      color: var(--text-theme);
+      color: $text-theme;
       box-shadow: 0 8px 12px rgba(0, 0, 0, 0.3);
       transform: translateY(-2px) translateZ(2px);
     }
@@ -180,7 +180,7 @@
 
     .login-submit-btn:focus {
       outline: none;
-      box-shadow: 0 0 0 2px #000, 0 0 0 4px var(--background-theme-primary);
+      box-shadow: 0 0 0 2px #000, 0 0 0 4px $background-theme-primary;
       transform: translateY(0px) translateZ(2px);
     }
 
@@ -195,14 +195,14 @@
       justify-content: center;
       width: 80%;
       margin: 0 auto;
-      color: var(--text-theme);
+      color: $text-theme;
     }
 
     .partition::before,
     .partition::after {
       content: "";
       display: block;
-      border-top: 1px solid var(--text-theme);
+      border-top: 1px solid $text-theme;
       flex-grow: 1;
       height: 1px;
       margin: 0 10px; /* add some space between the elements */
@@ -216,14 +216,14 @@
 
     .login-create-account-link {
       cursor: pointer;
-      color: var(--text-theme);
+      color: $text-theme;
       letter-spacing: 1.2px;
 
       span {
         text-decoration: underline;
       }
       span:hover {
-        color: var(--background-theme-primary);
+        color: $background-theme-primary;
       }
     }
 
@@ -233,7 +233,7 @@
       justify-content: space-around;
       a {
         font-size: 0.7rem;
-        color: var(--text-theme);
+        color: $text-theme;
       }
     }
   }
