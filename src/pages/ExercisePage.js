@@ -9,7 +9,7 @@ const ExercisePage = () => {
 
   const { id } = useParams();
   // console.log(id);
-  const [ex, setex] = useState("");
+  const [exercise, setexercise] = useState("");
   const [exercisesForBodyPart, setExercisesForBodyPart] = useState([]);
   const [exercisesForMuscle, setExercisesForMuscle] = useState([]);
 
@@ -17,7 +17,8 @@ const ExercisePage = () => {
     await axios
       .get(`${REACT_APP_BASE_URL}/exercise/findex/${id}`)
       .then((res) => {
-        setex(res.data);
+        console.log(res);
+        setexercise(res.data);
         findExercisesByBodyPart(res.data.bodyPart);
         findExercisesByMuscle(res.data.target);
       })
@@ -47,34 +48,55 @@ const ExercisePage = () => {
   }, [id]);
 
   useEffect(() => {
-    window.scrollTo(0, 0);
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "smooth",
+    });
   }, []);
 
-  // console.log(id);
+  console.log(id);
   return (
     <div className="exercise-page">
-      {/*quote*/}
       <div className="quote-container">
         <FormatQuoteOutlinedIcon fontSize="large" className="quote-icon" />
-        <p>
+        <p className="quote-text">
           “Once you are exercising regularly, the hardest thing is to stop it.”
         </p>
       </div>
+      {/* <div className="exercise-detail-container"> */}
       <div className="exercise-gif-info">
-        <img src={ex.gifUrl} alt="error" />
+        <div className="exericse-page-img-container">
+          <img
+            className="exercise-page-img"
+            src={exercise?.gifUrl}
+            alt="error"
+          />
+        </div>
         <div className="exercise-info">
-          <h3 className="exercise-info-name">{ex.name} </h3>
-          <hr />
-          <p className="exercise-info-detail">
-            Exercises keep you strong {ex.name} is one of the best exercises to
-            target your {ex.target}. It will help you improve your mood and gain
-            energy.
-          </p>
+          <h3 className="exercise-info-name">{exercise?.name} </h3>
+          <hr className="exercise-info-ruler" />
+
+          <ul className="exercise-page-info-instructions-list">
+            <p className="exercise-info-detail" style={{ fontWeight: "bold" }}>
+              Instructions :
+            </p>
+            {exercise?.instructions?.map((instruction, index) => (
+              <li key={index} className="exercise-info-detail">
+                {instruction}
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
+      {/* </div> */}
 
-      <DetailSection ex={ex} data={exercisesForMuscle} type="muscle" />
-      <DetailSection ex={ex} data={exercisesForBodyPart} type="bodyPart" />
+      <DetailSection ex={exercise} data={exercisesForMuscle} type="muscle" />
+      <DetailSection
+        ex={exercise}
+        data={exercisesForBodyPart}
+        type="bodyPart"
+      />
     </div>
   );
 };

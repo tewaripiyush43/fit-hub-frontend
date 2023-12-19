@@ -16,7 +16,7 @@ const DetailSection = ({ ex, data, type }) => {
   // console.log(data);
 
   const handleClick = () => {
-    let search = type === "muscle" ? ex.target : ex.bodyPart;
+    let search = type === "muscle" ? ex?.target : ex?.bodyPart;
     navigate(`/exercises/${search}`);
   };
 
@@ -28,20 +28,25 @@ const DetailSection = ({ ex, data, type }) => {
     >
       <div className="muscle-detail">
         <h1 className="muscle-detail-title">
-          More Exercises for &#32; {type === "muscle" ? ex.target : ex.bodyPart}
+          More Exercises for &#32;{" "}
+          {type === "muscle" ? ex?.target : ex?.bodyPart}
         </h1>
-        <hr />
+        <hr className="muscle-info-ruler" />
         <p className="muscle-detail-info">
-          Exercises keep you strong {ex.name} is one of the best exercises to
-          target your {ex.target}. It will help you improve your mood and gain
-          energy.
+          Exercises keep you strong {ex?.name} is one of the best exercises to
+          target your {type === "muscle" ? ex?.target : ex?.bodyPart}. It will
+          help you improve your mood and gain energy. It will also help you to
+          sleep better and manage your weight. Regular exercise is good for your
+          muscles, bones, and joints. To see more exercises for{" "}
+          {type === "muscle" ? ex?.target : ex?.bodyPart} click on the button
+          below.
         </p>
 
         <button className="muscle-detail-link" onClick={handleClick}>
           see more...
         </button>
       </div>
-      <div className="father">
+      <div>
         <Swiper
           effect={"cards"}
           grabCursor={true}
@@ -61,11 +66,7 @@ const DetailSection = ({ ex, data, type }) => {
                 <ExerciseCard
                   className="exercise-card"
                   key={exercise._id}
-                  id={exercise._id}
-                  exerciseImg={exercise.gifUrl}
-                  bodyPart={exercise.bodyPart}
-                  targetMuscle={exercise.target}
-                  exercise={exercise.name}
+                  exerciseData={exercise}
                 />
               </SwiperSlide>
             );

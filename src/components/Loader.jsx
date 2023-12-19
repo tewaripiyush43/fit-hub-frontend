@@ -1,4 +1,5 @@
 import React from "react";
+import logo from "../assets/images/bg-removed-blue-logo-gif.gif";
 
 const Loader = () => {
   return (
@@ -10,3 +11,4 @@ const Loader = () => {
 };
 
 export default Loader;
+// <img className="blue-theme-gif-logo" src={logo} alt="404" />;

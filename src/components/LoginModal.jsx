@@ -3,27 +3,26 @@ import { Link, useNavigate } from "react-router-dom";
 import Switch from "@mui/material/Switch";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { authActions } from "../store";
+import { authActions, portalActions } from "../store";
 
-import logo from "../assets/images/image-removebg-preview.png";
+import { errorPopUp } from "../helpers/errorPopUp";
+
+import logo from "../assets/images/blue-theme-Logo-removebg-preview.png";
 import {
   MailOutlined,
   EyeOutlined,
   EyeInvisibleOutlined,
 } from "@ant-design/icons";
 
-const LoginModal = ({ open, onClose, changeType }) => {
+const LoginModal = () => {
   const REACT_APP_BASE_URL = process.env.REACT_APP_BASE_URL;
-  const history = useNavigate();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
-  // const user = useSelector((state) => state.user);
   const [inputs, setInputs] = useState({
     email: "",
     password: "",
   });
   const [showPassword, setShowPassword] = useState(false);
-
-  if (!open) return null;
 
   const handleChange = (e) => {
     setInputs((prev) => ({
@@ -40,30 +39,32 @@ const LoginModal = ({ open, onClose, changeType }) => {
       })
       .then((res) => {
         console.log(res);
-        if (res.data?.error?.status === 401) {
-          alert("Invalid credentials");
-          // return res.data.error;
+        if (res.data?.error?.status === 400) {
+          throw res.data.error;
         } else {
           localStorage.setItem("accessToken", res.data.accessToken);
-          onClose();
-          dispatch(authActions.setUser(res.data.user));
           dispatch(authActions.login());
-          history("/");
+          dispatch(authActions.setUser(res.data.user));
+          dispatch(portalActions.setPortalClose());
+          navigate("/");
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        errorPopUp(err.message);
+      });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // console.log();
     sendRequest();
-    //   dispatch(authActions.login());
   };
 
   return (
     <div className="modal-style">
-      <button className="login-close-btn" onClick={onClose}>
+      <button
+        className="login-close-btn"
+        onClick={() => dispatch(portalActions.setPortalClose())}
+      >
         X
       </button>
       <img className="login-logo" src={logo} alt="404" />
@@ -79,8 +80,8 @@ const LoginModal = ({ open, onClose, changeType }) => {
             name="email"
             value={inputs.email}
             onChange={handleChange}
-            type="email"
-            placeholder="Email or username"
+            type="text"
+            placeholder="Email or Username"
             required
           />
           <MailOutlined className="login-page-icon" />
@@ -114,15 +115,18 @@ const LoginModal = ({ open, onClose, changeType }) => {
         <button className="login-submit-btn" type="submit">
           Login
         </button>
-        <div className="partition">
+        {/* <div className="partition">
           <p>OR</p>
-        </div>
+        </div> */}
         <p className="login-create-account-link">
-          Don't have an account? <span onClick={changeType}>SIGNUP</span>
+          Don't have an account?{" "}
+          <span onClick={() => dispatch(portalActions.setPortalTypeSignup())}>
+            SIGNUP
+          </span>
         </p>
-        <div className="login-forgot-pass-container">
+        {/* <div className="login-forgot-pass-container">
           <Link to="/">RESET PASSWORD</Link> <Link to="/">SETTINGS</Link>
-        </div>
+        </div> */}
       </form>
     </div>
   );

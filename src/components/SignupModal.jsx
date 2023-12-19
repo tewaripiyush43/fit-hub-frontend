@@ -3,9 +3,7 @@ import ReactDom from "react-dom";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { authActions } from "../store/index";
 
-import logo from "../assets/images/image-removebg-preview.png";
 import {
   MailOutlined,
   EyeOutlined,
@@ -13,81 +11,64 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 
+import { errorPopUp } from "../helpers/errorPopUp";
+import { portalActions } from "../store/index";
+import logo from "../assets/images/blue-theme-Logo-removebg-preview.png";
+import { getUser } from "../api/authAPI";
+
 axios.defaults.withCredentials = true;
-const SignupMoal = ({ open, onClose, changeType }) => {
-  const navigate = useNavigate();
+const SignupModal = () => {
   const REACT_APP_BASE_URL = process.env.REACT_APP_BASE_URL;
   const [inputs, setInputs] = useState({
-    name: "",
+    username: "",
     email: "",
     password: "",
   });
+  const [errorMessage, setErrorMessage] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch();
-  // const isLoggedIn = useSelector((state) => state.isLoggedIn);
-
-  if (!open) return null;
 
   const handleChange = (e) => {
-    // console.log(e.target.name + " " + e.target.value);
     setInputs((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
     }));
   };
 
-  const sendRequestToGetUser = async () => {
-    await axios
-      .get(`${REACT_APP_BASE_URL}/auth/private`, {
-        withCredentials: true,
-        headers: {
-          "Content-Type": "application/json",
-          authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        },
-      })
-      .then((res) => {
-        console.log(res);
-        dispatch(authActions.setUser(res.data.user));
-        dispatch(authActions.login());
-        onClose();
-        changeType(!changeType);
-        navigate("/");
-      })
-      .catch((err) => console.log(err));
-  };
-
   const sendRegisterRequest = async () => {
     await axios
       .post(`${REACT_APP_BASE_URL}/auth/register`, {
-        // name: inputs.name,
+        username: inputs.username,
         email: inputs.email,
         password: inputs.password,
       })
       .then((res) => {
+        if (res.data?.error?.status === 422) {
+          throw res.data?.error;
+        }
         console.log(res.data);
         console.log("User registered Successfully");
         localStorage.setItem("accessToken", res.data.accessToken);
-        sendRequestToGetUser();
+        getUser(dispatch, REACT_APP_BASE_URL);
       })
-      .catch((err) => console.log(err, { message: "User already exists" }));
+      .catch((err) => {
+        setErrorMessage(err.message);
+        errorPopUp(errorMessage);
+      });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // console.log();
     sendRegisterRequest();
-    // .then(() => console.log("User registered Successfully"))
-    // .catch((err) => console.log({ message: "User already exists" }));
   };
 
-  return ReactDom.createPortal(
+  return (
     <div>
       <div className="modal-style">
         <button
           className="login-close-btn"
           onClick={() => {
-            onClose();
-            changeType(!changeType);
+            dispatch(portalActions.setPortalClose());
           }}
         >
           X
@@ -102,10 +83,10 @@ const SignupMoal = ({ open, onClose, changeType }) => {
           <div className="login-form-textfield">
             <input
               onChange={handleChange}
-              name="name"
+              name="username"
               className="login-form-input"
               type="text"
-              value={inputs.name}
+              value={inputs.username}
               placeholder="What should we call you?"
             />
             <UserOutlined className="login-page-icon" />
@@ -152,17 +133,19 @@ const SignupMoal = ({ open, onClose, changeType }) => {
           <button className="login-submit-btn" type="submit">
             CREATE ACCOUNT
           </button>
-          <div className="partition">
+          {/* <div className="partition">
             <p>OR</p>
-          </div>
+          </div> */}
           <p className="login-create-account-link">
-            Already have an account? <span onClick={changeType}>LOGIN</span>
+            Already have an account?
+            <span onClick={() => dispatch(portalActions.setPortalTypeLogin())}>
+              LOGIN
+            </span>
           </p>
         </form>
       </div>
-    </div>,
-    document.getElementById("portal")
+    </div>
   );
 };
 
-export default SignupMoal;
+export default SignupModal;

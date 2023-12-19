@@ -1,0 +1,122 @@
+.workouts-small-component-container {
+  width: 80%;
+  // min-width: 400px;
+  height: auto;
+  background-color: $background;
+  border-radius: 20px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  font-family: "Arial", sans-serif;
+  text-align: center;
+  color: $text;
+  overflow: hidden;
+  transition: all 0.5s ease-in-out;
+
+  @media (max-width: 1024px) {
+    width: 85%;
+  }
+
+  @media (max-width: 768px) {
+    width: 80%;
+    margin-block: 20px;
+  }
+
+  @media (max-width: 426px) {
+    width: 90%;
+  }
+
+  @media (max-width: 375px) {
+    width: 100%;
+  }
+}
+
+.workouts-small-component-header {
+  background: linear-gradient(to right, $accent, $accent-hover);
+  padding: 10px 0;
+  font-size: 1.6rem;
+  transition: all 0.5s ease-in-out;
+
+  @media (max-width: 1024px) {
+    font-size: 1.5rem;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 1.25rem;
+  }
+
+  @media (max-width: 426px) {
+    font-size: 1.25rem;
+  }
+
+  @media (max-width: 375px) {
+    font-size: 1.125rem;
+  }
+}
+
+.wsc-list {
+  margin: 15px;
+  background-color: $background;
+  list-style: none;
+}
+
+.wsc-item {
+  text-align: left;
+  margin: 10px;
+  padding: 10px;
+  border-left: 8px solid $accent;
+  background-color: $background-input-field;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 10px;
+  transition: all 0.5s ease-in-out;
+
+  @media (max-width: 1024px) {
+    font-size: 0.9rem;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 0.8rem;
+  }
+
+  @media (max-width: 426px) {
+    font-size: 0.8rem;
+  }
+
+  @media (max-width: 375px) {
+    font-size: 0.7rem;
+  }
+}
+
+.wsc-btn {
+  background-color: $accent;
+  border-radius: 50px;
+  color: $text;
+  cursor: pointer;
+  padding: 8px 16px;
+  text-align: center;
+  font-size: 1rem;
+  margin-bottom: 10px;
+  transition: all 0.5s ease-in-out;
+  border: none;
+
+  @media (max-width: 1024px) {
+    font-size: 0.9rem;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 0.8rem;
+  }
+
+  @media (max-width: 426px) {
+    font-size: 0.8rem;
+  }
+
+  @media (max-width: 375px) {
+    font-size: 0.7rem;
+  }
+
+  &:hover {
+    background-color: $accent-hover;
+    transform: scale(1.1);
+  }
+}

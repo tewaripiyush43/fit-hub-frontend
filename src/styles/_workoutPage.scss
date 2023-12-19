@@ -1,0 +1,193 @@
+.workout-page {
+  position: relative;
+  min-height: 86vh;
+  margin: 120px auto 0 auto;
+  width: 94%;
+  background-color: $background-hover;
+  border-radius: 50px;
+  text-align: center;
+  padding: 20px 30px;
+
+  .workout-page-edit-icon-container {
+    position: absolute;
+    top: 1.5%;
+    right: 8%;
+    width: 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    @media (max-width: 1024px) {
+      top: 1.5%;
+      right: 7%;
+      width: 6%;
+    }
+
+    @media (max-width: 768px) {
+      top: 1.2%;
+      right: 7%;
+      width: 8%;
+    }
+
+    @media (max-width: 426px) {
+      top: 1.2%;
+      right: 10%;
+      width: 8%;
+    }
+
+    @media (max-width: 375px) {
+      top: 1.2%;
+      right: 10%;
+      width: 8%;
+    }
+  }
+
+  .workout-page-title {
+    font-size: 2rem;
+    font-weight: 600;
+    color: $accent;
+    margin: 0 auto 20px auto;
+    // border-radius: 30px;
+    width: 60%;
+
+    &:focus {
+      outline: none;
+      // outline-color: black;
+      background-color: $background-input-field;
+      border-bottom: $text 3px solid;
+    }
+
+    @media (max-width: 1024px) {
+      font-size: 1.75rem;
+    }
+
+    @media (max-width: 768px) {
+      font-size: 1.5rem;
+    }
+
+    @media (max-width: 426px) {
+      font-size: 1.5rem;
+    }
+
+    @media (max-width: 375px) {
+      font-size: 1.25rem;
+    }
+  }
+
+  .workout-page-description {
+    font-size: 1.2rem;
+    font-weight: 400;
+    margin-bottom: 20px;
+    background-color: $background-input-field;
+    color: $text;
+    border-radius: 30px;
+    word-spacing: 1px;
+    // max-height: 100px;
+    // padding: 15px;
+
+    .workout-page-content {
+      padding: 15px;
+      border-radius: 30px;
+    }
+
+    @media (max-width: 1024px) {
+      font-size: 1.1rem;
+    }
+
+    @media (max-width: 768px) {
+      font-size: 1rem;
+    }
+
+    @media (max-width: 426px) {
+      font-size: 1rem;
+    }
+
+    @media (max-width: 375px) {
+      font-size: 0.875rem;
+    }
+  }
+
+  .workout-page-exercises-container {
+    gap: 50px;
+    padding: 25px;
+    display: flex;
+    justify-content: center;
+    flex-flow: wrap row;
+  }
+}
+
+.workout-page-save-info-btn {
+  background-color: $accent;
+  color: $text;
+  border: none;
+  border-radius: 10px;
+  padding: 7px 14px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform 0.3s ease-in-out;
+
+  &:hover {
+    transform: translateY(-5px);
+  }
+
+  @media (max-width: 1024px) {
+    font-size: 0.875rem;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 0.875rem;
+  }
+
+  @media (max-width: 426px) {
+    font-size: 0.875rem;
+  }
+
+  @media (max-width: 375px) {
+    font-size: 0.75rem;
+  }
+}
+
+.workout-page-delete-icon {
+  color: #ff5555;
+  font-size: 1.5rem;
+  cursor: pointer;
+  margin-right: 5px;
+
+  @media (max-width: 1024px) {
+    font-size: 1.25rem !important;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 1.25rem !important;
+  }
+
+  @media (max-width: 426px) {
+    font-size: 1.25rem !important;
+  }
+
+  @media (max-width: 375px) {
+    font-size: 1.25rem !important;
+  }
+}
+
+.workout-page-edit-icon {
+  color: $accent;
+  font-size: 1.5rem;
+  cursor: pointer;
+
+  @media (max-width: 1024px) {
+    font-size: 1.25rem !important;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 1.25rem !important;
+  }
+
+  @media (max-width: 426px) {
+    font-size: 1.25rem !important;
+  }
+
+  @media (max-width: 375px) {
+    font-size: 1.25rem !important;
+  }
+}

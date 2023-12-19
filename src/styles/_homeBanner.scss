@@ -1,46 +1,99 @@
 .home-banner {
   text-align: center;
   height: 90vh;
+  transition: all 0.3s ease;
+
+  @media (max-width: 1024px) {
+    height: 80vh;
+  }
+
+  @media (max-width: 768px) {
+    height: 70vh;
+  }
+
+  @media (max-width: 425px) {
+    height: 70vh;
+  }
+
+  @media (max-width: 375px) {
+    height: 65vh;
+  }
 
   .home-img {
-    filter: brightness(70%) opacity(0.6);
-    width: 98vw;
+    filter: brightness(50%);
+    width: 100vw;
     height: 100vh;
     box-shadow: 0 0 20px 10px #000;
     object-fit: cover;
+    transition: all 0.3s ease;
+
+    @media (max-width: 1024px) {
+      height: 90vh;
+    }
+
+    @media (max-width: 768px) {
+      height: 80vh;
+    }
+
+    @media (max-width: 425px) {
+      height: 70vh;
+    }
+
+    @media (max-width: 375px) {
+      height: 65vh;
+    }
   }
 
   .img-text {
     position: absolute;
-    top: 50%;
+    top: 60%;
     left: 50%;
     transform: translate(-50%, -50%);
 
+    @media (max-width: 1024px) {
+      top: 50%;
+    }
+
+    @media (max-width: 768px) {
+      top: 48%;
+    }
+
+    @media (max-width: 425px) {
+      top: 45%;
+    }
+
+    @media (max-width: 375px) {
+      top: 40%;
+    }
+
     .home-banner-text {
-      font-size: 3.5rem;
+      width: 50vw;
+      font-size: 3rem;
       letter-spacing: 0.8px;
       text-transform: capitalize;
       font-family: "Roboto", sans-serif;
       font-weight: 900;
-      // font-size: clamp(3.4375rem, 3.25rem + 0.75vw, 3rem);
-      // text-shadow: 2px 2px 0 #3ea968, 4px 4px 0 #2e8f57, 6px 6px 0 #207b47,
-      //   8px 8px 0 #136836, 10px 10px 0 #084c26, 12px 12px 0 #003215,
-      //   14px 14px 6px rgba(0, 0, 0, 0.3);
-      // animation: neon 1.5s ease-in-out infinite alternate;
-      color: rgb(230, 230, 230) !important;
+      color: $text;
+      transition: all 0.3s ease;
 
-      // @keyframes neon {
-      //   from {
-      //     text-shadow: 2px 2px 5px #3ea968, 4px 4px 5px #2e8f57,
-      //       6px 6px 5px #207b47, 8px 8px 5px #136836, 10px 10px 5px #084c26,
-      //       12px 12px 5px #003215, 14px 14px 10px rgba(0, 0, 0, 0.6);
-      //   }
-      //   to {
-      //     text-shadow: 2px 2px 15px #3ea968, 4px 4px 15px #2e8f57,
-      //       6px 6px 15px #207b47, 8px 8px 15px #136836, 10px 10px 15px #084c26,
-      //       12px 12px 15px #003215, 14px 14px 20px rgba(0, 0, 0, 0.9);
-      //   }
-      // }
+      @media (max-width: 1024px) {
+        width: 55vw;
+        font-size: 2.5rem;
+      }
+
+      @media (max-width: 768px) {
+        width: 65vw;
+        font-size: 1.8rem;
+      }
+
+      @media (max-width: 425px) {
+        width: 80vw;
+        font-size: 1.7rem;
+      }
+
+      @media (max-width: 375px) {
+        font-size: 1.5rem;
+      }
     }
   }
 
@@ -48,112 +101,127 @@
     position: relative;
     display: inline-block;
     padding: 12px 24px;
-    background-color: #1ed760;
-    color: $background-theme-secondary;
+    background-color: $accent;
+    color: $text-secondary;
     border-radius: 6px;
     text-align: center;
     text-transform: uppercase;
     font-weight: bold;
     text-decoration: none;
     transition: all 0.3s ease;
-    // box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
     transform-style: preserve-3d;
-  }
+    margin-top: 10px;
 
-  .find-exercise-btn:before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-      45deg,
-      rgba(255, 255, 255, 0.2),
-      rgba(0, 0, 0, 0.1)
-    );
-    border-radius: 6px;
-    opacity: 0;
-    transform-origin: 50% 0%;
-    transform: scaleY(0.1) rotateX(90deg);
-    transition: all 0.3s ease;
-  }
-
-  .find-exercise-btn:hover {
-    background-color: #0f8c3f;
-    color: $text-theme;
-    // box-shadow: 0 8px 12px rgba(0, 0, 0, 0.3);
-    transform: translateY(-2px) translateZ(2px);
-  }
-
-  .find-exercise-btn:hover:before {
-    opacity: 1;
-    transform: scaleY(1) rotateX(0deg);
-  }
-
-  .find-exercise-btn:focus {
-    outline: none;
-    // box-shadow: 0 0 0 2px #000, 0 0 0 4px #1ed760;
-    transform: translateY(0px) translateZ(2px);
-  }
-
-  .find-exercise-btn:focus:before {
-    opacity: 1;
-    transform: scaleY(1) rotateX(0deg);
-  }
-}
-
-@media screen and (max-width: 1200px) {
-}
-@media screen and (max-width: 1024px) {
-}
-@media screen and (max-width: 768px) {
-  .home-banner {
-    // height: 70vh;
-    .img-text {
-      width: 250px;
-      .home-banner-text {
-        font-size: 2.3rem;
-      }
-    }
-
-    .find-exercise-btn {
-      padding: 8px 16px;
-    }
-  }
-}
-
-@media screen and (max-width: 480px) {
-  .home-banner {
-    // height: 70vh;
-    .img-text {
-      .home-banner-text {
-        font-size: 2rem;
-      }
-    }
-
-    .find-exercise-btn {
+    @media (max-width: 1024px) {
+      font-size: 1.2rem;
       padding: 10px 20px;
     }
-  }
-}
 
-@media screen and (max-width: 320px) {
-  .home-banner {
-    height: 85vh;
-    .home-img {
-      filter: brightness(70%) opacity(0.6);
-      height: 85vh;
-    }
-    .img-text {
-      .home-banner-text {
-        font-size: 2rem;
-      }
-    }
-
-    .find-exercise-btn {
+    @media (max-width: 768px) {
       font-size: 1rem;
+      padding: 8px 16px;
+    }
+
+    @media (max-width: 425px) {
+      font-size: 0.9rem;
       padding: 7px 14px;
     }
+
+    @media (max-width: 375px) {
+      font-size: 0.8rem;
+      padding: 6px 12px;
+    }
+
+    .find-exercise-btn:before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        45deg,
+        rgba(255, 255, 255, 0.2),
+        rgba(0, 0, 0, 0.1)
+      );
+      border-radius: 6px;
+      opacity: 0;
+      transform-origin: 50% 0%;
+      transform: scaleY(0.1) rotateX(90deg);
+      transition: all 0.3s ease;
+    }
+
+    .find-exercise-btn:hover {
+      background-color: $accent-hover;
+      color: $text;
+      // box-shadow: 0 8px 12px rgba(0, 0, 0, 0.3);
+      transform: translateY(-2px) translateZ(2px);
+    }
+
+    .find-exercise-btn:hover:before {
+      opacity: 1;
+      transform: scaleY(1) rotateX(0deg);
+    }
+
+    .find-exercise-btn:focus {
+      outline: none;
+      // box-shadow: 0 0 0 2px #000, 0 0 0 4px $accent;
+      transform: translateY(0px) translateZ(2px);
+    }
+
+    .find-exercise-btn:focus:before {
+      opacity: 1;
+      transform: scaleY(1) rotateX(0deg);
+    }
   }
+
+  // @media screen and (max-width: 768px) {
+  //   .home-banner {
+  //     // height: 70vh;
+  //     .img-text {
+  //       width: 250px;
+  //       .home-banner-text {
+  //         font-size: 2.3rem;
+  //       }
+  //     }
+
+  //     .find-exercise-btn {
+  //       padding: 8px 16px;
+  //     }
+  //   }
+  // }
+
+  // @media screen and (max-width: 480px) {
+  //   .home-banner {
+  //     // height: 70vh;
+  //     .img-text {
+  //       .home-banner-text {
+  //         font-size: 2rem;
+  //       }
+  //     }
+
+  //     .find-exercise-btn {
+  //       padding: 10px 20px;
+  //     }
+  //   }
+  // }
+
+  // @media screen and (max-width: 320px) {
+  //   .home-banner {
+  //     height: 85vh;
+  //     .home-img {
+  //       filter: brightness(70%) opacity(0.6);
+  //       height: 85vh;
+  //     }
+  //     .img-text {
+  //       .home-banner-text {
+  //         font-size: 2rem;
+  //       }
+  //     }
+
+  //     .find-exercise-btn {
+  //       font-size: 1rem;
+  //       padding: 7px 14px;
+  //     }
+  //   }
 }

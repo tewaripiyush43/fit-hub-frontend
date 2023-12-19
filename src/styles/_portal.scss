@@ -1,20 +1,55 @@
-.portal-type {
-  text-align: center;
+.overlay-style {
   position: fixed;
-  top: 12.5%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(2px);
+  z-index: 1000;
+  width: 100vw;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.model {
+  position: fixed;
+  top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: #292929;
-  //   padding: 20px;
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(2px);
   z-index: 1000;
+  background-color: $background;
+  max-height: 100vh; /* Set a max height for the modal */
+  overflow-y: auto; /* Allow vertical scrolling */
+}
 
+.portal-type {
+  text-align: center;
+  background-color: $background;
   display: flex;
   justify-content: space-around;
-  //   flex-direction: column;
   align-items: center;
-
   height: 50px;
   width: 400px;
+  transition: all 0.3s ease;
+
+  @media (max-width: 1024px) {
+    // width: 300px;
+  }
+
+  @media (max-width: 768px) {
+    // width: 250px;
+  }
+
+  @media (max-width: 425px) {
+    width: 350px;
+  }
+
+  @media (max-width: 375px) {
+    width: 300px;
+  }
 
   div {
     width: 100%;
@@ -24,14 +59,14 @@
     span {
       font-size: 1.2rem;
       font-weight: 700;
-      color: $text-theme;
+      color: $text;
     }
   }
 
   .login-selected {
-    background-color: #252525ba;
-    border-right: 3px solid $background-theme-primary;
-    border-bottom: 3px solid $background-theme-primary;
+    background-color: $background-transparent;
+    border-right: 3px solid $accent;
+    border-bottom: 3px solid $accent;
     border-bottom-right-radius: 50px;
 
     span {
@@ -39,9 +74,9 @@
     }
   }
   .signup-selected {
-    background-color: #252525ba;
-    border-left: 3px solid $background-theme-primary;
-    border-bottom: 3px solid $background-theme-primary;
+    background-color: $background-transparent;
+    border-left: 3px solid $accent;
+    border-bottom: 3px solid $accent;
     border-bottom-left-radius: 50px;
 
     span {

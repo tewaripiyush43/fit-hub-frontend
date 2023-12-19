@@ -1,36 +1,55 @@
+import "./styles/styles.scss";
 import React, { useState, useEffect } from "react";
-import { Route, Routes, useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { Route, Routes, useParams, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+import { ToastContainer } from "react-toastify";
 
 import Home from "./pages/Home";
 import Recipes from "./pages/Recipes";
+import ExercisePage from "./pages/ExercisePage";
+import ExercisesPage from "./pages/Exercises";
+import UserProfile from "./pages/UserProfile";
+import WorkoutPage from "./pages/WorkoutPage";
 
 import Navbar from "./components/Navbar";
 import Loader from "./components/Loader";
 
-import "./styles/styles.scss";
-// import Test from "./pages/Test";
-import ExercisePage from "./pages/ExercisePage";
-import ExercisesPage from "./pages/Exercises";
-
-import axios from "axios";
-import UserProfile from "./components/UserProfile";
+import "react-toastify/dist/ReactToastify.css";
+import { getUser } from "./api/authAPI";
 
 axios.defaults.withCredentials = true;
 
 function App() {
+  const dispatch = useDispatch();
+  const REACT_APP_BASE_URL = process.env.REACT_APP_BASE_URL;
+
   const [loading, setLoading] = useState(false);
-  const isLoggedIn = useSelector((state) => state.isLoggedIn);
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 
   useEffect(() => {
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
     }, 3000);
+
+    getUser(dispatch, REACT_APP_BASE_URL);
   }, []);
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      getUser(dispatch, REACT_APP_BASE_URL);
+    }
+  }, [isLoggedIn]);
 
   return (
     <div className="App">
+      <ToastContainer
+        theme="dark"
+        progressStyle={{
+          background: "red",
+        }}
+      />
       {loading ? (
         <Loader />
       ) : (
@@ -41,7 +60,11 @@ function App() {
             <Route path="/exercises/:search" element={<ExercisesPage />} />
             <Route path="/recipes" element={<Recipes />} />
             <Route path="/exercise/:id" element={<ExercisePage />} />
-            <Route path="/:username" element={<UserProfile />} />
+            <Route path="/:username/:page" element={<UserProfile />} />
+            <Route
+              path="/:username/:page/:id-:name"
+              element={<WorkoutPage />}
+            />
           </Routes>
         </div>
       )}

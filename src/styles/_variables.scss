@@ -1,35 +1,50 @@
+:root {
+  --swiper-navigation-size: 30px;
+}
+
 // //dark
-// $TEXT: #ffffff;
-// $BACKGROUND: #1d1d1d;
-// $PRIMARY-BUTTON: #ff6347;
-// $SECONDARY-BUTTON: #6c757d;
-// $ACCENT: #008080;
+// $text: #ffffff;
+// $background: #1d1d1d;
+// $primary-button: #ff6347;
+// $secondary-button: #6c757d;
+// $accent: #008080;
 
 // //neon
-// $TEXT: #f0f0f0;
-// $BACKGROUND: #2e2e2e;
-// $PRIMARY-BUTTON: #ff6eff;
-// $SECONDARY-BUTTON: #00ffd1;
-// $ACCENT: #ffca1c;
+// $text: #f0f0f0;
+// $background: #2e2e2e;
+// $primary-button: #ff6eff;
+// $secondary-button: #00ffd1;
+// $accent: #ffca1c;
 
 // //grainy
-// $TEXT: #ffffff;
-// $BACKGROUND: #404040;
-// $PRIMARY-BUTTON: #ff6347;
-// $SECONDARY-BUTTON: #808080;
-// $ACCENT: #00aeef;
+// $text: #ffffff;
+// $background: #404040;
+// $primary-button: #ff6347;
+// $secondary-button: #808080;
+// $accent: #00aeef;
 
 // //something else
-// $TEXT: #ffffff;
-// $BACKGROUND: #222222;
-// $PRIMARY-BUTTON: #ff4081;
-// $SECONDARY-BUTTON: #757575;
-// $ACCENT: #00bcd4;
+// $text: #ffffff;
+// $background: #222222;
+// $primary-button: #ff4081;
+// $secondary-button: #757575;
+// $accent: #00bcd4;
 
 //something
-$TEXT: #ffffff;
-$BACKGROUND: #333333;
-$BACKGROUND-TRANSPARENT: #333333ba;
-$PRIMARY-BUTTON: #ff6b6b;
-$SECONDARY-BUTTON: #808080;
-$ACCENT: #00b3e6;
+$text: #ffffff;
+$text-secondary: #000000;
+$background: #333333;
+$background-hover: #404040;
+$background-transparent: #333333ba;
+$primary-button: #ff6b6b;
+$primary-button-hover: #ff4d4d;
+$secondary-button: #808080;
+$secondary-button-hover: #a6a6a6;
+$accent: #00b3e6;
+$accent-hover: #00a3cc;
+
+$exercise-card-background: #191919;
+
+$background-input-field: #606060;
+$text-input-field: #c4c4c4;
+$text-input-field-secondary: #ccc;

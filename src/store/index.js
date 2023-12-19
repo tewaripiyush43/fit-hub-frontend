@@ -21,28 +21,41 @@ const portalSlice = createSlice({
   name: "portal",
   initialState: { isPortalOpen: false, isPortalTypeLogin: true },
   reducers: {
-    openPortal(state) {
+    setPortalOpen(state) {
+      document.documentElement.classList.add("modal-open");
       state.isPortalOpen = true;
     },
-    closePortal(state) {
+    setPortalClose(state) {
+      document.documentElement.classList.remove("modal-open");
       state.isPortalOpen = false;
     },
-    loginPortal(state) {
+    setPortalTypeLogin(state) {
       state.isPortalTypeLogin = true;
     },
-    signupPortal(state) {
+    setPortalTypeSignup(state) {
       state.isPortalTypeLogin = false;
+    },
+  },
+});
+
+const workoutSlice = createSlice({
+  name: "workout",
+  initialState: { workoutData: {} },
+  reducers: {
+    setWorkoutData(state, action) {
+      state.workoutData = action.payload;
     },
   },
 });
 
 export const authActions = authSlice.actions;
 export const portalActions = portalSlice.actions;
+export const workoutActions = workoutSlice.actions;
 
 export const store = configureStore({
-  //create reducers
   reducer: {
     auth: authSlice.reducer,
     portal: portalSlice.reducer,
+    workout: workoutSlice.reducer,
   },
 });

@@ -1,0 +1,62 @@
+.my-favorites-container {
+  padding: 40px 0px;
+  min-height: 86vh;
+  text-align: center;
+  width: 100%;
+
+  .my-favorites-title {
+    color: $text;
+    font-size: 1.8rem;
+    margin-bottom: 50px;
+
+    & span {
+      font-size: 2rem;
+      color: $accent;
+    }
+    & span:nth-child(2) {
+      font-size: 2rem;
+      color: $accent;
+    }
+
+    @media (max-width: 1024px) {
+      font-size: 1.75rem;
+    }
+
+    @media (max-width: 768px) {
+      font-size: 1.5rem;
+    }
+
+    @media (max-width: 426px) {
+      font-size: 1.5rem;
+    }
+
+    @media (max-width: 375px) {
+      font-size: 1.5rem;
+      margin-bottom: 30px;
+    }
+  }
+}
+
+.my-favorite-exercise-cards-container {
+  gap: 50px;
+  padding: 25px;
+  display: flex;
+  justify-content: center;
+  flex-flow: wrap row;
+
+  @media (max-width: 1024px) {
+    gap: 25px;
+  }
+
+  @media (max-width: 768px) {
+    gap: 25px;
+  }
+
+  @media (max-width: 426px) {
+    gap: 25px;
+  }
+
+  @media (max-width: 375px) {
+    gap: 25px;
+  }
+}

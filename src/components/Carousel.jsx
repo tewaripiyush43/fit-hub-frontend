@@ -24,15 +24,18 @@ const Carousel = ({ carouselData, setSearchByCarousel, carouselTitle }) => {
           centeredSlides={true}
           slidesPerView={"auto"}
           loop={true}
+          slideToClickedSlide={true}
           coverflowEffect={{
-            rotate: 50,
-            stretch: 0,
-            depth: 100,
+            rotate: 0,
+            stretch: 5,
+            // scale: 1,
+            depth: 250,
             modifier: 1,
             slideShadows: true,
           }}
           pagination={{
             clickable: "true",
+            dynamicBullets: "true",
           }}
           navigation={true}
           modules={[EffectCoverflow, Pagination, Navigation]}

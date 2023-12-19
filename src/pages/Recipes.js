@@ -8,7 +8,7 @@ const Recipes = () => {
   };
 
   return (
-    <div>
+    <div className="recipes-page-container">
       <div className="recipe-text">
         I TOLD YOU NOT TO CLICK...😡
         <p> NOW GO BACK. </p>

@@ -6,12 +6,12 @@ import axios from "axios";
 
 import Pagination from "@mui/material/Pagination";
 import SearchIcon from "@mui/icons-material/Search";
+import { useSelector } from "react-redux";
 
 /* Todays workout eg. if monday back bi, tuesday chest tri */
 
 const Exercises = ({ searchByCarousel }) => {
   const REACT_APP_BASE_URL = process.env.REACT_APP_BASE_URL;
-
   const [searchValue, setSearchValue] = useState("");
   const [suggestion, setSuggestion] = useState([]);
   const [exercises, setExercises] = useState([]);
@@ -20,6 +20,7 @@ const Exercises = ({ searchByCarousel }) => {
   const [searchClick, setSearchClick] = useState(false);
   const [dropdownActive, setDropdownActive] = useState(false);
   const [inputOpen, setInputOpen] = useState(false);
+  const user = useSelector((state) => state.auth.user);
 
   useEffect(() => {
     const getNames = async () => {
@@ -34,6 +35,7 @@ const Exercises = ({ searchByCarousel }) => {
   }, []);
 
   const handleInputChange = (e) => {
+    console.log("yo");
     const value = e.target.value;
     setSearchValue(value);
     searchByCarousel = "";
@@ -49,7 +51,9 @@ const Exercises = ({ searchByCarousel }) => {
         .get(
           `${REACT_APP_BASE_URL}/exercise/exercises?exercise=${searchValue}&page=${currentPage}`
         )
-        .then((res) => setExercises(res.data))
+        .then((res) => {
+          setExercises(res.data);
+        })
         .catch((err) => console.log(err.message));
     };
     fetchSearchResult();
@@ -82,6 +86,7 @@ const Exercises = ({ searchByCarousel }) => {
     const searchByCarouselClick = () => {
       setSearchValue(searchByCarousel);
       setSearchClick(!searchClick);
+      window.scrollTo(0, window.scrollY + 400);
     };
 
     if (searchByCarousel.length !== 0) {
@@ -94,6 +99,7 @@ const Exercises = ({ searchByCarousel }) => {
     if (inputOpen && searchValue.length === 0) {
       setInputOpen(false);
       setSearchClick(!searchClick);
+      setDropdownActive(false);
     } else if (inputOpen) {
       setCurrentPage(1);
       setSearchClick(!searchClick);
@@ -107,28 +113,31 @@ const Exercises = ({ searchByCarousel }) => {
   };
 
   return (
-    <div className="search-exercises">
-      <div className="search-bar">
-        <div className="exercises-input-dropdown">
-          {inputOpen && (
+    <div className="search-exercises-component-container">
+      <div className="search-exercises">
+        <div className="search-bar">
+          <div className="exercises-input-with-dropdown">
             <input
               type="text"
+              className={`exercises-input-search-bar ${
+                inputOpen ? "open-input" : ""
+              }`}
               value={searchValue}
               onChange={handleInputChange}
-              onFocus={() => setDropdownActive(true)}
-              onBlur={() =>
-                setTimeout(() => {
-                  setDropdownActive(false);
-                  if (searchValue.length === 0) setInputOpen(false);
-                }, 500)
-              }
+              onFocus={() => {
+                setDropdownActive(true);
+              }}
+              onBlur={() => {
+                setDropdownActive(false);
+              }}
               onKeyDown={handleKeyDown}
               placeholder="Search muscle, bodypart or exercise"
             />
-          )}
-          <div className="drop-down">
-            {dropdownActive &&
-              suggestion
+
+            <div
+              className={`drop-down ${dropdownActive ? "dropdown-active" : ""}`}
+            >
+              {suggestion
                 .filter((item) => {
                   const searchTerm = searchValue.toLocaleLowerCase();
                   const hasItem = item.name.toLocaleLowerCase();
@@ -152,34 +161,32 @@ const Exercises = ({ searchByCarousel }) => {
                   );
                 })
                 .slice(0, 10)}
+            </div>
           </div>
+          <button onClick={handleSearchBtnClick} className="search-button">
+            <SearchIcon className="search-icon" />
+          </button>
         </div>
-        <button onClick={handleSearchBtnClick} className="search-button">
-          <SearchIcon className="search-icon" />
-        </button>
+        <div className="exercises">
+          {exercises.map((exercise) => {
+            return (
+              <ExerciseCard
+                className="exercise-card"
+                key={exercise._id}
+                exerciseData={exercise}
+                animation={true}
+              />
+            );
+          })}
+        </div>
+        <Pagination
+          page={currentPage}
+          className="pagination"
+          count={totalPages}
+          defaultPage={1}
+          onChange={handlePageChange}
+        />
       </div>
-      <div className="exercises">
-        {exercises.map((exercise) => {
-          return (
-            <ExerciseCard
-              className="exercise-card"
-              key={exercise._id}
-              id={exercise._id}
-              exerciseImg={exercise.gifUrl}
-              bodyPart={exercise.bodyPart}
-              targetMuscle={exercise.target}
-              exercise={exercise.name}
-            />
-          );
-        })}
-      </div>
-      <Pagination
-        page={currentPage}
-        className="pagination"
-        count={totalPages}
-        defaultPage={1}
-        onChange={handlePageChange}
-      />
     </div>
   );
 };

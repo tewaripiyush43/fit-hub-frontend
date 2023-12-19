@@ -1,5 +1,5 @@
 import React from "react";
-import homeImg from "../assets/images/back-2.jpeg";
+import homeImg from "../assets/images/back.jpg";
 
 import { Link } from "react-router-dom";
 
@@ -9,7 +9,7 @@ const HomeBanner = () => {
       <img className="home-img" src={homeImg} alt="home-img"></img>
       <div className="img-text">
         <h2 className="home-banner-text">
-          Build a body like your favourite character
+          Build a body like your favorite character
         </h2>
         <Link to="/exercises/all" className={`find-exercise-btn btn-effect-3d`}>
           Find Exercises
