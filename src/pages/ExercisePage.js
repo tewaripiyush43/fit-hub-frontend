@@ -94,18 +94,21 @@ const ExercisePage = () => {
         <div className="exercise-info">
           <h3 className="exercise-info-name">{exercise?.name} </h3>
           <hr className="exercise-info-ruler" />
-          <p className="exercise-info-detail" style={{ marginBottom: "1rem" }}>
+          <div
+            className="exercise-info-detail"
+            style={{ marginBottom: "1rem" }}
+          >
             Target:
             <span className="exercise-info-target">
               {exercise?.target} &nbsp;
             </span>
             Secondary Muscles:
             {exercise?.secondaryMuscles?.map((muscle, index) => (
-              <spam className="exercise-info-target" key={index}>
+              <span className="exercise-info-target" key={index}>
                 {muscle},
-              </spam>
+              </span>
             ))}
-          </p>
+          </div>
           <ul className="exercise-page-info-instructions-list">
             <p className="exercise-info-detail" style={{ fontWeight: "bold" }}>
               Instructions :
