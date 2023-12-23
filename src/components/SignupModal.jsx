@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import ReactDom from "react-dom";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
@@ -35,25 +34,34 @@ const SignupModal = () => {
     }));
   };
 
+  useEffect(() => {
+    if (errorMessage.length > 0) {
+      // console.log(errorMessage);
+      errorPopUp(errorMessage);
+      setErrorMessage("");
+    }
+  }, [errorMessage]);
+
   const sendRegisterRequest = async () => {
     await axios
       .post(`${REACT_APP_BASE_URL}/auth/register`, {
-        username: inputs.username,
-        email: inputs.email,
+        username: inputs.username.toLocaleLowerCase(),
+        email: inputs.email.toLowerCase(),
         password: inputs.password,
       })
       .then((res) => {
-        if (res.data?.error?.status === 422) {
+        // console.log(res);
+        if (res.data?.error) {
           throw res.data?.error;
+        } else {
+          // console.log("User registered Successfully");
+          localStorage.setItem("accessToken", res.data.accessToken);
+          getUser(dispatch, REACT_APP_BASE_URL);
+          return;
         }
-        console.log(res.data);
-        console.log("User registered Successfully");
-        localStorage.setItem("accessToken", res.data.accessToken);
-        getUser(dispatch, REACT_APP_BASE_URL);
       })
       .catch((err) => {
         setErrorMessage(err.message);
-        errorPopUp(errorMessage);
       });
   };
 
@@ -87,7 +95,7 @@ const SignupModal = () => {
               className="login-form-input"
               type="text"
               value={inputs.username}
-              placeholder="What should we call you?"
+              placeholder="Username"
             />
             <UserOutlined className="login-page-icon" />
           </div>

@@ -1,5 +1,4 @@
 import React from "react";
-import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import ExerciseCard from "./ExerciseCard";
 
@@ -14,7 +13,11 @@ const MyFavorite = () => {
 
       <div className="my-favorite-exercise-cards-container">
         {user?.favoriteExercises?.map((exercise) => (
-          <ExerciseCard animation={true} exerciseData={exercise} />
+          <ExerciseCard
+            key={exercise._id}
+            animation={true}
+            exerciseData={exercise}
+          />
         ))}
       </div>
     </div>

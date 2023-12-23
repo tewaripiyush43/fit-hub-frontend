@@ -3,7 +3,6 @@ import UserProfileInfoCard from "./UserProfileInfoCard";
 
 import GoalComponent from "./GoalComponent";
 import WorkoutsSmallComponent from "./WorkoutsSmallComponent";
-import BmiCalculator from "./BmiCalculator";
 
 const MyProfile = () => {
   return (

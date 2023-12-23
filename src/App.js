@@ -17,13 +17,14 @@ import Loader from "./components/Loader";
 
 import "react-toastify/dist/ReactToastify.css";
 import { getUser } from "./api/authAPI";
+import PageNotFound from "./components/PageNotFound";
 
 axios.defaults.withCredentials = true;
 
 function App() {
   const dispatch = useDispatch();
   const REACT_APP_BASE_URL = process.env.REACT_APP_BASE_URL;
-
+  // console.log(REACT_APP_BASE_URL);
   const [loading, setLoading] = useState(false);
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 
@@ -31,7 +32,7 @@ function App() {
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
-    }, 3000);
+    }, 2000);
 
     getUser(dispatch, REACT_APP_BASE_URL);
   }, []);
@@ -65,6 +66,7 @@ function App() {
               path="/:username/:page/:id-:name"
               element={<WorkoutPage />}
             />
+            <Route path="*" element={<PageNotFound />} />
           </Routes>
         </div>
       )}

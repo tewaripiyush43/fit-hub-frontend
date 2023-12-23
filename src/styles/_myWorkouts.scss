@@ -111,15 +111,15 @@
   color: $text;
   text-align: center;
   display: flex;
-
   justify-content: center;
   align-items: center;
   cursor: pointer;
   border: 2px dashed $background-input-field;
 
   .create-new-workout-card-icon {
-    font-size: 5rem;
+    font-size: 3rem;
     color: $background-input-field;
+    // text-align: center;
     // padding: 20px;
   }
 

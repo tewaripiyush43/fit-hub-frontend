@@ -10,7 +10,7 @@ export const getUser = async (dispatch, REACT_APP_BASE_URL) => {
     if (!accessToken) {
       throw new Error("Access token not found");
     }
-    console.log(accessToken);
+    // console.log(accessToken);
 
     const response = await axios.get(`${REACT_APP_BASE_URL}/auth/private`, {
       withCredentials: true,
@@ -22,7 +22,7 @@ export const getUser = async (dispatch, REACT_APP_BASE_URL) => {
 
     const { data } = response;
     const status = data.error?.status;
-    console.log(data, status);
+    // console.log(data, status);
     if (status === 401) {
       if (!isRefreshing) {
         isRefreshing = true;
@@ -42,7 +42,7 @@ export const getUser = async (dispatch, REACT_APP_BASE_URL) => {
       dispatch(portalActions.setPortalClose());
     }
   } catch (error) {
-    console.error("Error fetching user data:", error);
+    // console.error("Error fetching user data:", error);
   }
 };
 
@@ -64,7 +64,7 @@ const handleTokenRefresh = async (dispatch, REACT_APP_BASE_URL) => {
       dispatch(authActions.logout());
       throw new Error("Token refresh failed");
     } else {
-      console.log(data);
+      // console.log(data);
       localStorage.setItem("accessToken", data.accessToken);
     }
   } catch (error) {

@@ -33,15 +33,15 @@ const UserProfileSmallCard = () => {
         <p>Explore your personal records in style!</p>
       </div>
       <div className="pr-list">
-        {prs.map((pr, index) => (
+        {prs?.map((pr, index) => (
           <div className="pr-item" key={index}>
-            <h3>{pr.exercise}</h3>
+            <h3>{pr?.exercise}</h3>
             {editIndex === index ? (
               <div className="edit-save-container">
                 <input
                   className="edit-input"
                   type="text"
-                  value={pr.maxWeight}
+                  value={pr?.maxWeight}
                   onChange={(e) => handleInputChange(e, index)}
                 />
                 <button
@@ -53,7 +53,7 @@ const UserProfileSmallCard = () => {
               </div>
             ) : (
               <div>
-                <p>Max Weight: {pr.maxWeight}</p>
+                <p>Max Weight: {pr?.maxWeight}</p>
                 <button
                   className="edit-button"
                   onClick={() => handleEditClick(index)}

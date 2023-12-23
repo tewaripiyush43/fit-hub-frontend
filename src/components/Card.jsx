@@ -2,14 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import FitnessCenterRoundedIcon from "@mui/icons-material/FitnessCenterRounded";
 
-const Card = ({
-  imgUrl,
-  title,
-  description,
-  buttonText,
-  textColor,
-  cardTitle,
-}) => {
+const Card = ({ imgUrl, title, description, buttonText, cardTitle }) => {
   const navigate = useNavigate();
 
   const handleOnclick = () => {
@@ -22,8 +15,6 @@ const Card = ({
     <>
       <div className="card">
         {<img className="card-img" src={imgUrl} alt="pic" />}
-        {/* ToDo card title and card flip on hover animation*/}
-        {/*<FitnessCenterRoundedIcon className="card-img" />*/}
         <p className="card-title">{cardTitle}</p>
         <div className="card-content">
           <h1 className="card-decription-title">{title}</h1>

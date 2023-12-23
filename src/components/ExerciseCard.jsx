@@ -8,6 +8,7 @@ import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
 import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "../store/index.js";
 import axios from "axios";
+import { errorPopUp } from "../helpers/errorPopUp.js";
 
 import {
   addWorkout,
@@ -32,9 +33,17 @@ const ExerciseCard = ({
   const [isFavorite, setIsFavorite] = useState(false);
   const user = useSelector((state) => state.auth.user);
   const workoutData = useSelector((state) => state.workout.workoutData);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const { _id, bodyPart, target, gifUrl, name } = exerciseData;
   // console.log(exerciseData);
+
+  useEffect(() => {
+    if (errorMessage.length > 0) {
+      errorPopUp(errorMessage);
+      setErrorMessage("");
+    }
+  }, [errorMessage]);
 
   const bodyPartPage = () => {
     navigate(`/exercises/${bodyPart}`);
@@ -72,13 +81,15 @@ const ExerciseCard = ({
         window.location.reload();
         throw new Error("Unauthorized");
       }
-      console.log(response);
+      // console.log(response);
       // console.log(data, status);
       if (status === 201) {
         dispatch(authActions.setUser(data.user));
+        setIsFavorite(true);
       }
     } catch (err) {
-      console.log(err);
+      // console.log(err);
+      setErrorMessage("Something went wrong. Please try again later.");
     }
   }
 
@@ -106,13 +117,15 @@ const ExerciseCard = ({
         window.location.reload();
         throw new Error("Unauthorized");
       }
-      console.log(response);
+      // console.log(response);
       // console.log(data, status);
       if (status === 201) {
         dispatch(authActions.setUser(data.user));
+        setIsFavorite(false);
       }
     } catch (err) {
-      console.log(err);
+      // console.log(err);
+      setErrorMessage("Something went wrong. Please try again later.");
     }
   }
 
@@ -163,12 +176,12 @@ const ExerciseCard = ({
         newWorkoutInput,
         REACT_APP_BASE_URL
       );
-      await addExerciseToWorkout(dispatch, workoutId, _id, REACT_APP_BASE_URL);
 
       setTakingInput(!takingInput);
       setNewWorkoutInput("");
     } catch (error) {
-      console.error("Error creating workout or adding exercise:", error);
+      // console.error("Error creating workout or adding exercise:", error);
+      setErrorMessage("Something went wrong. Please try again later.");
     }
   };
 
@@ -221,7 +234,7 @@ const ExerciseCard = ({
                       key={workout._id}
                       onClick={(e) => {
                         e.preventDefault();
-                        console.log("adding exercise to workout");
+                        // console.log("adding exercise to workout");
                         addExerciseToWorkout(
                           dispatch,
                           workout._id,

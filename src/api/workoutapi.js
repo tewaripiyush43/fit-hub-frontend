@@ -24,19 +24,20 @@ export const addWorkout = async (dispatch, workoutName, REACT_APP_BASE_URL) => {
       throw new Error("Unauthorized");
     }
     // console.log(response);
-    console.log(data.user, status);
+    // console.log(data.user, status);
     if (status === 201) {
       dispatch(authActions.setUser(data.user));
-      console.log(data.workoutId);
+      // console.log(data.workoutId);
       return data.workoutId;
     }
   } catch (error) {
-    console.error("Error fetching user data:", error);
+    // console.error("Error fetching user data:", error);
   }
 };
 
 export const fetchWorkout = async (dispatch, workoutId, REACT_APP_BASE_URL) => {
   try {
+    // console.log("fetchWorkout function called");
     const accessToken = localStorage.accessToken;
     if (!accessToken) throw new Error("Access token not found");
 
@@ -56,13 +57,13 @@ export const fetchWorkout = async (dispatch, workoutId, REACT_APP_BASE_URL) => {
       window.location.reload();
       throw new Error("Unauthorized");
     }
-    console.log(response);
+    // console.log(response);
     // console.log(data, status);
     if (status === 201) {
       dispatch(workoutActions.setWorkoutData(data.workout));
     }
   } catch (err) {
-    console.log(err);
+    // console.log(err);
   }
 };
 
@@ -91,14 +92,14 @@ export const deleteWorkout = async (
       window.location.reload();
       throw new Error("Unauthorized");
     }
-    console.log(response);
+    // console.log(response);
     // console.log(data, status);
     if (status === 201) {
       dispatch(authActions.setUser(data.user));
       dispatch(workoutActions.setWorkoutData(null));
     }
   } catch (err) {
-    console.log(err);
+    // console.log(err);
   }
 };
 
@@ -109,12 +110,18 @@ export const updateWorkout = async (
   REACT_APP_BASE_URL
 ) => {
   try {
+    // console.log("updateWorkout function called");
     const accessToken = localStorage.accessToken;
     if (!accessToken) throw new Error("Access token not found");
 
     const response = await axios.put(
       `${REACT_APP_BASE_URL}/workout/update/${workoutId}`,
-      { updatedData },
+      {
+        updatedData: {
+          name: updatedData.name,
+          description: updatedData.description,
+        },
+      },
       {
         withCredentials: true,
         headers: {
@@ -129,14 +136,14 @@ export const updateWorkout = async (
       window.location.reload();
       throw new Error("Unauthorized");
     }
-    console.log(response);
+    // console.log(response);
     // console.log(data, status);
     if (status === 201) {
       dispatch(workoutActions.setWorkoutData(data.workout));
       dispatch(authActions.setUser(data.user));
     }
   } catch (err) {
-    console.log(err);
+    // console.log(err);
   }
 };
 
@@ -147,7 +154,7 @@ export const addExerciseToWorkout = async (
   REACT_APP_BASE_URL
 ) => {
   try {
-    console.log("addExerciseToWorkout");
+    // console.log("addExerciseToWorkout");
     const accessToken = localStorage.accessToken;
     if (!accessToken) throw new Error("Access token not found");
 
@@ -168,14 +175,14 @@ export const addExerciseToWorkout = async (
       window.location.reload();
       throw new Error("Unauthorized");
     }
-    console.log(response);
+    // console.log(response);
     // console.log(data, status);
     if (status === 201) {
       dispatch(workoutActions.setWorkoutData(data.workout));
       dispatch(authActions.setUser(data.user));
     }
   } catch (err) {
-    console.log(err);
+    // console.log(err);
   }
 };
 
@@ -206,13 +213,13 @@ export const removeExerciseFromWorkout = async (
       window.location.reload();
       throw new Error("Unauthorized");
     }
-    console.log(response);
+    // console.log(response);
     // console.log(data, status);
     if (status === 201) {
       dispatch(workoutActions.setWorkoutData(data.workout));
       dispatch(authActions.setUser(data.user));
     }
   } catch (err) {
-    console.log(err);
+    // console.log(err);
   }
 };

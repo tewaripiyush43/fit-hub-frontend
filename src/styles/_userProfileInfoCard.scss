@@ -80,7 +80,7 @@
 }
 
 .username {
-  font-size: 2rem;
+  font-size: 1.7rem;
   color: $accent;
   margin: 0;
   transition: all 0.5s ease-in-out;
@@ -126,6 +126,7 @@
 }
 
 .user-bio {
+  position: relative;
   background-color: $background-input-field;
   border-radius: 10px;
   padding: 20px;
@@ -149,9 +150,37 @@
     padding: 10px;
   }
 
+  .total-user-bio-characters {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    font-size: 1rem;
+    color: $text-input-field;
+    margin: 0;
+    transition: all 0.5s ease-in-out;
+
+    @media (max-width: 1024px) {
+      font-size: 0.875rem;
+    }
+
+    @media (max-width: 768px) {
+      font-size: 0.875rem;
+    }
+
+    @media (max-width: 426px) {
+      font-size: 0.875rem;
+    }
+
+    @media (max-width: 375px) {
+      font-size: 0.75rem;
+    }
+  }
+
   .user-bio-textarea {
     width: 100%;
     min-height: 30px;
+    max-height: 20%;
+    height: auto;
     border: none;
     padding: 0;
     background-color: $background-input-field;
@@ -182,22 +211,30 @@
 }
 
 .user-details {
+  width: 100%;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
   gap: 18px;
 }
 
 .user-profile-detail {
-  // max-width: max-content;
+  // min-width: 25%;
+  // min-width: fit-content;
+  // max-width: 60%;
+  // width: 30%;
+  // width: auto;
   background-color: $accent;
   color: $text;
   border-radius: 10px;
   padding: 10px;
-  text-align: center;
   flex-grow: 1;
   transition: all 0.3s ease-in-out;
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .user-profile-detail:hover {
@@ -206,9 +243,36 @@
 
 .user-profile-detail-label {
   font-weight: bold;
-  font-size: 1rem;
+  font-size: 0.8rem;
   margin-bottom: 5px;
+  font-weight: bold;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
   transition: all 0.5s ease-in-out;
+
+  @media (max-width: 1024px) {
+    font-size: 0.75rem;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 0.75rem;
+  }
+
+  @media (max-width: 426px) {
+    font-size: 0.75rem;
+  }
+
+  @media (max-width: 375px) {
+    font-size: 0.625rem;
+  }
+}
+
+.user-profile-detail-value {
+  font-size: 1rem;
+  margin-top: 5px;
+  margin: 0;
+  transition: all 0.5s ease-in-out;
+  font-weight: bold;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
 
   @media (max-width: 1024px) {
     font-size: 0.875rem;
@@ -227,11 +291,14 @@
   }
 }
 
-.user-profile-detail-value {
+.user-profile-detail-value-input {
+  width: 100%;
   font-size: 1rem;
-  margin-top: 5px;
-  margin: 0;
-  transition: all 0.5s ease-in-out;
+  background-color: $background-input-field;
+  border: none;
+  border-radius: 10px;
+  padding: 5px 10px;
+  color: $text;
 
   @media (max-width: 1024px) {
     font-size: 0.875rem;
@@ -247,15 +314,6 @@
 
   @media (max-width: 375px) {
     font-size: 0.75rem;
-  }
-
-  &.editable {
-    cursor: text;
-    outline: none;
-
-    &:focus {
-      background-color: $accent-hover;
-    }
   }
 }
 

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import DetailSection from "../components/DetailsSection";
 import FormatQuoteOutlinedIcon from "@mui/icons-material/FormatQuoteOutlined";
+import { errorPopUp } from "../helpers/errorPopUp";
 
 import axios from "axios";
 const ExercisePage = () => {
@@ -12,17 +13,21 @@ const ExercisePage = () => {
   const [exercise, setexercise] = useState("");
   const [exercisesForBodyPart, setExercisesForBodyPart] = useState([]);
   const [exercisesForMuscle, setExercisesForMuscle] = useState([]);
+  const [errorMessage, setErrorMessage] = useState({});
 
   const findExercise = async () => {
     await axios
       .get(`${REACT_APP_BASE_URL}/exercise/findex/${id}`)
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         setexercise(res.data);
         findExercisesByBodyPart(res.data.bodyPart);
         findExercisesByMuscle(res.data.target);
       })
-      .catch((err) => console.log(err.message));
+      .catch((err) => {
+        // console.log(err.message);
+        setErrorMessage("Something went wrong. Please try again.");
+      });
   };
 
   const findExercisesByBodyPart = async (bodyPart) => {
@@ -31,7 +36,10 @@ const ExercisePage = () => {
       .then((res) => {
         setExercisesForBodyPart(res.data);
       })
-      .catch((err) => console.log(err.message));
+      .catch((err) => {
+        // console.log(err.message);
+        setErrorMessage("Something went wrong. Please try again.");
+      });
   };
 
   const findExercisesByMuscle = async (muscle) => {
@@ -40,8 +48,18 @@ const ExercisePage = () => {
       .then((res) => {
         setExercisesForMuscle(res.data);
       })
-      .catch((err) => console.log(err.message));
+      .catch((err) => {
+        // console.log(err.message);
+        setErrorMessage("Something went wrong. Please try again.");
+      });
   };
+
+  useEffect(() => {
+    if (errorMessage.length > 0) {
+      errorPopUp(errorMessage);
+      setErrorMessage("");
+    }
+  }, [errorMessage]);
 
   useEffect(() => {
     findExercise();
@@ -55,7 +73,7 @@ const ExercisePage = () => {
     });
   }, []);
 
-  console.log(id);
+  // console.log(id);
   return (
     <div className="exercise-page">
       <div className="quote-container">
@@ -76,7 +94,18 @@ const ExercisePage = () => {
         <div className="exercise-info">
           <h3 className="exercise-info-name">{exercise?.name} </h3>
           <hr className="exercise-info-ruler" />
-
+          <p className="exercise-info-detail" style={{ marginBottom: "1rem" }}>
+            Target:
+            <span className="exercise-info-target">
+              {exercise?.target} &nbsp;
+            </span>
+            Secondary Muscles:
+            {exercise?.secondaryMuscles?.map((muscle, index) => (
+              <spam className="exercise-info-target" key={index}>
+                {muscle},
+              </spam>
+            ))}
+          </p>
           <ul className="exercise-page-info-instructions-list">
             <p className="exercise-info-detail" style={{ fontWeight: "bold" }}>
               Instructions :

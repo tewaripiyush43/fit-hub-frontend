@@ -32,27 +32,28 @@
 
 .goal-edit-icon-container {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 15px;
+  right: 15px;
+  transition: all 0.5s ease-in-out;
 
   @media (max-width: 1024px) {
-    top: 5px;
-    right: 5px;
+    top: 10px;
+    right: 10px;
   }
 
   @media (max-width: 768px) {
-    top: 5px;
-    right: 5px;
+    top: 10px;
+    right: 10px;
   }
 
   @media (max-width: 426px) {
-    top: 5px;
-    right: 5px;
+    top: 10px;
+    right: 10px;
   }
 
   @media (max-width: 375px) {
-    top: 5px;
-    right: 5px;
+    top: 9px;
+    right: 10px;
   }
 }
 
@@ -75,11 +76,13 @@
   }
 
   @media (max-width: 768px) {
-    font-size: 0.875rem;
+    font-size: 0.8rem;
+    padding: 6px 12px;
   }
 
   @media (max-width: 426px) {
-    font-size: 0.875rem;
+    font-size: 0.8rem;
+    padding: 5px 10px;
   }
 
   @media (max-width: 375px) {
@@ -169,6 +172,22 @@
 
 .goal-content {
   padding: 0 20px;
+
+  @media (max-width: 1024px) {
+    padding: 0 20px;
+  }
+
+  @media (max-width: 768px) {
+    padding: 0 20px;
+  }
+
+  @media (max-width: 426px) {
+    padding: 0 10px;
+  }
+
+  @media (max-width: 375px) {
+    padding: 0 10px;
+  }
 }
 
 .goal-text-input {
@@ -240,13 +259,46 @@
 }
 
 .goal-input {
-  // width: 80%;
-  // padding: 12px;
+  width: 100%;
+  padding: 5px;
   border: none;
   border-radius: 5px;
-  font-size: 1rem;
-  margin-bottom: 12px;
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  background-color: $background-input-field;
   color: $text;
+  outline: none;
+  text-transform: uppercase;
+  font-weight: bold;
+  transition: all 0.5s ease-in-out;
+
+  &:-webkit-autofill {
+    box-shadow: 0 0 0 50px $background-input-field inset;
+    -webkit-text-fill-color: $text;
+    color: $text;
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 50px $background-input-field inset;
+    color: $text;
+    -webkit-text-fill-color: $text;
+  }
+
+  @media (max-width: 1024px) {
+    font-size: 1rem;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 0.875rem;
+  }
+
+  @media (max-width: 426px) {
+    font-size: 0.875rem;
+  }
+
+  @media (max-width: 375px) {
+    font-size: 0.75rem;
+  }
 }
 
 .progress-bar {
@@ -260,6 +312,7 @@
   height: 100%;
   border-radius: 10px;
   background: linear-gradient(to right, #00b3e6, #00a3cc);
+  transition: width 0.3s ease-in-out;
 }
 
 .progress-dates {
@@ -280,6 +333,22 @@
   // font-size: 1rem;
   // margin-bottom: 12px;
   // color: $text;
+
+  @media (max-width: 1024px) {
+    font-size: 0.875rem;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 0.875rem;
+  }
+
+  @media (max-width: 426px) {
+    font-size: 0.875rem;
+  }
+
+  @media (max-width: 375px) {
+    font-size: 0.75rem;
+  }
 }
 
 .goal-date {

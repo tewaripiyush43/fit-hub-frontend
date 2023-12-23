@@ -87,6 +87,30 @@
   }
 }
 
+.wsc-no-workouts {
+  text-align: center;
+  font-size: 1.5rem;
+  margin: 20px;
+  color: $text;
+  transition: all 0.5s ease-in-out;
+
+  @media (max-width: 1024px) {
+    font-size: 1.25rem;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 1.125rem;
+  }
+
+  @media (max-width: 426px) {
+    font-size: 1.125rem;
+  }
+
+  @media (max-width: 375px) {
+    font-size: 1rem;
+  }
+}
+
 .wsc-btn {
   background-color: $accent;
   border-radius: 50px;

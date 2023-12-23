@@ -6,7 +6,8 @@ import axios from "axios";
 
 import Pagination from "@mui/material/Pagination";
 import SearchIcon from "@mui/icons-material/Search";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
+import { errorPopUp } from "../helpers/errorPopUp";
 
 /* Todays workout eg. if monday back bi, tuesday chest tri */
 
@@ -20,30 +21,23 @@ const Exercises = ({ searchByCarousel }) => {
   const [searchClick, setSearchClick] = useState(false);
   const [dropdownActive, setDropdownActive] = useState(false);
   const [inputOpen, setInputOpen] = useState(false);
-  const user = useSelector((state) => state.auth.user);
+  const [errorMessage, setErrorMessage] = useState("");
+  // const user = useSelector((state) => state.auth.user);
 
   useEffect(() => {
     const getNames = async () => {
       await axios
         .get(`${REACT_APP_BASE_URL}/exercise/fetchnames`)
         .then((res) => setSuggestion(res.data))
-        .catch((err) => console.log(err.message));
+        .catch((err) => {
+          // console.log(err.message)
+          setErrorMessage("Something went wrong. Please try again later.");
+        });
     };
 
     setInputOpen(false);
     getNames();
   }, []);
-
-  const handleInputChange = (e) => {
-    console.log("yo");
-    const value = e.target.value;
-    setSearchValue(value);
-    searchByCarousel = "";
-  };
-
-  const handlePageChange = (e, value) => {
-    setCurrentPage(value);
-  };
 
   useEffect(() => {
     const fetchSearchResult = async () => {
@@ -54,7 +48,10 @@ const Exercises = ({ searchByCarousel }) => {
         .then((res) => {
           setExercises(res.data);
         })
-        .catch((err) => console.log(err.message));
+        .catch((err) => {
+          // console.log(err.message);
+          setErrorMessage("Something went wrong. Please try again later.");
+        });
     };
     fetchSearchResult();
   }, [currentPage]);
@@ -66,7 +63,10 @@ const Exercises = ({ searchByCarousel }) => {
           `${REACT_APP_BASE_URL}/exercise/fetchCount?exercise=${searchValue}`
         )
         .then((res) => setTotalPages(Math.ceil(res.data / 9)))
-        .catch((err) => console.log(err.message));
+        .catch((err) => {
+          // console.log(err.message);
+          setErrorMessage("Something went wrong. Please try again later.");
+        });
     };
 
     const fetchSearchResult = async () => {
@@ -75,7 +75,10 @@ const Exercises = ({ searchByCarousel }) => {
           `${REACT_APP_BASE_URL}/exercise/exercises?exercise=${searchValue}&page=${currentPage}`
         )
         .then((res) => setExercises(res.data))
-        .catch((err) => console.log(err.message));
+        .catch((err) => {
+          // console.log(err.message);
+          setErrorMessage("Something went wrong. Please try again later.");
+        });
     };
 
     fetchCount();
@@ -94,6 +97,24 @@ const Exercises = ({ searchByCarousel }) => {
       searchByCarouselClick();
     }
   }, [searchByCarousel]);
+
+  useEffect(() => {
+    if (errorMessage.length > 0) {
+      errorPopUp(errorMessage);
+      setErrorMessage("");
+    }
+  }, [errorMessage]);
+
+  const handleInputChange = (e) => {
+    // console.log("yo");
+    const value = e.target.value;
+    setSearchValue(value);
+    searchByCarousel = "";
+  };
+
+  const handlePageChange = (e, value) => {
+    setCurrentPage(value);
+  };
 
   const handleSearchBtnClick = (e, value) => {
     if (inputOpen && searchValue.length === 0) {
@@ -138,13 +159,13 @@ const Exercises = ({ searchByCarousel }) => {
               className={`drop-down ${dropdownActive ? "dropdown-active" : ""}`}
             >
               {suggestion
-                .filter((item) => {
+                ?.filter((item) => {
                   const searchTerm = searchValue.toLocaleLowerCase();
                   const hasItem = item.name.toLocaleLowerCase();
 
                   return searchTerm && hasItem.includes(searchTerm);
                 })
-                .map(({ _id, name }) => {
+                ?.map(({ _id, name }) => {
                   return (
                     name !== searchValue && (
                       <div
@@ -160,7 +181,7 @@ const Exercises = ({ searchByCarousel }) => {
                     )
                   );
                 })
-                .slice(0, 10)}
+                ?.slice(0, 10)}
             </div>
           </div>
           <button onClick={handleSearchBtnClick} className="search-button">
@@ -168,7 +189,7 @@ const Exercises = ({ searchByCarousel }) => {
           </button>
         </div>
         <div className="exercises">
-          {exercises.map((exercise) => {
+          {exercises?.map((exercise) => {
             return (
               <ExerciseCard
                 className="exercise-card"

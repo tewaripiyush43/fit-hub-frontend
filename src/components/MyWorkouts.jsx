@@ -8,7 +8,7 @@ const MyWorkouts = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
-  console.log(user);
+  // console.log(user);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -26,9 +26,7 @@ const MyWorkouts = () => {
               <h2 className="workout-card-title">{workout?.name}</h2>
               <div className="workout-card-content">
                 <p className="workout-card-description">
-                  I will do this exercises on Monday I will do this exercises on
-                  Monday I will do this exercises on Monday I will do this
-                  exercises on Monday I will do this exercises on Monday I will
+                  {workout?.description}
                 </p>
                 <div className="workout-card-btn-container">
                   <p className="workout-card-exercises">

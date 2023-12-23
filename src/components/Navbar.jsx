@@ -35,13 +35,13 @@ const Navbar = () => {
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
     setAccountMenuClicked(true);
-    console.log(accountMenuClicked);
+    // console.log("onClick", accountMenuClicked);
     document.body.classList.add("account-menu-custom-style");
   };
   const handleDropDownClose = () => {
     setAnchorEl(null);
     setAccountMenuClicked(false);
-    console.log(accountMenuClicked);
+    // console.log("onClose", accountMenuClicked);
     document.body.classList.remove("account-menu-custom-style");
   };
   const takeToHomePage = () => {
@@ -53,6 +53,7 @@ const Navbar = () => {
   };
 
   const sendLogoutReq = async () => {
+    // console.log("logout");
     await axios
       .post(`${REACT_APP_BASE_URL}/auth/logout`, {
         withCredentials: true,
@@ -62,9 +63,9 @@ const Navbar = () => {
           localStorage.clear();
           dispatch(authActions.logout());
           dispatch(authActions.setUser({}));
-          // localStorage.removeItem("accessToken");
           navigate(`/`);
-          console.log(isLoggedIn);
+          // console.log(isLoggedIn);
+          handleDropDownClose();
           return;
         }
         return new Error("Unable to log out. Please try again");
@@ -90,7 +91,7 @@ const Navbar = () => {
     <div>
       <nav id="nav">
         <h2 onClick={takeToHomePage} id="heading">
-          FlexHubX
+          FitHub
         </h2>
 
         <div className="links">
@@ -104,7 +105,7 @@ const Navbar = () => {
               </h3>
               {isLoggedIn && (
                 <h3
-                  onClick={() => navigate(`/${user.username}/myworkouts`)}
+                  onClick={() => navigate(`/${user?.username}/myworkouts`)}
                   className="link"
                 >
                   My Workouts
@@ -135,7 +136,7 @@ const Navbar = () => {
                     className="profile-avatar"
                     sx={{ width: 32, height: 32 }}
                   >
-                    {user?.username[0].toUpperCase()}
+                    {user?.username[0]?.toUpperCase()}
                   </Avatar>
                 </IconButton>
               </Tooltip>
@@ -144,19 +145,18 @@ const Navbar = () => {
                 id="account-menu"
                 className="account-menu"
                 open={open}
-                onClose={handleDropDownClose}
                 onClick={handleDropDownClose}
                 transformOrigin={{ horizontal: "right", vertical: "top" }}
                 anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
               >
                 {isMobile && (
-                  <>
+                  <div>
                     <MenuItem onClick={takeToExercisesPage}>Exercises</MenuItem>
                     <MenuItem onClick={() => navigate(`/recipes`)}>
                       Recipes
                     </MenuItem>
                     <Divider className="line" />
-                  </>
+                  </div>
                 )}
                 <MenuItem
                   onClick={() => {
@@ -166,28 +166,26 @@ const Navbar = () => {
                 >
                   <Avatar className="account-menu-dropdown-icon" /> Profile
                 </MenuItem>
-                <MenuItem onClick={handleDropDownClose}>
-                  <Avatar className="account-menu-dropdown-icon" /> My account
-                </MenuItem>
-                <MenuItem onClick={handleDropDownClose}>
+                <MenuItem
+                  onClick={() => {
+                    handleDropDownClose();
+                    navigate(`/${user?.username}/myfavorite`);
+                  }}
+                >
                   <FavoriteIcon className="account-menu-dropdown-icon" />{" "}
                   Favorites
                 </MenuItem>
-                <MenuItem onClick={handleDropDownClose}>
+                <MenuItem
+                  onClick={() => {
+                    handleDropDownClose();
+                    navigate(`/${user?.username}/myworkouts`);
+                  }}
+                >
                   <ListAltIcon className="account-menu-dropdown-icon" /> My
                   workouts
                 </MenuItem>
                 <Divider className="line" />
-                <MenuItem onClick={handleDropDownClose}>
-                  <ListItemIcon>
-                    <Settings
-                      className="account-menu-dropdown-icon"
-                      fontSize="small"
-                    />
-                  </ListItemIcon>
-                  Settings
-                </MenuItem>
-                <MenuItem onClick={handleDropDownClose}>
+                <MenuItem>
                   <ListItemIcon>
                     <Logout
                       className="account-menu-dropdown-icon"

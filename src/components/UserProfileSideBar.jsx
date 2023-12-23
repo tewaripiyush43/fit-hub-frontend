@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { authActions } from "../store/index.js";
 import axios from "axios";
 import ConfirmationPopup from "../components/ConfirmationPopUp.jsx";
@@ -11,7 +11,6 @@ const UserProfileSideBar = () => {
   const dispatch = useDispatch();
   const sidebarRef = useRef(null);
   const { username, page } = useParams();
-  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const [isSidebarShown, setIsSidebarShown] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
 
@@ -31,7 +30,6 @@ const UserProfileSideBar = () => {
     { id: "1", name: "My Profile" },
     { id: "2", name: "My Workouts" },
     { id: "3", name: "My Favorite" },
-    { id: "4", name: "Logout" },
   ];
 
   const currPage = {
@@ -66,7 +64,7 @@ const UserProfileSideBar = () => {
           dispatch(authActions.logout());
           dispatch(authActions.setUser({}));
           navigate(`/`);
-          console.log(isLoggedIn);
+          // console.log(isLoggedIn);
           return;
         }
         return new Error("Unable to delete account. Please try again");

@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
-import { fetchWorkout, deleteWorkout } from "../api/workoutapi";
+import { fetchWorkout, deleteWorkout, updateWorkout } from "../api/workoutapi";
+import { workoutActions } from "../store/index";
 import ExerciseCard from "../components/ExerciseCard";
-import { workoutActions } from "../store";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
 import ConfirmationPopup from "../components/ConfirmationPopUp";
@@ -11,17 +11,12 @@ import ConfirmationPopup from "../components/ConfirmationPopUp";
 const WorkoutPage = () => {
   const REACT_APP_BASE_URL = process.env.REACT_APP_BASE_URL;
   const navigate = useNavigate();
-  const { username, page, name, id } = useParams();
+  const { username, id } = useParams();
   const dispatch = useDispatch();
   const workoutData = useSelector((state) => state.workout.workoutData);
-  const user = useSelector((state) => state.auth.user);
   const [editMode, setEditMode] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
-  const [workoutState, setWorkoutState] = useState({
-    name: "",
-    description: "",
-    exercises: [],
-  });
+  const textareaRef = useRef(null);
 
   useEffect(() => {
     fetchWorkout(dispatch, id, REACT_APP_BASE_URL);
@@ -29,13 +24,30 @@ const WorkoutPage = () => {
 
   function handleChange(e) {
     const { name, value } = e.target;
-    setWorkoutState((prev) => {
-      return {
-        ...prev,
+    dispatch(
+      workoutActions.setWorkoutData({
+        ...workoutData,
         [name]: value,
-      };
-    });
+      })
+    );
+    if (name === "description" && editMode) {
+      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.height =
+        textareaRef.current.scrollHeight + "px";
+    }
   }
+
+  // useEffect(() => {
+  //   console.log("Workout data changed:", workoutData);
+  // }, [workoutData]);
+
+  useEffect(() => {
+    if (editMode) {
+      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.height =
+        textareaRef.current.scrollHeight + "px";
+    }
+  }, [editMode]);
 
   return (
     <div className="workout-page">
@@ -50,14 +62,16 @@ const WorkoutPage = () => {
           }}
         />
       )}
-      <p
-        name="name"
-        onInput={(e) => handleChange(e)}
-        contentEditable={editMode}
-        className="workout-page-title"
-      >
-        {workoutData?.name}
-      </p>
+      {editMode ? (
+        <input
+          name="name"
+          value={workoutData?.name}
+          onChange={(e) => handleChange(e)}
+          className="workout-page-title-input"
+        />
+      ) : (
+        <p className="workout-page-title">{workoutData?.name}</p>
+      )}
       <div className="workout-page-edit-icon-container">
         <DeleteTwoToneIcon
           onClick={() => {
@@ -70,14 +84,7 @@ const WorkoutPage = () => {
           <button
             onClick={() => {
               setEditMode((prev) => !prev);
-              dispatch(
-                workoutActions.updateWorkout(
-                  dispatch,
-                  id,
-                  workoutState,
-                  REACT_APP_BASE_URL
-                )
-              );
+              updateWorkout(dispatch, id, workoutData, REACT_APP_BASE_URL);
             }}
             title="Save Info"
             className="workout-page-save-info-btn"
@@ -93,14 +100,19 @@ const WorkoutPage = () => {
         )}
       </div>
       <div className="workout-page-description">
-        <p
-          contentEditable={editMode}
-          name="description"
-          onInput={(e) => handleChange(e)}
-          className="workout-page-content"
-        >
-          These exercises are amazing.
-        </p>
+        {editMode ? (
+          <textarea
+            name="description"
+            ref={textareaRef}
+            maxLength={400}
+            value={workoutData?.description}
+            onChange={(e) => handleChange(e)}
+            height="auto"
+            className="workout-page-content-input"
+          />
+        ) : (
+          <p className="workout-page-content">{workoutData?.description}</p>
+        )}
       </div>
       <div className="workout-page-exercises-container">
         {workoutData?.exercises?.map((exercise) => (

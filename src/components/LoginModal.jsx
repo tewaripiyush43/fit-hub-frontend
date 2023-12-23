@@ -19,10 +19,11 @@ const LoginModal = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [inputs, setInputs] = useState({
-    email: "",
+    emailOrUsername: "",
     password: "",
   });
   const [showPassword, setShowPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleChange = (e) => {
     setInputs((prev) => ({
@@ -31,15 +32,22 @@ const LoginModal = () => {
     }));
   };
 
+  useEffect(() => {
+    if (errorMessage.length > 0) {
+      errorPopUp(errorMessage);
+      setErrorMessage("");
+    }
+  }, [errorMessage]);
+
   const sendRequest = async () => {
     await axios
       .post(`${REACT_APP_BASE_URL}/auth/login`, {
-        email: inputs.email,
+        emailOrUsername: inputs.emailOrUsername.toLocaleLowerCase(),
         password: inputs.password,
       })
       .then((res) => {
-        console.log(res);
-        if (res.data?.error?.status === 400) {
+        // console.log(res);
+        if (res.data?.error) {
           throw res.data.error;
         } else {
           localStorage.setItem("accessToken", res.data.accessToken);
@@ -50,7 +58,7 @@ const LoginModal = () => {
         }
       })
       .catch((err) => {
-        errorPopUp(err.message);
+        setErrorMessage(err.message);
       });
   };
 
@@ -77,8 +85,8 @@ const LoginModal = () => {
         <div className="login-form-textfield">
           <input
             className="login-form-input"
-            name="email"
-            value={inputs.email}
+            name="emailOrUsername"
+            value={inputs.emailOrUsername}
             onChange={handleChange}
             type="text"
             placeholder="Email or Username"

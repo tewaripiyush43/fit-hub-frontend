@@ -1,48 +1,45 @@
 .recipes-page-container {
-  background: url("../assets/images/angry-hd.png");
-  background-position: center;
-  background-repeat: no-repeat;
-  background-color: $background;
-}
-.recipe-text {
-  // background-size: contain;
-  // background-size: cover;
-  backdrop-filter: opacity(50%);
-
   height: 100vh;
-  font-size: 1rem;
-  color: white;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: center;
-  // line-height: 10px;
-  padding-bottom: 1.2rem;
+  position: relative;
+}
 
-  button {
-    cursor: pointer;
-    margin: 10px 0;
-    padding: 8px 15px;
-    font-size: 0.9rem;
-    font-weight: 700;
-    border: none;
-    border-radius: 2px;
+.smile-emoji {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100vw;
+  text-align: center;
 
-    // color: $accent ;
-    background-color: $secondary-button;
+  svg {
+    color: $accent !important;
+    height: 25%;
+    width: 25%;
   }
-}
+  .recipe-page-text {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: $text;
 
-@media screen and (max-width: 1200px) {
-}
-@media screen and (max-width: 1024px) {
-}
-@media screen and (max-width: 480px) {
-}
-@media screen and (max-width: 768px) {
-}
-@media screen and (max-width: 320px) {
-  .recipe-text {
-    background: none;
+    @media (max-width: 1024px) {
+      font-size: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+      font-size: 1.25rem;
+    }
+
+    @media (max-width: 480px) {
+      font-size: 1rem;
+    }
+
+    @media (max-width: 320px) {
+      font-size: 0.875rem;
+    }
+
+    &:nth-child(2) {
+      margin-bottom: 20px;
+      color: $accent;
+    }
   }
 }

@@ -88,14 +88,27 @@
         width: 85%;
         padding: 6px;
         border: none;
-      }
-      .login-form-input:focus {
-        border: none;
-        outline: none;
-      }
 
-      .login-form-input::placeholder {
-        color: $text-input-field;
+        &:-webkit-autofill {
+          box-shadow: 0 0 0 50px $background-input-field inset;
+          -webkit-text-fill-color: $text;
+          color: $text;
+        }
+
+        &:focus {
+          box-shadow: 0 0 0 50px $background-input-field inset;
+          color: $text;
+          -webkit-text-fill-color: $text;
+        }
+
+        &:focus {
+          border: none;
+          outline: none;
+        }
+
+        &::placeholder {
+          color: $text-input-field;
+        }
       }
 
       .login-page-icon {
@@ -194,17 +207,6 @@
     }
 
     .login-submit-btn:hover:before {
-      opacity: 1;
-      transform: scaleY(1) rotateX(0deg);
-    }
-
-    .login-submit-btn:focus {
-      outline: none;
-      box-shadow: 0 0 0 2px #000, 0 0 0 4px $accent;
-      transform: translateY(0px) translateZ(2px);
-    }
-
-    .login-submit-btn:focus:before {
       opacity: 1;
       transform: scaleY(1) rotateX(0deg);
     }

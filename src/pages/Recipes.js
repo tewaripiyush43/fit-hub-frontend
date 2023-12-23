@@ -1,18 +1,15 @@
-import { useNavigate } from "react-router-dom";
+import InsertEmoticonIcon from "@mui/icons-material/InsertEmoticon";
 
 const Recipes = () => {
-  const navigate = useNavigate();
-
-  const handleOnClick = () => {
-    navigate("/");
-  };
-
   return (
     <div className="recipes-page-container">
-      <div className="recipe-text">
-        I TOLD YOU NOT TO CLICK...😡
-        <p> NOW GO BACK. </p>
-        <button onClick={handleOnClick}>Please take me back 🙏</button>
+      <div className="smile-emoji">
+        <InsertEmoticonIcon className="" />
+        <p className="recipe-page-text">Coming soon..</p>
+        <p className="recipe-page-text">
+          Thank you for visiting my site! <br></br> I am currently working on
+          this page.
+        </p>
       </div>
     </div>
   );
