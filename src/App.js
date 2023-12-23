@@ -63,7 +63,7 @@ function App() {
             <Route path="/exercise/:id" element={<ExercisePage />} />
             <Route path="/:username/:page" element={<UserProfile />} />
             <Route
-              path="/:username/:page/:id-:name"
+              path="/:username/myworkouts/:workoutId"
               element={<WorkoutPage />}
             />
             <Route path="*" element={<PageNotFound />} />

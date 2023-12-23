@@ -11,7 +11,8 @@ import ConfirmationPopup from "../components/ConfirmationPopUp";
 const WorkoutPage = () => {
   const REACT_APP_BASE_URL = process.env.REACT_APP_BASE_URL;
   const navigate = useNavigate();
-  const { username, id } = useParams();
+  const { username, workoutId } = useParams();
+  const [id, name] = workoutId.split("-");
   const dispatch = useDispatch();
   const workoutData = useSelector((state) => state.workout.workoutData);
   const [editMode, setEditMode] = useState(false);

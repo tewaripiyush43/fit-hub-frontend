@@ -7,12 +7,8 @@ const ExercisesPage = () => {
   const [searchData, setsearchData] = useState("");
   const { search } = useParams();
 
-  // console.log(search);
-
   useEffect(() => {
-    // console.log(search);
     if (search !== "all" || search !== "") setsearchData(search);
-    // console.log(searchData);
   }, [search]);
 
   return (

@@ -50,7 +50,7 @@ const SignupModal = () => {
         password: inputs.password,
       })
       .then((res) => {
-        // console.log(res);
+        console.log(res);
         if (res.data?.error) {
           throw res.data?.error;
         } else {
@@ -61,6 +61,7 @@ const SignupModal = () => {
         }
       })
       .catch((err) => {
+        console.log(err.message);
         setErrorMessage(err.message);
       });
   };

@@ -19,6 +19,9 @@ const MyFavorite = () => {
             exerciseData={exercise}
           />
         ))}
+        {user?.favoriteExercises?.length === 0 && (
+          <p className="no-favorite-exercises">No Favorite Exercises</p>
+        )}
       </div>
     </div>
   );

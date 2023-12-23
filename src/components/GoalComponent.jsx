@@ -211,7 +211,9 @@ const GoalComponent = () => {
                   className="goal-input"
                 />
               ) : (
-                <p className="goal-text">{goal?.goal}</p>
+                <p className="goal-text">
+                  {goal?.goal?.length === 0 ? "UNTITLED" : goal?.goal}
+                </p>
               )}
               <div className="progress-bar">
                 {typeof progress[goal?.type] === "number" ? (
