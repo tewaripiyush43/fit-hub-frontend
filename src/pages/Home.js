@@ -6,17 +6,32 @@ import Exercises from "../components/Exercises";
 import Carousel from "../components/Carousel";
 import HomeBanner from "../components/HomeBanner";
 import SectionCards from "../components/SectionCards";
+import { errorPopUp } from "../helpers/errorPopUp";
 
 import axios from "axios";
 
 export default function Home() {
   const REACT_APP_BASE_URL = process.env.REACT_APP_BASE_URL;
-  // console.log(BASE_URL);
-
-  // console.log(process.env);
-
   const [carouselData, setCarouselData] = useState([]);
   const [searchByCarousel, setSearchByCarousel] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const getCarouselHomeData = async () => {
+    await axios
+      .get(`${REACT_APP_BASE_URL}/exercise/fetchCarouselDataHome`)
+      .then((res) => setCarouselData(res.data))
+      .catch((err) => {
+        // console.log(err.message);
+        setErrorMessage("Something went wrong. Please try again.");
+      });
+  };
+
+  useEffect(() => {
+    if (errorMessage.length > 0) {
+      errorPopUp(errorMessage);
+      setErrorMessage("");
+    }
+  }, [errorMessage]);
 
   useEffect(() => {
     AOS.init({
@@ -25,19 +40,11 @@ export default function Home() {
       easing: "ease-in-out",
       delay: 100,
     });
-
-    const getCarouselHomeData = async () => {
-      await axios
-        .get(`${REACT_APP_BASE_URL}/fetchCarouselDataHome`)
-        .then((res) => setCarouselData(res.data))
-        .catch((err) => console.log(err.message));
-    };
-
     getCarouselHomeData();
   }, []);
 
   return (
-    <>
+    <div className="home-container">
       <HomeBanner />
       <SectionCards />
       <Carousel
@@ -50,6 +57,6 @@ export default function Home() {
         searchByCarousel={searchByCarousel}
         setSearchByCarousel={setSearchByCarousel}
       />
-    </>
+    </div>
   );
 }

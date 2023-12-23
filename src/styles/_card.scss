@@ -1,45 +1,152 @@
 .card {
   margin: 20px auto;
   border-radius: 10px;
-  box-shadow: 0 0 1px 3px var(--background-theme-primary);
-  width: 37%;
+  box-shadow: 0 0 20px -5px $accent;
+  width: 37vw;
   height: 350px;
+  position: relative;
+  transition: all 0.5s ease-in-out;
+
+  // @media (max-width: 1024px) {
+  //   width: 40vw;
+  // }
+
+  // @media (max-width: 768px) {
+  //   width: 45vw;
+  // }
+
+  @media (max-width: 480px) {
+    // width: 80vw;
+
+    &:hover {
+      width: 50vw;
+      z-index: 1;
+    }
+  }
+
+  // @media (max-width: 320px) {
+  //   width: 90vw;
+
+  // }
 
   .card-img {
-    filter: brightness(70%);
+    filter: brightness(60%);
     border-radius: 10px;
     position: absolute;
-    width: 37%;
+    width: 100%;
     object-fit: cover;
     height: 350px;
+    transition: all 0.5s ease-in-out;
+  }
+
+  &:hover {
+    .card-img {
+      filter: brightness(50%) blur(2px);
+    }
+    .card-title {
+      opacity: 0;
+    }
+    .card-content {
+      opacity: 1;
+    }
   }
 
   .card-title {
     text-align: center;
-    color: var(--text-theme);
+    text-shadow: 0 5px 5px $text-secondary;
+    color: $text;
     opacity: 1;
     position: absolute;
     margin-top: 10px;
     font-size: 1.3rem;
-    // left: 220px;
-
     writing-mode: vertical-rl;
     text-orientation: upright;
+    transition: all 0.5s ease-in-out;
+
+    @media (max-width: 1024px) {
+      font-size: 1.1rem;
+    }
+
+    @media (max-width: 768px) {
+      font-size: 1rem;
+    }
+
+    @media (max-width: 425px) {
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 375px) {
+      font-size: 0.9rem;
+    }
   }
 
   .card-content {
-    color: var(--text-theme);
+    color: $text;
     padding: 10px 25px;
     position: relative;
-    text-shadow: 0 5px 5px black;
+    text-shadow: 0 5px 5px $text-secondary;
     opacity: 0;
+    transition: all 0.5s ease-in-out;
+
+    @media (max-width: 1024px) {
+      padding: 10px 20px;
+    }
+
+    @media (max-width: 768px) {
+      padding: 10px 15px;
+    }
+
+    @media (max-width: 425px) {
+      padding: 10px 10px;
+    }
+
+    @media (max-width: 375px) {
+      padding: 10px 10px;
+    }
 
     .card-decription-title {
       font-weight: 800;
+      font-size: 1.3rem;
+      margin-bottom: 5px;
+      transition: all 0.5s ease-in-out;
+
+      @media (max-width: 1024px) {
+        font-size: 1.1rem;
+      }
+
+      @media (max-width: 768px) {
+        font-size: 1rem;
+      }
+
+      @media (max-width: 425px) {
+        font-size: 0.9rem;
+      }
+
+      @media (max-width: 375px) {
+        font-size: 0.9rem;
+      }
     }
 
     .card-details {
       font-size: 1rem;
+      letter-spacing: 0.5px;
+      transition: all 0.5s ease-in-out;
+
+      @media (max-width: 1024px) {
+        font-size: 0.9rem;
+      }
+
+      @media (max-width: 768px) {
+        font-size: 0.9rem;
+      }
+
+      @media (max-width: 425px) {
+        font-size: 0.8rem;
+      }
+
+      @media (max-width: 375px) {
+        font-size: 0.8rem;
+      }
     }
     button {
       cursor: pointer;
@@ -49,92 +156,94 @@
       font-weight: 700;
       border: none;
       border-radius: 2px;
+      color: $text;
+      background-color: $secondary-button;
+      transition: all 0.5s ease-in-out;
 
-      // color: #1ed760;
-      background-color: var(--background-theme-primary);
-    }
-  }
-}
-
-.card:hover {
-  .card-img {
-    filter: brightness(50%) blur(2px);
-  }
-  .card-title {
-    opacity: 0;
-  }
-  .card-content {
-    opacity: 1;
-  }
-}
-
-@media screen and (max-width: 1200px) {
-}
-
-@media screen and (max-width: 1024px) {
-}
-@media screen and (max-width: 768px) {
-}
-@media screen and (max-width: 480px) {
-  .card {
-    width: 40%;
-    .card-img {
-      width: 40%;
-    }
-
-    .card-title {
-    }
-
-    .card-content {
-      padding: 9px 14px;
-      text-align: center;
-
-      .card-decription-title {
-        margin-top: 0;
-        font-weight: 800;
-        font-size: 1.1rem;
+      &:hover {
+        background-color: $secondary-button-hover;
+        box-shadow: 0 0 10px $text-secondary;
       }
 
-      .card-details {
-        font-size: 0.85rem;
-      }
-      button {
-        margin: 5px 0;
-        padding: 4px 7px;
+      @media (max-width: 1024px) {
         font-size: 0.8rem;
-        font-weight: 700;
+      }
+
+      @media (max-width: 768px) {
+        font-size: 0.8rem;
+      }
+
+      @media (max-width: 425px) {
+        font-size: 0.7rem;
+      }
+
+      @media (max-width: 375px) {
+        font-size: 0.7rem;
       }
     }
   }
 }
-@media screen and (max-width: 320px) {
-  .card {
-    width: 40%;
-    .card-img {
-      width: 40%;
-    }
 
-    .card-title {
-    }
+// @media screen and (max-width: 480px) {
+//   .card {
+//     width: 40%;
+//     .card-img {
+//       width: 40%;
+//     }
 
-    .card-content {
-      padding: 9px 14px;
-      text-align: center;
+//     .card-title {
+//     }
 
-      .card-decription-title {
-        font-weight: 800;
-        font-size: 0.9rem;
-      }
+//     .card-content {
+//       padding: 9px 14px;
+//       text-align: center;
 
-      .card-details {
-        font-size: 0.7rem;
-      }
-      button {
-        margin: 5px 0;
-        padding: 4px 7px;
-        font-size: 0.7rem;
-        font-weight: 700;
-      }
-    }
-  }
-}
+//       .card-decription-title {
+//         margin-top: 0;
+//         font-weight: 800;
+//         font-size: 1.1rem;
+//       }
+
+//       .card-details {
+//         font-size: 0.85rem;
+//       }
+//       button {
+//         margin: 5px 0;
+//         padding: 4px 7px;
+//         font-size: 0.8rem;
+//         font-weight: 700;
+//       }
+//     }
+//   }
+// }
+// @media screen and (max-width: 320px) {
+//   .card {
+//     width: 40%;
+//     .card-img {
+//       width: 40%;
+//     }
+
+//     .card-title {
+//     }
+
+//     .card-content {
+//       padding: 9px 14px;
+//       text-align: center;
+
+//       .card-decription-title {
+//         font-weight: 800;
+//         font-size: 0.9rem;
+//       }
+
+//       .card-details {
+//         font-size: 0.7rem;
+//       }
+//       button {
+//         margin: 5px 0;
+//         padding: 4px 7px;
+//         font-size: 0.7rem;
+//         font-weight: 700;
+//       }
+//     }
+//   }
+// }

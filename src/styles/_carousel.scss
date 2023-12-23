@@ -1,45 +1,37 @@
+// @import "~@mui/icons-material/ArrowRightAltRounded";
+
 .exercises-carousel-container {
   text-align: center;
   margin-block: 100px;
 
   .carousel-title {
-    font-size: 2.5rem;
+    font-size: 2rem;
     letter-spacing: 0.8px;
     text-transform: capitalize;
     font-family: "Roboto", sans-serif;
-    font-weight: 900;
-    // font-size: clamp(3.4375rem, 3.25rem + 0.75vw, 3rem);
-    text-shadow: 2px 2px 0 #3ea968, 4px 4px 0 #2e8f57, 6px 6px 0 #207b47,
-      8px 8px 0 #136836, 10px 10px 0 #084c26, 12px 12px 0 #003215,
-      14px 14px 6px rgba(0, 0, 0, 0.3);
-    animation: neon 1.5s ease-in-out infinite alternate;
+    font-weight: 800;
 
-    @keyframes neon {
-      from {
-        text-shadow: 2px 2px 5px #3ea968, 4px 4px 5px #2e8f57,
-          6px 6px 5px #207b47, 8px 8px 5px #136836, 10px 10px 5px #084c26,
-          12px 12px 5px #003215, 14px 14px 10px rgba(0, 0, 0, 0.6);
-      }
-      to {
-        text-shadow: 2px 2px 15px #3ea968, 4px 4px 15px #2e8f57,
-          6px 6px 15px #207b47, 8px 8px 15px #136836, 10px 10px 15px #084c26,
-          12px 12px 15px #003215, 14px 14px 20px rgba(0, 0, 0, 0.9);
-      }
-    }
+    color: $accent;
   }
   .swiper {
-    width: 90%;
+    width: 97%;
+    height: 100%;
     padding-top: 50px;
     padding-bottom: 50px;
+    overflow: hidden;
+    position: relative;
 
     .swiper-pagination-bullet {
-      background-color: var(--background-theme-primary) !important;
+      background-color: $accent !important;
     }
   }
 
+  .swiper-wrapper {
+    // width: 70px !important;
+  }
   .swiper-slide {
     background-color: #181818;
-    color: var(--text-theme);
+    color: $text;
     background-position: center;
     background-size: cover;
     width: 325px;
@@ -47,7 +39,7 @@
     text-transform: capitalize;
     margin: 0px;
     cursor: pointer;
-    box-shadow: 0px 0px 3px 3px var(--background-theme-primary);
+    box-shadow: 0px 0px 3px 1px $accent;
 
     img {
       opacity: 0.9;
@@ -59,7 +51,7 @@
     }
 
     .carousel-slide-text {
-      text-shadow: 1px 1px 7px var(--background-theme-primary);
+      text-shadow: 1px 1px 7px $accent;
       margin: 0;
       padding: 0;
       padding-top: 20px;
@@ -67,16 +59,20 @@
     }
   }
 
+  .swiper-button-next,
   .swiper-button-prev {
-    color: var(--background-theme-primary);
+    color: $accent;
+    font-size: 20px;
+    cursor: pointer;
+    top: 96% !important;
   }
 
   .swiper-button-next {
-    color: var(--background-theme-primary);
+    right: 40% !important;
   }
 
-  .swiper-pagination-bullet-active {
-    background-color: var(--background-theme-secondary) !important;
+  .swiper-button-prev {
+    left: 40% !important;
   }
 }
 

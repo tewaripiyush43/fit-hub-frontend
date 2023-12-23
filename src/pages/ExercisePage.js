@@ -2,84 +2,130 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import DetailSection from "../components/DetailsSection";
 import FormatQuoteOutlinedIcon from "@mui/icons-material/FormatQuoteOutlined";
+import { errorPopUp } from "../helpers/errorPopUp";
+
+import axios from "axios";
 const ExercisePage = () => {
   const REACT_APP_BASE_URL = process.env.REACT_APP_BASE_URL;
 
   const { id } = useParams();
-  const [ex, setex] = useState("");
+  // console.log(id);
+  const [exercise, setexercise] = useState("");
   const [exercisesForBodyPart, setExercisesForBodyPart] = useState([]);
   const [exercisesForMuscle, setExercisesForMuscle] = useState([]);
+  const [errorMessage, setErrorMessage] = useState({});
+
+  const findExercise = async () => {
+    await axios
+      .get(`${REACT_APP_BASE_URL}/exercise/findex/${id}`)
+      .then((res) => {
+        // console.log(res);
+        setexercise(res.data);
+        findExercisesByBodyPart(res.data.bodyPart);
+        findExercisesByMuscle(res.data.target);
+      })
+      .catch((err) => {
+        // console.log(err.message);
+        setErrorMessage("Something went wrong. Please try again.");
+      });
+  };
+
+  const findExercisesByBodyPart = async (bodyPart) => {
+    await axios
+      .get(`${REACT_APP_BASE_URL}/exercise/exercises/bodyParts/${bodyPart}`)
+      .then((res) => {
+        setExercisesForBodyPart(res.data);
+      })
+      .catch((err) => {
+        // console.log(err.message);
+        setErrorMessage("Something went wrong. Please try again.");
+      });
+  };
+
+  const findExercisesByMuscle = async (muscle) => {
+    await axios
+      .get(`${REACT_APP_BASE_URL}/exercise/exercises/${muscle}`)
+      .then((res) => {
+        setExercisesForMuscle(res.data);
+      })
+      .catch((err) => {
+        // console.log(err.message);
+        setErrorMessage("Something went wrong. Please try again.");
+      });
+  };
 
   useEffect(() => {
-    const findExercise = () => {
-      fetch(`${REACT_APP_BASE_URL}/findex/${id}`)
-        .then((res) => res.json())
-        .then((data) => {
-          setex(data);
-          // console.log(data);
-          findExercisesByBodyPart(data.bodyPart);
-          findExercisesByMuscle(data.target);
-        })
-        .catch((err) => {
-          console.log(err.message);
-        });
-    };
+    if (errorMessage.length > 0) {
+      errorPopUp(errorMessage);
+      setErrorMessage("");
+    }
+  }, [errorMessage]);
+
+  useEffect(() => {
     findExercise();
-
-    const findExercisesByBodyPart = (bodyPart) => {
-      fetch(`${REACT_APP_BASE_URL}/exercises/bodyParts/${bodyPart}`)
-        .then((res) => res.json())
-        .then((data) => {
-          // console.log(data);
-          setExercisesForBodyPart(data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    };
-
-    const findExercisesByMuscle = (muscle) => {
-      fetch(`${REACT_APP_BASE_URL}/exercises/${muscle}`)
-        .then((res) => res.json())
-        .then((data) => {
-          // console.log(data);
-          setExercisesForMuscle(data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    };
   }, [id]);
 
   useEffect(() => {
-    window.scrollTo(0, 0);
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "smooth",
+    });
   }, []);
 
   // console.log(id);
   return (
     <div className="exercise-page">
-      {/*quote*/}
       <div className="quote-container">
         <FormatQuoteOutlinedIcon fontSize="large" className="quote-icon" />
-        <p>
+        <p className="quote-text">
           “Once you are exercising regularly, the hardest thing is to stop it.”
         </p>
       </div>
+      {/* <div className="exercise-detail-container"> */}
       <div className="exercise-gif-info">
-        <img src={ex.gifUrl} alt="error" />
+        <div className="exericse-page-img-container">
+          <img
+            className="exercise-page-img"
+            src={exercise?.gifUrl}
+            alt="error"
+          />
+        </div>
         <div className="exercise-info">
-          <h3 className="exercise-info-name">{ex.name} </h3>
-          <hr />
-          <p className="exercise-info-detail">
-            Exercises keep you strong {ex.name} is one of the best exercises to
-            target your {ex.target}. It will help you improve your mood and gain
-            energy.
+          <h3 className="exercise-info-name">{exercise?.name} </h3>
+          <hr className="exercise-info-ruler" />
+          <p className="exercise-info-detail" style={{ marginBottom: "1rem" }}>
+            Target:
+            <span className="exercise-info-target">
+              {exercise?.target} &nbsp;
+            </span>
+            Secondary Muscles:
+            {exercise?.secondaryMuscles?.map((muscle, index) => (
+              <spam className="exercise-info-target" key={index}>
+                {muscle},
+              </spam>
+            ))}
           </p>
+          <ul className="exercise-page-info-instructions-list">
+            <p className="exercise-info-detail" style={{ fontWeight: "bold" }}>
+              Instructions :
+            </p>
+            {exercise?.instructions?.map((instruction, index) => (
+              <li key={index} className="exercise-info-detail">
+                {instruction}
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
+      {/* </div> */}
 
-      <DetailSection ex={ex} data={exercisesForMuscle} type="muscle" />
-      <DetailSection ex={ex} data={exercisesForBodyPart} type="bodyPart" />
+      <DetailSection ex={exercise} data={exercisesForMuscle} type="muscle" />
+      <DetailSection
+        ex={exercise}
+        data={exercisesForBodyPart}
+        type="bodyPart"
+      />
     </div>
   );
 };

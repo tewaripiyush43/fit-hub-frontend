@@ -1,0 +1,217 @@
+@import "resets.scss";
+@import "variables.scss";
+
+//fonts
+$font-weights: (
+  "regular": 400,
+  "medium": 500,
+  "bold": 700,
+);
+
+// @function weight($weight-name) {
+// @return map-get($font-weights, $weight-name);
+// }
+
+// font-weigth: weight("regular");
+
+//MIXIN
+// @mixin flexCenter($direction){
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   flex-direction: $direction;
+// }
+
+// .class {
+//   @include flexCenter(column);
+// }
+
+// can also use for theme and media queries
+// @mixin theme($theme) {
+//   @if $theme == "dark" {
+//     background-color: #000;
+//     color: #fff;
+//   } @else if $theme == "light" {
+//     background-color: #fff;
+//     color: #000;
+//   } @else {
+//     background-color: #fff;
+//     color: #000;
+//   }
+// }
+
+// @mixin breakpoint($breakpoint) {
+//   @media screen and (max-width: map-get($breakpoints, $breakpoint)) {
+//     @content;
+//   }
+// }
+// @mixin breakpoint-min($breakpoint) {
+//   @media screen and (min-width: map-get($breakpoints, $breakpoint)) {
+//     @content;
+//   }
+// }
+
+$font-size: (
+  "small": 0.8rem,
+  "medium": 1rem,
+  "large": 1.2rem,
+  "x-large": 1.5rem,
+  "xx-large": 2rem,
+);
+
+//spacing
+$spacing: (
+  "small": 5px,
+  "medium": 10px,
+  "large": 15px,
+  "x-large": 20px,
+  "xx-large": 25px,
+);
+
+//breakpoints
+$breakpoints: (
+  "small": 480px,
+  "medium": 768px,
+  "large": 1024px,
+  "x-large": 1200px,
+);
+
+//mixins
+// @mixin breakpoint($breakpoint) {
+//   @media screen and (max-width: map-get($breakpoints, $breakpoint)) {
+//     @content;
+//   }
+// }
+
+// @mixin breakpoint-min($breakpoint) {
+//   @media screen and (min-width: map-get($breakpoints, $breakpoint)) {
+//     @content;
+//   }
+// }
+
+// @mixin breakpoint-between($breakpoint1, $breakpoint2) {
+//   @media screen and (min-width: map-get($breakpoints, $breakpoint1)) and (max-width: map-get($breakpoints, $breakpoint2)) {
+//     @content;
+//   }
+// }
+
+// @mixin breakpoint-max($breakpoint) {
+//   @media screen and (max-width: map-get($breakpoints, $breakpoint)) {
+//     @content;
+//   }
+// }
+
+// @mixin breakpoint-min-max($breakpoint1, $breakpoint2) {
+//   @media screen and (min-width: map-get($breakpoints, $breakpoint1)) and (max-width: map-get($breakpoints, $breakpoint2)) {
+//     @content;
+//   }
+// }
+
+// @mixin breakpoint-max-min($breakpoint1, $breakpoint2) {
+//   @media screen and (min-width: map-get($breakpoints, $breakpoint1)) and (max-width: map-get($breakpoints, $breakpoint2)) {
+//     @content;
+//   }
+// }
+
+//variables
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  // font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+  //   Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  background-color: $background;
+  // font-family: "Roboto", sans-serif;
+  font-family: "Arial", sans-serif;
+
+  scroll-behavior: smooth;
+
+  overflow-x: hidden;
+  user-select: none;
+}
+
+body.modal-open {
+  overflow-y: hidden !important;
+  // position: fixed;
+}
+
+.account-menu-custom-style {
+  padding-right: 0px !important;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+html.modal-open {
+  overflow-y: hidden;
+  // background-color: rgba(0, 0, 0, 0.7);
+  // backdrop-filter: blur(2px);
+}
+
+// .container {
+//   text-align: center;
+// }
+// ::-webkit-scrollbar {
+//   display: none;
+// }
+
+::-webkit-scrollbar {
+  width: 10px;
+  background-color: $background;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey;
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, $accent, $background);
+  border-radius: 10px;
+}
+
+.testing {
+  position: absolute;
+  top: 20%;
+  left: 50%;
+}
+
+@import "loader.scss";
+@import "navbar.scss";
+@import "home.scss";
+@import "card.scss";
+@import "exerciseCard.scss";
+@import "exercises.scss";
+@import "carousel.scss";
+@import "sectionCards.scss";
+@import "homeBanner.scss";
+@import "exercisePage.scss";
+@import "recipe.scss";
+@import "detailsSection.scss";
+@import "exercisesPage";
+@import "loginModal.scss";
+@import "portal.scss";
+@import "userProfile";
+@import "userProfileSideBar";
+@import "userProfileMainSection";
+@import "userProfileInfoCard";
+@import "userProfileSmallCard";
+@import "bmiCalculator.scss";
+@import "goalComponent.scss";
+@import "workoutsSmallComponent.scss";
+@import "myProfile.scss";
+@import "myWorkouts";
+@import "myFavorite";
+@import "workoutCard";
+@import "settings";
+@import "workoutPage";
+@import "confirmationPopUp";
