@@ -9,6 +9,7 @@
   height: 100%;
   width: 400px;
   transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 
   @media (max-width: 1024px) {
     // width: 300px;
@@ -70,6 +71,7 @@
   }
 
   .login-form {
+    margin-top: 15px;
     display: flex;
     flex-direction: column;
     width: 85%;
@@ -127,21 +129,41 @@
     .login-form-textfield:nth-child(3) {
       margin-top: 15px;
     }
-    .remember-me {
+    .row1 {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 15px;
+      margin-block: 15px;
 
-      span {
-        margin-left: 2px;
-        font-size: 0.8rem;
-        letter-spacing: 1px;
-        color: $text;
+      .remember-me {
+        display: flex;
+        align-items: center;
+
+        input[type="checkbox"] {
+          cursor: pointer;
+
+          &:checked {
+            accent-color: $accent !important;
+          }
+        }
+
+        .remember-me-text {
+          margin-left: 4px;
+          font-size: 0.7rem;
+          letter-spacing: 1px;
+          color: $text;
+        }
       }
 
-      .Mui-checked + .MuiSwitch-track {
-        background-color: $accent;
+      .forgot-password {
+        font-size: 0.7rem;
+        letter-spacing: 1px;
+        color: $text;
+        cursor: pointer;
+
+        &:hover {
+          color: $accent;
+        }
       }
     }
 
@@ -230,34 +252,23 @@
       margin: 0 10px; /* add some space between the elements */
     }
 
-    p {
-      font-size: 0.8rem;
-      line-height: 1.5;
-      margin: 20px 0;
-    }
+    // p {
+    //   font-size: 0.8rem;
+    //   line-height: 1.5;
+    //   margin: 20px 0;
+    // }
 
     .login-create-account-link {
       cursor: pointer;
       color: $text;
-      letter-spacing: 1.2px;
+      letter-spacing: 1px;
+      font-size: 0.8rem;
+      margin-top: 15px;
 
       span {
         text-decoration: underline;
       }
       span:hover {
-        color: $accent;
-      }
-    }
-
-    .login-forgot-pass-container {
-      // width: ;
-      display: flex;
-      justify-content: space-around;
-      a {
-        font-size: 0.7rem;
-        color: $text;
-      }
-      a:hover {
         color: $accent;
       }
     }

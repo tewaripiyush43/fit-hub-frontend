@@ -19,7 +19,10 @@ const authSlice = createSlice({
 
 const portalSlice = createSlice({
   name: "portal",
-  initialState: { isPortalOpen: false, isPortalTypeLogin: true },
+  initialState: {
+    isPortalOpen: false,
+    portalType: "Login",
+  },
   reducers: {
     setPortalOpen(state) {
       document.documentElement.classList.add("modal-open");
@@ -30,10 +33,13 @@ const portalSlice = createSlice({
       state.isPortalOpen = false;
     },
     setPortalTypeLogin(state) {
-      state.isPortalTypeLogin = true;
+      state.portalType = "Login";
     },
     setPortalTypeSignup(state) {
-      state.isPortalTypeLogin = false;
+      state.portalType = "Signup";
+    },
+    setPortalTypeForgotPassword(state) {
+      state.portalType = "ForgotPassword";
     },
   },
 });

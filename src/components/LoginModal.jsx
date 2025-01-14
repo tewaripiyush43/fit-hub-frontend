@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import Switch from "@mui/material/Switch";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { authActions, portalActions } from "../store";
@@ -46,7 +45,7 @@ const LoginModal = () => {
         password: inputs.password,
       })
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         if (res.data?.error) {
           throw res.data.error;
         } else {
@@ -116,9 +115,19 @@ const LoginModal = () => {
             />
           )}
         </div>
-        <div className="remember-me">
-          <span>Remember me</span>
-          <Switch className="login-switch" />
+        <div className="row1">
+          <div className="remember-me">
+            <input type="checkbox" />
+            <span className="remember-me-text">Remember me</span>
+          </div>
+          <p
+            onClick={() => {
+              dispatch(portalActions.setPortalTypeForgotPassword());
+            }}
+            className="forgot-password"
+          >
+            Forgot Password?
+          </p>
         </div>
         <button className="login-submit-btn" type="submit">
           Login
@@ -127,14 +136,11 @@ const LoginModal = () => {
           <p>OR</p>
         </div> */}
         <p className="login-create-account-link">
-          Don't have an account?{" "}
+          Don't have an account?&nbsp;
           <span onClick={() => dispatch(portalActions.setPortalTypeSignup())}>
             SIGNUP
           </span>
         </p>
-        {/* <div className="login-forgot-pass-container">
-          <Link to="/">RESET PASSWORD</Link> <Link to="/">SETTINGS</Link>
-        </div> */}
       </form>
     </div>
   );

@@ -50,7 +50,7 @@ const SignupModal = () => {
         password: inputs.password,
       })
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         if (res.data?.error) {
           throw res.data?.error;
         } else {
@@ -146,7 +146,7 @@ const SignupModal = () => {
             <p>OR</p>
           </div> */}
           <p className="login-create-account-link">
-            Already have an account?
+            Already have an account?&nbsp;
             <span onClick={() => dispatch(portalActions.setPortalTypeLogin())}>
               LOGIN
             </span>

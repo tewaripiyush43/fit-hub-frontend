@@ -18,6 +18,8 @@ import Loader from "./components/Loader";
 import "react-toastify/dist/ReactToastify.css";
 import { getUser } from "./api/authAPI";
 import PageNotFound from "./components/PageNotFound";
+import ForgotPassword from "./components/ForgotPassword";
+import ResetPassword from "./components/ResetPassword";
 
 axios.defaults.withCredentials = true;
 
@@ -27,6 +29,10 @@ function App() {
   // console.log(REACT_APP_BASE_URL);
   const [loading, setLoading] = useState(false);
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const isRouteResetPassword =
+    window.location.pathname.includes("/reset-password");
+
+  const shouldRenderNavbar = isRouteResetPassword;
 
   useEffect(() => {
     setLoading(true);
@@ -51,25 +57,28 @@ function App() {
           background: "red",
         }}
       />
-      {loading ? (
+      {/* {loading ? (
         <Loader />
-      ) : (
-        <div>
-          <Navbar />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/exercises/:search" element={<ExercisesPage />} />
-            <Route path="/recipes" element={<Recipes />} />
-            <Route path="/exercise/:id" element={<ExercisePage />} />
-            <Route path="/:username/:page" element={<UserProfile />} />
-            <Route
-              path="/:username/myworkouts/:workoutId"
-              element={<WorkoutPage />}
-            />
-            <Route path="*" element={<PageNotFound />} />
-          </Routes>
-        </div>
-      )}
+      ) : ( */}
+      <div>
+        {!shouldRenderNavbar && <Navbar />}
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
+          <Route path="/exercises/:search" element={<ExercisesPage />} />
+          <Route path="/recipes" element={<Recipes />} />
+          <Route path="/exercise/:id" element={<ExercisePage />} />
+          <Route path="/:username/:page" element={<UserProfile />} />
+
+          <Route
+            path="/:username/myworkouts/:workoutId"
+            element={<WorkoutPage />}
+          />
+          <Route path="*" element={<PageNotFound />} />
+        </Routes>
+      </div>
+      {/* )} */}
     </div>
   );
 }

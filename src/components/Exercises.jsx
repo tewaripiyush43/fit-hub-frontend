@@ -64,7 +64,7 @@ const Exercises = ({ searchByCarousel }) => {
         )
         .then((res) => setTotalPages(Math.ceil(res.data / 9)))
         .catch((err) => {
-          // console.log(err.message);
+          console.log(err.message);
           setErrorMessage("Something went wrong. Please try again later.");
         });
     };
@@ -76,7 +76,7 @@ const Exercises = ({ searchByCarousel }) => {
         )
         .then((res) => setExercises(res.data))
         .catch((err) => {
-          // console.log(err.message);
+          console.log(err.message);
           setErrorMessage("Something went wrong. Please try again later.");
         });
     };
@@ -149,7 +149,9 @@ const Exercises = ({ searchByCarousel }) => {
                 setDropdownActive(true);
               }}
               onBlur={() => {
-                setDropdownActive(false);
+                setTimeout(() => {
+                  setDropdownActive(false);
+                }, 400);
               }}
               onKeyDown={handleKeyDown}
               placeholder="Search muscle, bodypart or exercise"
@@ -213,3 +215,60 @@ const Exercises = ({ searchByCarousel }) => {
 };
 
 export default Exercises;
+
+// async function findSearchResult(req, res, next) {
+//   try {
+//     let exercise = req.query.exercise;
+//     if (exercise.length === 0 || exercise === "all") {
+//       const page = req.query.page;
+//       const data = await Exercise.find()
+//         .skip(9 * (page - 1))
+//         .limit(9)
+//         .catch((err) => {
+//           // console.log(err);
+//           throw err;
+//         });
+
+//       // console.log(data);
+//       return res.json(data);
+//     } else {
+//       const page = req.query.page;
+//       if (exercise.includes("(")) {
+//         let i = exercise.indexOf("(");
+//         let j = exercise.indexOf(")");
+//         exercise =
+//           exercise.substr(0, i) +
+//           exercise.substr(i + 1, j - i - 1) +
+//           exercise.substr(j + 1);
+//       }
+
+//       // let exerciseArr = exercise.split(" ");
+//       // console.log(exercise);
+//       // exercise = exerciseArr.join(".*");
+
+//       const exercises = await Exercise.find({
+//         $or: [
+//           { name: { $regex: new RegExp(`.*${exercise}.*`, "g") } },
+//           { bodyPart: { $regex: new RegExp(`.*${exercise}.*`, "g") } },
+//           { target: { $regex: new RegExp(`.*${exercise}.*`, "g") } },
+//           { equipment: { $regex: new RegExp(`.*${exercise}.*`, "g") } },
+//           {
+//             secondaryMuscles: {
+//               $elemMatch: {
+//                 $regex: new RegExp(`.*${exercise}.*`, "g"),
+//               },
+//             },
+//           },
+//         ],
+//       })
+//         .skip(9 * (page - 1))
+//         .limit(9);
+
+//       // console.log("exercises   ", exercises);
+//       return res.json(exercises);
+//     }
+//   } catch (err) {
+//     console.log(err);
+//     next(err);
+//   }
+// }

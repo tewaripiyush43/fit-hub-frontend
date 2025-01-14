@@ -2,49 +2,133 @@
   --swiper-navigation-size: 30px;
 }
 
-// //dark
+//dark
+// Text Colors
 // $text: #ffffff;
+// $text-secondary: #000000;
+
+// // Background Colors
 // $background: #1d1d1d;
+// $background-hover: darken($background, 10%);
+// $background-transparent: rgba($background, 0.75);
+
+// // Button Colors
 // $primary-button: #ff6347;
+// $primary-button-hover: darken($primary-button, 10%);
 // $secondary-button: #6c757d;
+// $secondary-button-hover: darken($secondary-button, 10%);
+
+// // Accent Colors
 // $accent: #008080;
+// $accent-hover: darken($accent, 10%);
+
+// // Specific Element Colors
+// $exercise-card-background: darken($background, 20%);
+// $background-input-field: lighten($background, 5%);
+// $text-input-field: lighten($text, 20%);
+// $text-input-field-secondary: lighten($text, 15%);
 
 // //neon
+// Text Colors
 // $text: #f0f0f0;
+// $text-secondary: #000000;
+
+// // Background Colors
 // $background: #2e2e2e;
+// $background-hover: darken($background, 10%);
+// $background-transparent: rgba($background, 0.75);
+
+// // Button Colors
 // $primary-button: #ff6eff;
+// $primary-button-hover: darken($primary-button, 10%);
 // $secondary-button: #00ffd1;
+// $secondary-button-hover: darken($secondary-button, 10%);
+
+// // Accent Colors
 // $accent: #ffca1c;
+// $accent-hover: darken($accent, 10%);
+
+// // Specific Element Colors
+// $exercise-card-background: darken($background, 20%);
+// $background-input-field: lighten($background, 5%);
+// $text-input-field: lighten($text, 20%);
+// $text-input-field-secondary: lighten($text, 15%);
 
 // //grainy
+// Text Colors
 // $text: #ffffff;
+// $text-secondary: #000000;
+
+// // Background Colors
 // $background: #404040;
+// $background-hover: darken($background, 10%);
+// $background-transparent: rgba($background, 0.75);
+
+// // Button Colors
 // $primary-button: #ff6347;
+// $primary-button-hover: darken($primary-button, 10%);
 // $secondary-button: #808080;
+// $secondary-button-hover: darken($secondary-button, 10%);
+
+// // Accent Colors
 // $accent: #00aeef;
+// $accent-hover: darken($accent, 10%);
+
+// // Specific Element Colors
+// $exercise-card-background: darken($background, 20%);
+// $background-input-field: lighten($background, 5%);
+// $text-input-field: lighten($text, 20%);
+// $text-input-field-secondary: lighten($text, 15%);
 
 // //something else
+// Text Colors
 // $text: #ffffff;
+// $text-secondary: #000000;
+
+// // Background Colors
 // $background: #222222;
+// $background-hover: darken($background, 10%);
+// $background-transparent: rgba($background, 0.75);
+
+// // Button Colors
 // $primary-button: #ff4081;
+// $primary-button-hover: darken($primary-button, 10%);
 // $secondary-button: #757575;
+// $secondary-button-hover: darken($secondary-button, 10%);
+
+// // Accent Colors
 // $accent: #00bcd4;
+// $accent-hover: darken($accent, 10%);
+
+// // Specific Element Colors
+// $exercise-card-background: darken($background, 20%);
+// $background-input-field: lighten($background, 5%);
+// $text-input-field: lighten($text, 20%);
+// $text-input-field-secondary: lighten($text, 15%);
 
 //something
+// Text Colors
 $text: #ffffff;
 $text-secondary: #000000;
+
+// Background Colors
 $background: #333333;
 $background-hover: #404040;
 $background-transparent: #333333ba;
+
+// Button Colors
 $primary-button: #ff6b6b;
 $primary-button-hover: #ff4d4d;
 $secondary-button: #808080;
 $secondary-button-hover: #a6a6a6;
+
+// Accent Colors
 $accent: #00b3e6;
 $accent-hover: #00a3cc;
+$accent-invert: #ff4c19;
 
-$exercise-card-background: #191919;
-
+// Specific Element Colors
+$exercise-card-background: #1b1b1b;
 $background-input-field: #606060;
 $text-input-field: #c4c4c4;
 $text-input-field-secondary: #ccc;
