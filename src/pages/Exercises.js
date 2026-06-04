@@ -4,11 +4,11 @@ import { useParams } from "react-router-dom";
 import Exercises from "../components/Exercises";
 
 const ExercisesPage = () => {
-  const [searchData, setsearchData] = useState("");
   const { search } = useParams();
+  const [searchData, setsearchData] = useState(search || "");
 
   useEffect(() => {
-    if (search !== "all" || search !== "") setsearchData(search);
+    setsearchData(search || "");
   }, [search]);
 
   return (
