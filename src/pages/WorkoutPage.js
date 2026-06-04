@@ -139,15 +139,15 @@ const WorkoutPage = () => {
 
   useEffect(() => {
     let interval = null;
-    if (activeSession) {
+    if (activeSession && !showSummary) {
       interval = setInterval(() => {
         setSeconds((prev) => prev + 1);
       }, 1000);
-    } else {
+    } else if (!activeSession) {
       setSeconds(0);
     }
     return () => clearInterval(interval);
-  }, [activeSession]);
+  }, [activeSession, showSummary]);
 
   const handleAddActiveSet = (exerciseId) => {
     const currentSets = sessionExercises[exerciseId] || [];

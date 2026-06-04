@@ -30,7 +30,8 @@
     }
   }
 
-  .goal-save-info-btn {
+  .goal-save-info-btn,
+  .goal-edit-btn {
     background-color: rgba($accent, 0.08);
     border: 1px solid rgba($accent, 0.3);
     color: $accent;
@@ -189,6 +190,43 @@
       flex-direction: column;
       align-items: flex-start;
       gap: 10px;
+    }
+
+    &.edit-active {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 12px;
+
+      .date-block {
+        width: 100%;
+        justify-content: flex-start;
+        align-items: center;
+        
+        &.align-right {
+          @media (min-width: 481px) {
+            text-align: left;
+            flex-direction: row; // Reset row-reverse in edit mode
+          }
+        }
+
+        .date-input-wrap {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          width: 100%;
+          
+          .date-label {
+            min-width: 45px;
+          }
+
+          .goal-date-input {
+            flex-grow: 1;
+            width: 100%;
+            padding: 6px 12px;
+            font-size: 0.85rem;
+          }
+        }
+      }
     }
 
     .date-block {

@@ -35,6 +35,7 @@ const ExerciseCard = ({
   const user = useSelector((state) => state.auth.user);
   const workoutData = useSelector((state) => state.workout.workoutData);
   const [errorMessage, setErrorMessage] = useState("");
+  const [isCreating, setIsCreating] = useState(false);
 
   const { _id, bodyPart, target, gifUrl, name } = exerciseData;
   // console.log(exerciseData);
@@ -167,22 +168,32 @@ const ExerciseCard = ({
     e.stopPropagation();
 
     if (!takingInput) {
-      setTakingInput(!takingInput);
+      setTakingInput(true);
       return;
     }
 
+    if (isCreating) return;
+
+    const trimmedName = newWorkoutInput.trim();
+    if (!trimmedName) {
+      setErrorMessage("Workout name cannot be empty");
+      return;
+    }
+
+    setIsCreating(true);
     try {
       const workoutId = await addWorkout(
         dispatch,
-        newWorkoutInput,
+        trimmedName,
         REACT_APP_BASE_URL
       );
 
-      setTakingInput(!takingInput);
+      setTakingInput(false);
       setNewWorkoutInput("");
     } catch (error) {
-      // console.error("Error creating workout or adding exercise:", error);
       setErrorMessage("Something went wrong. Please try again later.");
+    } finally {
+      setIsCreating(false);
     }
   };
 

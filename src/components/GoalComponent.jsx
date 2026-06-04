@@ -174,7 +174,9 @@ const GoalComponent = () => {
             <SaveIcon style={{ fontSize: "1.1rem" }} /> Save
           </button>
         ) : (
-          <EditIcon onClick={handleEditClick} title="Edit Goals" className="goal-edit-icon" />
+          <button onClick={handleEditClick} title="Edit Goals" className="goal-edit-btn">
+            <EditIcon style={{ fontSize: "1.1rem" }} /> Edit
+          </button>
         )}
       </div>
 
@@ -228,7 +230,7 @@ const GoalComponent = () => {
                     </div>
                   </div>
 
-                  <div className="goal-dates-row">
+                  <div className={`goal-dates-row ${editMode ? "edit-active" : ""}`}>
                     <div className="date-block">
                       <CalendarMonthIcon className="date-icon" />
                       {editMode ? (

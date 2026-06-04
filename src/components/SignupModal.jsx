@@ -23,7 +23,8 @@ const SignupModal = () => {
     email: "",
     password: "",
   });
-  const [errorMessage, setErrorMessage] = useState({});
+  const [errorMessage, setErrorMessage] = useState("");
+  const [agreeToTerms, setAgreeToTerms] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch();
 
@@ -68,6 +69,10 @@ const SignupModal = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!agreeToTerms) {
+      setErrorMessage("Please agree to the terms and conditions");
+      return;
+    }
     sendRegisterRequest();
   };
 
@@ -136,8 +141,15 @@ const SignupModal = () => {
             )}
           </div>
           <div className="terms-and-condition">
-            <input type="checkbox" />
-            <Link to={"/"}> &nbsp; I agree to terms & conditions </Link>
+            <input
+              type="checkbox"
+              id="terms-checkbox"
+              checked={agreeToTerms}
+              onChange={(e) => setAgreeToTerms(e.target.checked)}
+            />
+            <label htmlFor="terms-checkbox" style={{ cursor: "pointer", userSelect: "none", color: "inherit" }}>
+              &nbsp; I agree to terms & conditions
+            </label>
           </div>
           <button className="login-submit-btn" type="submit">
             CREATE ACCOUNT
