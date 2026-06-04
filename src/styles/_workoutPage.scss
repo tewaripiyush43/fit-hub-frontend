@@ -50,6 +50,11 @@
       display: flex;
       align-items: center;
       gap: 12px;
+      flex-wrap: wrap;
+
+      @media (max-width: 768px) {
+        justify-content: flex-end;
+      }
 
       .workout-page-edit-icon,
       .workout-page-delete-icon {

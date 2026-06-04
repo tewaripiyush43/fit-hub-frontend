@@ -238,4 +238,68 @@ html.modal-open {
 @import "statsSection";
 @import "featuresSection";
 
+// Sidebar Layout Coordinations
+.App.has-sidebar {
+  .user-profile-side-bar-container {
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  // Sidebar Open State: Shift main content and fixed navbar to the right
+  .user-profile-side-bar-container:not(.hide) ~ .main-app-content {
+    margin-left: 20%;
+    width: 80%;
+
+    @media (max-width: 1200px) {
+      margin-left: 240px;
+      width: calc(100% - 240px);
+    }
+
+    @media (max-width: 768px) {
+      margin-left: 0;
+      width: 100%;
+    }
+
+    #nav {
+      margin-left: 20%;
+      width: 80vw;
+
+      @media (max-width: 1200px) {
+        margin-left: 240px;
+        width: calc(100vw - 240px);
+      }
+
+      @media (max-width: 768px) {
+        margin-left: 0;
+        width: 100vw;
+      }
+    }
+  }
+
+  // Sidebar Closed State: Shift slightly to offset the toggle tab (32px)
+  .user-profile-side-bar-container.hide ~ .main-app-content {
+    margin-left: 32px;
+    width: calc(100% - 32px);
+
+    @media (max-width: 768px) {
+      margin-left: 0;
+      width: 100%;
+    }
+
+    #nav {
+      margin-left: 32px;
+      width: calc(100vw - 32px);
+
+      @media (max-width: 768px) {
+        margin-left: 0;
+        width: 100vw;
+      }
+    }
+  }
+
+  #nav {
+    transition: margin-left 0.4s cubic-bezier(0.4, 0, 0.2, 1), width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+
 
