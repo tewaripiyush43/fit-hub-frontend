@@ -22,6 +22,7 @@ import { getUser } from "./api/authAPI";
 import PageNotFound from "./components/PageNotFound";
 import ForgotPassword from "./components/ForgotPassword";
 import ResetPassword from "./components/ResetPassword";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 
 axios.defaults.withCredentials = true;
 
@@ -90,6 +91,28 @@ function App() {
     }
   }, [isLoggedIn]);
 
+  const [showScrollButton, setShowScrollButton] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 300) {
+        setShowScrollButton(true);
+      } else {
+        setShowScrollButton(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
+
   return (
     <div className={`App ${isLoggedIn ? "has-sidebar" : ""}`}>
       <ToastContainer
@@ -118,6 +141,15 @@ function App() {
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </div>
+      {showScrollButton && (
+        <button
+          className="back-to-top-btn"
+          onClick={scrollToTop}
+          aria-label="Back to top"
+        >
+          <KeyboardArrowUpIcon />
+        </button>
+      )}
     </div>
   );
 }

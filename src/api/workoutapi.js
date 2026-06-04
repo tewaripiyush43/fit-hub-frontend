@@ -181,9 +181,12 @@ export const addExerciseToWorkout = async (
     if (status === 201) {
       dispatch(workoutActions.setWorkoutData(data.workout));
       dispatch(authActions.setUser(data.user));
+      return true;
     }
+    return false;
   } catch (err) {
     // console.log(err);
+    return false;
   }
 };
 

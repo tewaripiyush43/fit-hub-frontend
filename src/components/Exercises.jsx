@@ -61,7 +61,14 @@ const Exercises = ({ searchByCarousel }) => {
     const searchByCarouselClick = () => {
       setSearchValue(searchByCarousel);
       setSearchClick(!searchClick);
-      window.scrollTo(0, window.scrollY + 400);
+      const container = document.querySelector('.search-exercises-component-container');
+      if (container) {
+        const yOffset = -90; // offset for sticky navigation header
+        const y = container.getBoundingClientRect().top + window.scrollY + yOffset;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      } else {
+        window.scrollTo(0, window.scrollY + 500);
+      }
     };
 
     if (searchByCarousel.length !== 0) {

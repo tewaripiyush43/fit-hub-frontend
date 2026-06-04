@@ -1,8 +1,10 @@
 import React from "react";
 import profilePicture from "../assets/images/home-img-7.jpg";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const UserProfileInfoCard = () => {
+  const navigate = useNavigate();
   const user = useSelector((state) => state.auth.user);
 
   const bioText = user?.bio || "Welcome to my world of fitness and adventure! 🏋️‍♂️ Follow me on my journey as I explore new heights and push my limits.";
@@ -26,6 +28,12 @@ const UserProfileInfoCard = () => {
 
       <div className="user-bio">
         <p className="user-bio-textarea">{bioText}</p>
+        <span
+          className="edit-bio-hint"
+          onClick={() => navigate(`/${user?.username}/settings`)}
+        >
+          Edit profile in Settings →
+        </span>
       </div>
 
       <div className="user-details">

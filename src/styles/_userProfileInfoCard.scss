@@ -198,6 +198,21 @@
       font-size: 0.75rem;
     }
   }
+
+  .edit-bio-hint {
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 0.8rem;
+    color: rgba($text, 0.5);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+
+    &:hover {
+      color: $accent;
+      transform: translateX(3px);
+    }
+  }
 }
 
 .user-details {

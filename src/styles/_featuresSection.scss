@@ -82,6 +82,7 @@
 }
 
 .feature-card {
+  cursor: pointer;
   background: $glass-bg;
   backdrop-filter: $glass-blur;
   border: 1px solid $glass-border;

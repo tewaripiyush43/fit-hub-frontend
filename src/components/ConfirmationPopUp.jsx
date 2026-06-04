@@ -1,7 +1,10 @@
 import React from "react";
+import { createPortal } from "react-dom";
 
 const ConfirmationPopup = ({ onClose, onDelete, textContent }) => {
-  return (
+  const portalRoot = document.getElementById("portal") || document.body;
+
+  return createPortal(
     <div className="popup-overlay">
       <div className="popup-modal">
         <p>Are you sure you want to delete this {textContent}?</p>
@@ -14,7 +17,8 @@ const ConfirmationPopup = ({ onClose, onDelete, textContent }) => {
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    portalRoot
   );
 };
 

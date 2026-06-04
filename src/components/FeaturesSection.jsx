@@ -1,4 +1,7 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { portalActions } from "../store/index";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
@@ -14,6 +17,8 @@ const features = [
     description:
       "Tell our AI your fitness level, goals, and available equipment. Get a personalized workout plan in seconds — no guesswork, just science.",
     accentColor: "#00e5ff",
+    path: "/myworkouts",
+    protected: true,
   },
   {
     icon: <RestaurantMenuIcon className="feature-icon" />,
@@ -22,6 +27,8 @@ const features = [
     description:
       "Fuel your training with hand-picked, high-protein recipes designed to match your fitness goals. Tasty, balanced, and optimized for performance.",
     accentColor: "#ff9800",
+    path: "/recipes",
+    protected: false,
   },
   {
     icon: <EmojiEventsIcon className="feature-icon" />,
@@ -30,6 +37,8 @@ const features = [
     description:
       "Document your workouts with detailed notes and AI-generated descriptions. Keep a running log of what you lifted, how you felt, and what to improve.",
     accentColor: "#ffca28",
+    path: "/dashboard",
+    protected: true,
   },
   {
     icon: <FitnessCenterIcon className="feature-icon" />,
@@ -38,6 +47,8 @@ const features = [
     description:
       "Explore an extensive library of exercises filtered by muscle group, equipment, and difficulty — each with animated GIF demos.",
     accentColor: "#4caf50",
+    path: "/exercises/all",
+    protected: false,
   },
   {
     icon: <TrackChangesIcon className="feature-icon" />,
@@ -46,6 +57,8 @@ const features = [
     description:
       "Set measurable fitness goals and track your progress over time. Visualize how far you've come and what's left to conquer.",
     accentColor: "#ab47bc",
+    path: "/myprofile",
+    protected: true,
   },
   {
     icon: <CalculateIcon className="feature-icon" />,
@@ -54,10 +67,30 @@ const features = [
     description:
       "BMI, TDEE, Macro splits, and One-Rep Max calculators — all the numbers you need to train and eat with precision.",
     accentColor: "#ef5350",
+    path: "/fitnesstools",
+    protected: true,
   },
 ];
 
 const FeaturesSection = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const user = useSelector((state) => state.auth.user);
+
+  const handleCardClick = (feature) => {
+    if (feature.protected) {
+      if (isLoggedIn) {
+        navigate(`/${user?.username}${feature.path}`);
+      } else {
+        dispatch(portalActions.setPortalOpen());
+        dispatch(portalActions.setPortalTypeLogin());
+      }
+    } else {
+      navigate(feature.path);
+    }
+  };
+
   return (
     <section className="features-section">
       <div className="features-inner">
@@ -76,6 +109,7 @@ const FeaturesSection = () => {
               data-aos="fade-up"
               data-aos-delay={`${i * 80}`}
               style={{ "--accent-color": f.accentColor }}
+              onClick={() => handleCardClick(f)}
             >
               <div className="feature-card-icon-wrapper">
                 {f.icon}

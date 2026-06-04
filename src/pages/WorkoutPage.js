@@ -568,7 +568,7 @@ const WorkoutPage = () => {
             {workoutData?.exercises?.length < 10 && (
               <div
                 className="workout-page-add-exercise-placeholder-card"
-                onClick={() => navigate("/")}
+                onClick={() => navigate("/exercises/all")}
               >
                 <AddTwoToneIcon className="add-placeholder-icon" />
                 <span className="add-placeholder-text">Add More Exercises</span>
@@ -581,7 +581,7 @@ const WorkoutPage = () => {
         ) : (
           <div className="empty-exercises-state">
             <p>No exercises in this workout routine yet.</p>
-            <button className="browse-exercises-btn" onClick={() => navigate("/")}>
+            <button className="browse-exercises-btn" onClick={() => navigate("/exercises/all")}>
               Explore & Add Exercises
             </button>
           </div>

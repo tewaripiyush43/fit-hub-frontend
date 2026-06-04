@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "../store/index.js";
 import axios from "axios";
 import { errorPopUp } from "../helpers/errorPopUp.js";
+import { toast } from "react-toastify";
 
 import {
   addWorkout,
@@ -242,19 +243,33 @@ const ExerciseCard = ({
                   return (
                     <li
                       key={workout._id}
-                      onClick={(e) => {
+                      onClick={async (e) => {
                         e.preventDefault();
                         if (isFull) {
                           setErrorMessage("Workout is full! (Max 10 exercises)");
                           return;
                         }
-                        addExerciseToWorkout(
+                        const exists = workout.exercises?.some((ex) => {
+                          const exId = typeof ex === "string" ? ex : ex?._id;
+                          return exId === _id;
+                        });
+                        if (exists) {
+                          toast.info("Exercise already exists in this workout");
+                          setShowMore(false);
+                          return;
+                        }
+                        setShowMore(false);
+                        const success = await addExerciseToWorkout(
                           dispatch,
                           workout._id,
                           _id,
                           REACT_APP_BASE_URL
                         );
-                        setShowMore(false);
+                        if (success) {
+                          toast.success(`Added ${name} to ${workout.name}!`);
+                        } else {
+                          toast.error(`Failed to add ${name} to ${workout.name}`);
+                        }
                       }}
                       className={`exercise-card-more-options-list-item ${isFull ? "workout-full" : ""}`}
                     >
@@ -300,7 +315,7 @@ const ExerciseCard = ({
                 )}
                 <p
                   onClick={() => {
-                    navigate(`${user.username}/myworkouts`);
+                    navigate(`/${user.username}/myworkouts`);
                   }}
                   className="exercise-card-create-workout-btn exercise-card-more-options-list-item"
                 >

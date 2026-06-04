@@ -161,6 +161,7 @@ const MyWorkouts = () => {
                     <option value="Aesthetics">Aesthetics</option>
                     <option value="Strength">Strength Training</option>
                     <option value="Endurance">Endurance / Cardio</option>
+                    <option value="Weight Loss">Weight Loss / Fat Burn</option>
                   </select>
                 </div>
                 <div className="form-group">
