@@ -76,6 +76,9 @@ const Navbar = () => {
       });
   };
 
+  const [navVisible, setNavVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+
   function handleLogout() {
     sendLogoutReq();
   }
@@ -88,9 +91,28 @@ const Navbar = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
+      if (currentScrollY <= 20) {
+        setNavVisible(true);
+      } else if (currentScrollY > lastScrollY && currentScrollY > 120) {
+        setNavVisible(false);
+      } else if (currentScrollY < lastScrollY) {
+        setNavVisible(true);
+      }
+      
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [lastScrollY]);
+
   return (
     <div>
-      <nav id="nav">
+      <nav id="nav" className={!navVisible ? "nav-hidden" : ""}>
         <h2 onClick={takeToHomePage} id="heading">
           FitHub
         </h2>

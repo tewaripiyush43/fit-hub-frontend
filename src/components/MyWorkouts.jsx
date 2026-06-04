@@ -112,13 +112,6 @@ const MyWorkouts = () => {
       </div>
 
       <div className="my-workout-cards-container">
-        {user?.workouts?.map((workout, index) => (
-          <WorkoutCard
-            key={typeof workout === "string" ? workout : (workout?._id || index)}
-            workout={workout}
-            index={index}
-          />
-        ))}
         {user?.workouts?.length < 7 && (
           <div
             onClick={() =>
@@ -130,6 +123,13 @@ const MyWorkouts = () => {
             <p className="create-new-workout-card-text">Create New Workout</p>
           </div>
         )}
+        {user?.workouts?.map((workout, index) => (
+          <WorkoutCard
+            key={typeof workout === "string" ? workout : (workout?._id || index)}
+            workout={workout}
+            index={index}
+          />
+        ))}
       </div>
 
       {showAIModal && (

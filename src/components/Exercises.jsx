@@ -13,7 +13,7 @@ import { errorPopUp } from "../helpers/errorPopUp";
 
 const Exercises = ({ searchByCarousel }) => {
   const REACT_APP_BASE_URL = process.env.REACT_APP_BASE_URL;
-  const [searchValue, setSearchValue] = useState("");
+  const [searchValue, setSearchValue] = useState(searchByCarousel || "");
   const [suggestion, setSuggestion] = useState([]);
   const [exercises, setExercises] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -24,6 +24,7 @@ const Exercises = ({ searchByCarousel }) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const lastSearchTerm = useRef(null);
+  const isFirstRender = useRef(true);
   // const user = useSelector((state) => state.auth.user);
 
   useEffect(() => {
@@ -58,9 +59,17 @@ const Exercises = ({ searchByCarousel }) => {
   }, [currentPage, searchClick]);
 
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      if (searchByCarousel && searchByCarousel.length !== 0) {
+        setInputOpen(true);
+      }
+      return;
+    }
+
     const searchByCarouselClick = () => {
       setSearchValue(searchByCarousel);
-      setSearchClick(!searchClick);
+      setSearchClick((prev) => !prev);
       const container = document.querySelector('.search-exercises-component-container');
       if (container) {
         const yOffset = -90; // offset for sticky navigation header
@@ -71,7 +80,7 @@ const Exercises = ({ searchByCarousel }) => {
       }
     };
 
-    if (searchByCarousel.length !== 0) {
+    if (searchByCarousel && searchByCarousel.length !== 0) {
       setInputOpen(true);
       searchByCarouselClick();
     }

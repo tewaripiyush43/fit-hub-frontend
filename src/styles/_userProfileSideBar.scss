@@ -54,19 +54,43 @@
     margin: 0;
 
     .user-profile-side-bar-list-item {
-      padding: 18px 24px 18px 32px;
-      letter-spacing: 0.5px;
-      font-size: 1.1rem;
-      font-weight: 500;
-      color: $text-input-field-secondary;
+      padding: 16px 24px 16px 32px;
+      letter-spacing: 0.3px;
+      font-size: 1rem;
+      font-weight: 600;
+      color: rgba($text, 0.6);
       border-left: 4px solid transparent;
-      transition: all 0.3s ease;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+
+      .sidebar-icon-wrapper {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: inherit;
+        transition: transform 0.25s ease, color 0.25s ease;
+
+        svg {
+          font-size: 1.25rem;
+        }
+      }
+
+      .sidebar-text {
+        transition: transform 0.25s ease;
+      }
 
       &.user-profile-side-bar-list-item-active {
         color: $accent;
-        background: rgba($accent, 0.08);
+        background: linear-gradient(90deg, rgba($accent, 0.1) 0%, rgba($accent, 0.01) 100%);
         border-left-color: $accent;
-        font-weight: 600;
+        font-weight: 700;
+
+        .sidebar-icon-wrapper {
+          color: $accent;
+          filter: drop-shadow(0 0 6px rgba($accent, 0.5));
+        }
       }
 
       &:hover {
@@ -74,6 +98,11 @@
         color: $text;
         background: rgba(255, 255, 255, 0.03);
         padding-left: 36px;
+
+        .sidebar-icon-wrapper {
+          transform: scale(1.12);
+          color: $accent;
+        }
       }
     }
   }

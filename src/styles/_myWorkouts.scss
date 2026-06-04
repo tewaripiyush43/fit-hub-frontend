@@ -32,7 +32,7 @@
 }
 
 .workout-card {
-  width: calc(45% - 14px);
+  width: calc(50% - 14px);
   min-width: 340px;
   background: $background-hover;
   border: 1px solid $glass-border;
@@ -133,7 +133,7 @@
 }
 
 .create-new-workout-card {
-  width: calc(45% - 14px);
+  width: calc(50% - 14px);
   min-width: 340px;
   min-height: 180px;
   background: rgba(0, 0, 0, 0.12);

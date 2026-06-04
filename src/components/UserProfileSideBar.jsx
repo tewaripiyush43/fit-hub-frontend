@@ -4,6 +4,14 @@ import { useSelector } from "react-redux";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 
+import HomeIcon from "@mui/icons-material/Home";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import PersonIcon from "@mui/icons-material/Person";
+import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import CalculateIcon from "@mui/icons-material/Calculate";
+import SettingsIcon from "@mui/icons-material/Settings";
+
 const UserProfileSideBar = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -26,13 +34,13 @@ const UserProfileSideBar = () => {
   }, [sidebarRef]);
 
   const sidebarItems = [
-    { id: "1", name: "Home" },
-    { id: "8", name: "Dashboard" },
-    { id: "2", name: "My Profile" },
-    { id: "3", name: "My Workouts" },
-    { id: "4", name: "My Favorite" },
-    { id: "6", name: "Fitness Tools" },
-    { id: "7", name: "Settings" },
+    { id: "1", name: "Home", icon: <HomeIcon /> },
+    { id: "8", name: "Dashboard", icon: <DashboardIcon /> },
+    { id: "2", name: "My Profile", icon: <PersonIcon /> },
+    { id: "3", name: "My Workouts", icon: <FitnessCenterIcon /> },
+    { id: "4", name: "My Favorite", icon: <FavoriteIcon /> },
+    { id: "6", name: "Fitness Tools", icon: <CalculateIcon /> },
+    { id: "7", name: "Settings", icon: <SettingsIcon /> },
   ];
 
   const [activeItem, setActiveItem] = useState("1");
@@ -58,8 +66,7 @@ const UserProfileSideBar = () => {
     setActiveItem(activeId);
   }, [location.pathname]);
 
-  const handleItemClick = (e) => {
-    const item = sidebarItems.find((x) => x.id === e.target.id);
+  const handleItemClick = (item) => {
     if (!item) return;
 
     if (item.id === "1") {
@@ -93,10 +100,10 @@ const UserProfileSideBar = () => {
                   : "")
               }
               key={item.id}
-              id={item.id}
-              onClick={(e) => handleItemClick(e)}
+              onClick={() => handleItemClick(item)}
             >
-              {item.name}
+              <span className="sidebar-icon-wrapper">{item.icon}</span>
+              <span className="sidebar-text">{item.name}</span>
             </li>
           ))}
         </ul>
