@@ -188,6 +188,13 @@
   width: 100%;
   max-width: 1200px;
   margin-inline: auto;
+  padding-inline: 24px;
+  box-sizing: border-box;
+
+  @media (max-width: 768px) {
+    padding-inline: 16px;
+    margin-top: 60px;
+  }
 
   .dashboard-title {
     color: $text;
@@ -223,6 +230,11 @@
     backdrop-filter: $glass-blur;
     display: flex;
     flex-direction: column;
+
+    @media (max-width: 768px) {
+      padding: 20px;
+      border-radius: 16px;
+    }
     justify-content: flex-start;
     transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
 
@@ -652,6 +664,11 @@
             display: flex;
             gap: 8px;
             width: 100%;
+
+            @media (max-width: 480px) {
+              flex-direction: column;
+              gap: 6px;
+            }
 
             .half {
               flex: 1;

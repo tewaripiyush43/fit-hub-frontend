@@ -1,6 +1,6 @@
 import "./styles/styles.scss";
 import React, { useState, useEffect } from "react";
-import { Route, Routes, useParams, useNavigate } from "react-router-dom";
+import { Route, Routes, useParams, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { ToastContainer } from "react-toastify";
@@ -27,6 +27,7 @@ axios.defaults.withCredentials = true;
 
 function App() {
   const dispatch = useDispatch();
+  const location = useLocation();
   const REACT_APP_BASE_URL = process.env.REACT_APP_BASE_URL;
   // console.log(REACT_APP_BASE_URL);
   const [loading, setLoading] = useState(false);
@@ -35,6 +36,44 @@ function App() {
     window.location.pathname.includes("/reset-password");
 
   const shouldRenderNavbar = isRouteResetPassword;
+
+  useEffect(() => {
+    const path = location.pathname;
+    const parts = path.split("/").filter(Boolean);
+
+    if (parts.length === 0) {
+      document.title = "FitHub - Challenge yourself, change yourself | AI Workout Generator & Tracker";
+    } else if (parts[0] === "forgot-password") {
+      document.title = "FitHub - Forgot Password";
+    } else if (parts[0] === "reset-password") {
+      document.title = "FitHub - Reset Password";
+    } else if (parts[0] === "exercises") {
+      document.title = "FitHub - Search Exercises & Muscle Workouts | Interactive GIFs";
+    } else if (parts[0] === "recipes") {
+      document.title = "FitHub - Healthy Recipes";
+    } else if (parts[0] === "exercise") {
+      document.title = "FitHub - Exercise Details & Interactive GIFs";
+    } else if (parts[0] === "share" && parts[1] === "workout") {
+      document.title = "FitHub - Shared Workout Routine";
+    } else if (parts.length >= 2) {
+      const page = parts[1];
+      if (page === "myworkouts") {
+        if (parts.length >= 3) {
+          document.title = "FitHub - View Workout Routine";
+        } else {
+          document.title = "FitHub - My Custom Workout Routines & Training Programs";
+        }
+      } else if (page === "dashboard") {
+        document.title = "FitHub - Training Dashboard: Streaks, History & PRs";
+      } else if (page === "settings") {
+        document.title = "FitHub - Account Settings & Profile Customization";
+      } else {
+        document.title = `FitHub - ${parts[0]}'s Profile`;
+      }
+    } else {
+      document.title = "FitHub : Challenge yourself, change yourself";
+    }
+  }, [location.pathname]);
 
   useEffect(() => {
     setLoading(true);

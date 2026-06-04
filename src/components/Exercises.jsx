@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import ExerciseCard from "./ExerciseCard";
 import axios from "axios";
@@ -22,68 +22,40 @@ const Exercises = ({ searchByCarousel }) => {
   const [dropdownActive, setDropdownActive] = useState(false);
   const [inputOpen, setInputOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+  const lastSearchTerm = useRef(null);
   // const user = useSelector((state) => state.auth.user);
 
   useEffect(() => {
-    const getNames = async () => {
-      await axios
-        .get(`${REACT_APP_BASE_URL}/exercise/fetchnames`)
-        .then((res) => setSuggestion(res.data))
-        .catch((err) => {
-          // console.log(err.message)
-          setErrorMessage("Something went wrong. Please try again later.");
-        });
-    };
-
     setInputOpen(false);
-    getNames();
   }, []);
 
   useEffect(() => {
-    const fetchSearchResult = async () => {
-      await axios
-        .get(
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        if (lastSearchTerm.current !== searchValue) {
+          const countRes = await axios.get(
+            `${REACT_APP_BASE_URL}/exercise/fetchCount?exercise=${searchValue}`
+          );
+          setTotalPages(Math.ceil(countRes.data / 9));
+          lastSearchTerm.current = searchValue;
+        }
+
+        const exercisesRes = await axios.get(
           `${REACT_APP_BASE_URL}/exercise/exercises?exercise=${searchValue}&page=${currentPage}`
-        )
-        .then((res) => {
-          setExercises(res.data);
-        })
-        .catch((err) => {
-          // console.log(err.message);
-          setErrorMessage("Something went wrong. Please try again later.");
-        });
-    };
-    fetchSearchResult();
-  }, [currentPage]);
-
-  useEffect(() => {
-    const fetchCount = async () => {
-      await axios
-        .get(
-          `${REACT_APP_BASE_URL}/exercise/fetchCount?exercise=${searchValue}`
-        )
-        .then((res) => setTotalPages(Math.ceil(res.data / 9)))
-        .catch((err) => {
-          console.log(err.message);
-          setErrorMessage("Something went wrong. Please try again later.");
-        });
+        );
+        setExercises(exercisesRes.data);
+      } catch (err) {
+        console.log(err.message);
+        setErrorMessage("Something went wrong. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
     };
 
-    const fetchSearchResult = async () => {
-      await axios
-        .get(
-          `${REACT_APP_BASE_URL}/exercise/exercises?exercise=${searchValue}&page=${currentPage}`
-        )
-        .then((res) => setExercises(res.data))
-        .catch((err) => {
-          console.log(err.message);
-          setErrorMessage("Something went wrong. Please try again later.");
-        });
-    };
-
-    fetchCount();
-    fetchSearchResult();
-  }, [searchClick]);
+    fetchData();
+  }, [currentPage, searchClick]);
 
   useEffect(() => {
     const searchByCarouselClick = () => {
@@ -104,6 +76,18 @@ const Exercises = ({ searchByCarousel }) => {
       setErrorMessage("");
     }
   }, [errorMessage]);
+
+  const handleInputFocus = async () => {
+    setDropdownActive(true);
+    if (suggestion.length === 0) {
+      try {
+        const res = await axios.get(`${REACT_APP_BASE_URL}/exercise/fetchnames`);
+        setSuggestion(res.data);
+      } catch (err) {
+        setErrorMessage("Something went wrong. Please try again later.");
+      }
+    }
+  };
 
   const handleInputChange = (e) => {
     // console.log("yo");
@@ -136,9 +120,7 @@ const Exercises = ({ searchByCarousel }) => {
               className="exercises-input-search-bar open-input"
               value={searchValue}
               onChange={handleInputChange}
-              onFocus={() => {
-                setDropdownActive(true);
-              }}
+              onFocus={handleInputFocus}
               onBlur={() => {
                 setTimeout(() => {
                   setDropdownActive(false);
@@ -213,16 +195,31 @@ const Exercises = ({ searchByCarousel }) => {
           )}
         </div>
         <div className="exercises">
-          {exercises?.map((exercise) => {
-            return (
-              <ExerciseCard
-                className="exercise-card"
-                key={exercise._id}
-                exerciseData={exercise}
-                animation={true}
-              />
-            );
-          })}
+          {loading ? (
+            Array.from({ length: 9 }).map((_, index) => (
+              <div key={index} className="exercise-card-skeleton">
+                <div className="skeleton-img"></div>
+                <div className="skeleton-body">
+                  <div className="skeleton-info">
+                    <div className="skeleton-btn"></div>
+                    <div className="skeleton-btn"></div>
+                  </div>
+                  <div className="skeleton-title"></div>
+                </div>
+              </div>
+            ))
+          ) : (
+            exercises?.map((exercise) => {
+              return (
+                <ExerciseCard
+                  className="exercise-card"
+                  key={exercise._id}
+                  exerciseData={exercise}
+                  animation={true}
+                />
+              );
+            })
+          )}
         </div>
         <Pagination
           page={currentPage}

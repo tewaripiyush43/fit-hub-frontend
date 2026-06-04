@@ -310,3 +310,83 @@
     height: 240px;
   }
 }
+
+// Skeleton Loader styles
+.exercise-card-skeleton {
+  width: 100%;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  background: $exercise-card-background;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  overflow: hidden;
+  height: 410px; // Match average card height
+
+  @media screen and (max-width: 1024px) {
+    height: 370px;
+  }
+  @media screen and (max-width: 768px) {
+    height: 350px;
+  }
+
+  .skeleton-img {
+    width: 100%;
+    height: 300px;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 25%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0.03) 75%);
+    background-size: 200% 100%;
+    animation: skeleton-pulse 1.5s infinite;
+
+    @media screen and (max-width: 1024px) {
+      height: 260px;
+    }
+    @media screen and (max-width: 768px) {
+      height: 240px;
+    }
+  }
+
+  .skeleton-body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 14px 16px 18px;
+    flex: 1;
+  }
+
+  .skeleton-info {
+    display: flex;
+    gap: 6px;
+  }
+
+  .skeleton-btn {
+    width: 60px;
+    height: 22px;
+    border-radius: 20px;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 25%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0.03) 75%);
+    background-size: 200% 100%;
+    animation: skeleton-pulse 1.5s infinite;
+
+    &:nth-child(2) {
+      width: 80px;
+    }
+  }
+
+  .skeleton-title {
+    width: 70%;
+    height: 18px;
+    border-radius: 4px;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 25%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0.03) 75%);
+    background-size: 200% 100%;
+    animation: skeleton-pulse 1.5s infinite;
+    margin-top: 4px;
+  }
+}
+
+@keyframes skeleton-pulse {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
