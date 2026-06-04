@@ -186,20 +186,28 @@ const ExerciseCard = ({
   };
 
   return (
-    <div className={"exercise-card " + (animation ? "animation" : "")}>
-      <img onClick={exercisePage} src={gifUrl} alt="error" />
+    <div
+      className={
+        "exercise-card " +
+        (animation ? "animation " : "") +
+        (showMore ? "active-dropdown" : "")
+      }
+    >
+      <div className="exercise-card-img-wrapper">
+        <img onClick={exercisePage} src={gifUrl} alt="error" />
+      </div>
       {isLoggedIn && animation && (
         <div className="exercise-card-icon-container" ref={moreOptionsRef}>
           <div>
             {isFavorite ? (
               <FavoriteIcon
-                title="add to favorites"
+                title="remove from favorites"
                 onClick={(e) => removeFromFavorites(e)}
-                className="exercise-card-favorite-icon"
+                className="exercise-card-favorite-icon active-favorite"
               />
             ) : (
               <FavoriteBorderIcon
-                title="remove to favorites"
+                title="add to favorites"
                 onClick={(e) => addToFavorites(e)}
                 className="exercise-card-favorite-icon"
               />
@@ -229,12 +237,17 @@ const ExerciseCard = ({
               <ul className="exercise-card-more-options-list">
                 <p className="exercise-card-more-options-label">Add To</p>
                 {user?.workouts?.map((workout) => {
+                  const exerciseCount = workout.exercises?.length || 0;
+                  const isFull = exerciseCount >= 10;
                   return (
                     <li
                       key={workout._id}
                       onClick={(e) => {
                         e.preventDefault();
-                        // console.log("adding exercise to workout");
+                        if (isFull) {
+                          setErrorMessage("Workout is full! (Max 10 exercises)");
+                          return;
+                        }
                         addExerciseToWorkout(
                           dispatch,
                           workout._id,
@@ -243,9 +256,9 @@ const ExerciseCard = ({
                         );
                         setShowMore(false);
                       }}
-                      className="exercise-card-more-options-list-item"
+                      className={`exercise-card-more-options-list-item ${isFull ? "workout-full" : ""}`}
                     >
-                      {workout.name}
+                      {workout.name} ({exerciseCount}/10)
                     </li>
                   );
                 })}
@@ -299,15 +312,17 @@ const ExerciseCard = ({
         </div>
       )}
 
-      <div className="card-info">
-        <button onClick={bodyPartPage} className="exercise-button">
-          {bodyPart}
-        </button>
-        <button onClick={targetMusclePage} className="exercise-button">
-          {target}
-        </button>
+      <div className="exercise-card-body">
+        <div className="card-info">
+          <button onClick={bodyPartPage} className="exercise-button">
+            {bodyPart}
+          </button>
+          <button onClick={targetMusclePage} className="exercise-button">
+            {target}
+          </button>
+        </div>
+        <p className="exercise-name">{name}</p>
       </div>
-      <p className="exercise-name">{name}</p>
     </div>
   );
 };

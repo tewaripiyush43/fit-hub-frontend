@@ -140,7 +140,8 @@
         position: absolute;
         top: -12%;
         left: 7.5%;
-        filter: invert(90%);
+        filter: invert(1) contrast(1.3) brightness(0.95);
+        mix-blend-mode: screen;
         transition: all 0.3s ease-in-out;
         box-shadow: 0 0 50px -30px $accent-invert;
 

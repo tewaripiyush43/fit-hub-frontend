@@ -11,9 +11,11 @@ import ExercisePage from "./pages/ExercisePage";
 import ExercisesPage from "./pages/Exercises";
 import UserProfile from "./pages/UserProfile";
 import WorkoutPage from "./pages/WorkoutPage";
+import SharedWorkoutPage from "./pages/SharedWorkoutPage";
 
 import Navbar from "./components/Navbar";
 import Loader from "./components/Loader";
+import UserProfileSideBar from "./components/UserProfileSideBar";
 
 import "react-toastify/dist/ReactToastify.css";
 import { getUser } from "./api/authAPI";
@@ -50,17 +52,15 @@ function App() {
   }, [isLoggedIn]);
 
   return (
-    <div className="App">
+    <div className={`App ${isLoggedIn ? "has-sidebar" : ""}`}>
       <ToastContainer
         theme="dark"
         progressStyle={{
           background: "red",
         }}
       />
-      {/* {loading ? (
-        <Loader />
-      ) : ( */}
-      <div>
+      {isLoggedIn && <UserProfileSideBar />}
+      <div className="main-app-content">
         {!shouldRenderNavbar && <Navbar />}
         <Routes>
           <Route path="/" element={<Home />} />
@@ -75,10 +75,10 @@ function App() {
             path="/:username/myworkouts/:workoutId"
             element={<WorkoutPage />}
           />
+          <Route path="/share/workout/:workoutId" element={<SharedWorkoutPage />} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </div>
-      {/* )} */}
     </div>
   );
 }

@@ -120,6 +120,7 @@ export const updateWorkout = async (
         updatedData: {
           name: updatedData.name,
           description: updatedData.description,
+          isPrivate: updatedData.isPrivate,
         },
       },
       {
@@ -223,3 +224,72 @@ export const removeExerciseFromWorkout = async (
     // console.log(err);
   }
 };
+
+export const generateAIWorkout = async (
+  dispatch,
+  payload,
+  REACT_APP_BASE_URL
+) => {
+  try {
+    const accessToken = localStorage.accessToken;
+    if (!accessToken) throw new Error("Access token not found");
+
+    const response = await axios.post(
+      `${REACT_APP_BASE_URL}/workout/generate-ai`,
+      payload,
+      {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+
+    const { data, status } = response;
+    if (data?.error?.status === 401) {
+      window.location.reload();
+      throw new Error("Unauthorized");
+    }
+    if (status === 201) {
+      dispatch(authActions.setUser(data.user));
+      return { workoutId: data.workoutId, workoutName: data.workoutName };
+    }
+  } catch (error) {
+    console.error("Error generating AI workout:", error);
+    throw error;
+  }
+};
+
+export const cloneWorkout = async (dispatch, workoutId, REACT_APP_BASE_URL) => {
+  try {
+    const accessToken = localStorage.accessToken;
+    if (!accessToken) throw new Error("Access token not found");
+
+    const response = await axios.post(
+      `${REACT_APP_BASE_URL}/workout/clone/${workoutId}`,
+      {},
+      {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+
+    const { data, status } = response;
+    if (data?.error?.status === 401) {
+      window.location.reload();
+      throw new Error("Unauthorized");
+    }
+    if (status === 201) {
+      dispatch(authActions.setUser(data.user));
+      return data.workoutId;
+    }
+  } catch (error) {
+    console.error("Error cloning workout:", error);
+    throw error;
+  }
+};
+

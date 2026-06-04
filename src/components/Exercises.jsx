@@ -117,16 +117,9 @@ const Exercises = ({ searchByCarousel }) => {
   };
 
   const handleSearchBtnClick = (e, value) => {
-    if (inputOpen && searchValue.length === 0) {
-      setInputOpen(false);
-      setSearchClick(!searchClick);
-      setDropdownActive(false);
-    } else if (inputOpen) {
-      setCurrentPage(1);
-      setSearchClick(!searchClick);
-    } else {
-      setInputOpen(true);
-    }
+    setCurrentPage(1);
+    setSearchClick(!searchClick);
+    setDropdownActive(false);
   };
 
   const handleKeyDown = (e) => {
@@ -140,9 +133,7 @@ const Exercises = ({ searchByCarousel }) => {
           <div className="exercises-input-with-dropdown">
             <input
               type="text"
-              className={`exercises-input-search-bar ${
-                inputOpen ? "open-input" : ""
-              }`}
+              className="exercises-input-search-bar open-input"
               value={searchValue}
               onChange={handleInputChange}
               onFocus={() => {
@@ -154,7 +145,7 @@ const Exercises = ({ searchByCarousel }) => {
                 }, 400);
               }}
               onKeyDown={handleKeyDown}
-              placeholder="Search muscle, bodypart or exercise"
+              placeholder="Search muscle, body part or exercise..."
             />
 
             <div
@@ -164,7 +155,6 @@ const Exercises = ({ searchByCarousel }) => {
                 ?.filter((item) => {
                   const searchTerm = searchValue.toLocaleLowerCase();
                   const hasItem = item.name.toLocaleLowerCase();
-
                   return searchTerm && hasItem.includes(searchTerm);
                 })
                 ?.map(({ _id, name }) => {
@@ -189,6 +179,38 @@ const Exercises = ({ searchByCarousel }) => {
           <button onClick={handleSearchBtnClick} className="search-button">
             <SearchIcon className="search-icon" />
           </button>
+        </div>
+
+        {/* Quick Muscle Filters */}
+        <div className="quick-muscle-filters">
+          {["Chest", "Back", "Biceps", "Triceps", "Shoulders", "Quads", "Abs", "Cardio"].map((muscle) => {
+            const isActive = searchValue.toLowerCase() === muscle.toLowerCase();
+            return (
+              <button
+                key={muscle}
+                onClick={() => {
+                  setSearchValue(muscle);
+                  setCurrentPage(1);
+                  setSearchClick(!searchClick);
+                }}
+                className={`quick-filter-btn ${isActive ? "active" : ""}`}
+              >
+                {muscle}
+              </button>
+            );
+          })}
+          {searchValue && (
+            <button
+              onClick={() => {
+                setSearchValue("");
+                setCurrentPage(1);
+                setSearchClick(!searchClick);
+              }}
+              className="quick-filter-clear-btn"
+            >
+              Reset
+            </button>
+          )}
         </div>
         <div className="exercises">
           {exercises?.map((exercise) => {

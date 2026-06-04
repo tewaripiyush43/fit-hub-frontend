@@ -7,21 +7,29 @@ import Card from "../components/Card";
 
 const SectionCards = () => {
   return (
-    <div className="exercise-card-div" data-aos="slide-right">
-      <Card
-        imgUrl={ExerciseImg}
-        title="Exercises"
-        description="Exercise is a body activity that enhances or maintains physical fitness and overall health and wellness. In terms of health benefits, the amount of recommended exercise depends upon the goal, the type of exercise, and the age of the person. Even doing a small amount of exercise is healthier than doing none."
-        buttonText="Let's Do it!"
-        cardTitle="Exercises"
-      />
-      <Card
-        imgUrl={foodImg}
-        title="Recipes"
-        description="COMING SOON"
-        buttonText="Do not click on me"
-        cardTitle="Recipes"
-      />
+    <div className="section-cards-wrapper" data-aos="fade-up">
+      <div className="section-cards-eyebrow">EXPLORE</div>
+      <h2 className="section-cards-heading">
+        Start your journey with <span>what matters most</span>
+      </h2>
+      <div className="section-cards-grid">
+        <Card
+          imgUrl={ExerciseImg}
+          title="Exercises"
+          description="Explore 1300+ exercises filtered by muscle group, equipment, and difficulty — each with animated GIF demonstrations to perfect your form."
+          buttonText="Browse Exercises"
+          cardTitle="Exercises"
+          tag="1300+ Exercises"
+        />
+        <Card
+          imgUrl={foodImg}
+          title="Recipes"
+          description="Fuel your fitness journey with our curated selection of high-protein, nutritious recipes designed to match your goals and taste."
+          buttonText="Browse Recipes"
+          cardTitle="Recipes"
+          tag="500+ Recipes"
+        />
+      </div>
     </div>
   );
 };

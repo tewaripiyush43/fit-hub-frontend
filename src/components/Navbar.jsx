@@ -17,6 +17,7 @@ import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import WhatshotIcon from "@mui/icons-material/Whatshot";
 
 axios.defaults.withCredentials = true;
 const Navbar = () => {
@@ -122,7 +123,30 @@ const Navbar = () => {
               Login
             </button>
           ) : (
-            <div>
+            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+              {user?.streak > 0 && (
+                <div
+                  className="navbar-streak-badge"
+                  onClick={() => navigate(`/${user?.username}/dashboard`)}
+                  title={`${user.streak} Day Workout Streak!`}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "4px",
+                    background: "rgba(255, 94, 98, 0.12)",
+                    border: "1px solid rgba(255, 94, 98, 0.3)",
+                    padding: "4px 10px",
+                    borderRadius: "20px",
+                    cursor: "pointer",
+                    transition: "all 0.2s ease"
+                  }}
+                >
+                  <WhatshotIcon style={{ color: "#ff5e62", fontSize: "1.1rem" }} />
+                  <span style={{ color: "#ffffff", fontWeight: "800", fontSize: "0.85rem" }}>
+                    {user.streak}
+                  </span>
+                </div>
+              )}
               <Tooltip title="Account settings">
                 <IconButton
                   onClick={handleClick}
@@ -184,15 +208,23 @@ const Navbar = () => {
                   <ListAltIcon className="account-menu-dropdown-icon" /> My
                   workouts
                 </MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    handleDropDownClose();
+                    navigate(`/${user?.username}/settings`);
+                  }}
+                >
+                  <Settings className="account-menu-dropdown-icon" /> Settings
+                </MenuItem>
                 <Divider className="line" />
-                <MenuItem>
+                <MenuItem onClick={handleLogout}>
                   <ListItemIcon>
                     <Logout
                       className="account-menu-dropdown-icon"
                       fontSize="small"
                     />
                   </ListItemIcon>
-                  <span onClick={handleLogout}>Logout</span>
+                  <span>Logout</span>
                 </MenuItem>
               </Menu>
             </div>

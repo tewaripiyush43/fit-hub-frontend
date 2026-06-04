@@ -1,26 +1,15 @@
 .user-profile-info-card {
   position: relative;
-  width: 77%;
+  width: 100%;
   margin: 0 auto;
-  padding: 20px;
-  background-color: $background;
-  border-radius: 20px;
-  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+  padding: 30px 20px;
+  background: $glass-bg;
+  backdrop-filter: $glass-blur;
+  border: 1px solid $glass-border;
+  border-radius: 24px;
+  box-shadow: $card-shadow;
   text-align: center;
   transition: all 0.5s ease-in-out;
-
-  @media (max-width: 1024px) {
-    width: 85%;
-  }
-
-  @media (max-width: 768px) {
-    width: 80%;
-    margin-block: 20px;
-  }
-
-  @media (max-width: 426px) {
-    width: 100%;
-  }
 }
 
 .profile-header {
@@ -221,25 +210,27 @@
 }
 
 .user-profile-detail {
-  // min-width: 25%;
-  // min-width: fit-content;
-  // max-width: 60%;
-  // width: 30%;
-  // width: auto;
-  background-color: $accent;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   color: $text;
-  border-radius: 10px;
-  padding: 10px;
+  border-radius: 12px;
+  padding: 15px;
   flex-grow: 1;
   transition: all 0.3s ease-in-out;
   cursor: pointer;
   display: flex;
   flex-direction: column;
   justify-content: center;
-}
 
-.user-profile-detail:hover {
-  transform: translateY(-5px);
+  &:hover {
+    background: rgba($accent, 0.05);
+    border-color: rgba($accent, 0.25);
+    transform: translateY(-3px);
+
+    .user-profile-detail-value {
+      color: $accent;
+    }
+  }
 }
 
 .user-profile-detail-label {

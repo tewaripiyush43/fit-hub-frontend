@@ -1,0 +1,439 @@
+.settings-page-container {
+  padding: 40px;
+  color: $text;
+  max-width: 900px;
+  margin: 0 auto;
+  min-height: 80vh;
+
+  @media (max-width: 768px) {
+    padding: 20px;
+  }
+
+  .settings-header {
+    margin-bottom: 35px;
+    border-bottom: 1px solid $glass-border;
+    padding-bottom: 20px;
+
+    .settings-title {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: $accent;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+
+      .settings-title-icon {
+        font-size: 2.5rem;
+      }
+    }
+
+    .settings-subtitle {
+      color: $text-input-field-secondary;
+      font-size: 1rem;
+    }
+  }
+
+  .settings-content {
+    display: flex;
+    flex-direction: column;
+    gap: 35px;
+  }
+
+  .settings-section {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+
+    .section-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: $text;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      .section-icon {
+        color: $accent;
+        font-size: 1.5rem;
+      }
+    }
+
+    .section-card {
+      background: $background-hover;
+      border: 1px solid $glass-border;
+      border-radius: 16px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+
+      &.danger-zone {
+        border-color: rgba($primary-button, 0.25);
+        background: rgba($primary-button, 0.02);
+      }
+    }
+  }
+
+  // Account details details grid
+  .detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 15px;
+
+    &:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .detail-label {
+      color: $text-input-field-secondary;
+      font-weight: 500;
+    }
+
+    .detail-value {
+      font-weight: 600;
+      color: $text;
+    }
+
+    .status-badge {
+      background: rgba($accent, 0.12);
+      color: $accent;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: 1px solid rgba($accent, 0.2);
+    }
+  }
+
+  // Toggles and Controls
+  .setting-control-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+
+    @media (max-width: 600px) {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .control-text {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      max-width: 60%;
+
+      @media (max-width: 600px) {
+        max-width: 100%;
+      }
+
+      .control-label {
+        font-weight: 600;
+        font-size: 1.05rem;
+      }
+
+      .control-description {
+        font-size: 0.875rem;
+        color: $text-input-field-secondary;
+      }
+    }
+  }
+
+  .toggle-group {
+    display: flex;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    padding: 4px;
+    border: 1px solid $glass-border;
+
+    .toggle-btn {
+      background: transparent;
+      border: none;
+      color: $text-input-field-secondary;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+
+      &.active {
+        background: $accent;
+        color: $text-secondary;
+        box-shadow: 0 2px 8px rgba($accent, 0.3);
+      }
+
+      &:hover:not(.active) {
+        color: $text;
+      }
+    }
+  }
+
+  // Checkboxes
+  .checkbox-control-row {
+    .checkbox-label {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      cursor: pointer;
+
+      input[type="checkbox"] {
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        border: 2px solid $text-input-field-secondary;
+        border-radius: 4px;
+        background: transparent;
+        cursor: pointer;
+        display: grid;
+        place-content: center;
+        margin-top: 2px;
+        transition: all 0.2s ease;
+
+        &:checked {
+          border-color: $accent;
+          background: $accent;
+
+          &::before {
+            content: "✓";
+            color: $text-secondary;
+            font-size: 14px;
+            font-weight: 900;
+          }
+        }
+      }
+
+      .checkbox-text {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+
+        .control-label {
+          font-weight: 600;
+        }
+
+        .control-description {
+          font-size: 0.875rem;
+          color: $text-input-field-secondary;
+        }
+      }
+    }
+  }
+
+  // Danger Zone Row
+  .danger-row {
+    display: flex;
+    justify-delete: space-between;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+
+    @media (max-width: 600px) {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .danger-text {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      max-width: 70%;
+
+      @media (max-width: 600px) {
+        max-width: 100%;
+      }
+
+      .danger-label {
+        font-weight: 600;
+        color: $primary-button;
+        font-size: 1.05rem;
+      }
+
+      .danger-description {
+        font-size: 0.875rem;
+        color: $text-input-field-secondary;
+      }
+    }
+
+    .btn-delete-account {
+      background: rgba($primary-button, 0.1);
+      border: 1px solid rgba($primary-button, 0.3);
+      color: $primary-button;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background: $primary-button;
+        color: $text;
+        box-shadow: $danger-glow;
+        border-color: transparent;
+      }
+    }
+  }
+
+  // Form input styling
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+
+    @media (max-width: 600px) {
+      grid-template-columns: 1fr;
+      gap: 15px;
+    }
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+
+    label {
+      font-size: 0.85rem;
+      color: $text-input-field-secondary;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    textarea {
+      background: $background-input-field;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 12px 16px;
+      color: $text;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      outline: none;
+      transition: all 0.25s ease;
+      width: 100%;
+
+      &:focus {
+        border-color: $accent;
+        box-shadow: 0 0 6px rgba($accent, 0.3);
+      }
+
+      &::placeholder {
+        color: rgba($text, 0.35);
+      }
+    }
+
+    textarea {
+      font-family: inherit;
+    }
+  }
+
+  .bmi-submit-btn {
+    background-color: rgba($accent, 0.08);
+    border: 1px solid rgba($accent, 0.3);
+    color: $accent;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.25s ease;
+
+    &:hover:not(:disabled) {
+      background-color: $accent;
+      color: $text-secondary;
+      box-shadow: 0 0 12px rgba($accent, 0.4);
+      border-color: transparent;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+}
+
+// Floating notification save bar
+.settings-floating-save-bar {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(30, 30, 36, 0.92);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba($accent, 0.35);
+  border-radius: 16px;
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba($accent, 0.1);
+  z-index: 2000;
+  animation: slideUpBar 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+
+  .floating-save-message {
+    font-size: 0.9rem;
+    color: $text-input-field-secondary;
+    white-space: nowrap;
+  }
+
+  .floating-save-btn {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: $accent;
+    color: $text-secondary;
+    border: none;
+    border-radius: 10px;
+    padding: 9px 20px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+
+    &:hover {
+      background: $accent-hover;
+      box-shadow: 0 0 14px rgba($accent, 0.4);
+    }
+  }
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+    gap: 12px;
+    bottom: 16px;
+    width: calc(100% - 32px);
+  }
+}
+
+// Success toast
+.settings-saved-toast {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 230, 118, 0.12);
+  border: 1px solid rgba(0, 230, 118, 0.4);
+  color: #00e676;
+  border-radius: 50px;
+  padding: 12px 24px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 2000;
+  backdrop-filter: blur(12px);
+  animation: slideUpBar 0.3s ease;
+}
+
+@keyframes slideUpBar {
+  from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}

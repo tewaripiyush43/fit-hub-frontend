@@ -1,84 +1,48 @@
 .my-favorites-container {
-  padding: 40px 0px;
+  padding: 100px 0 60px; // clear navbar
   min-height: 86vh;
   text-align: center;
   width: 100%;
 
   .my-favorites-title {
     color: $text;
-    font-size: 1.8rem;
-    margin-bottom: 50px;
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 40px;
+    text-align: center;
+    letter-spacing: -0.5px;
 
     & span {
-      font-size: 2rem;
       color: $accent;
-    }
-    & span:nth-child(2) {
-      font-size: 2rem;
-      color: $accent;
-    }
-
-    @media (max-width: 1024px) {
-      font-size: 1.75rem;
-    }
-
-    @media (max-width: 768px) {
-      font-size: 1.5rem;
-    }
-
-    @media (max-width: 426px) {
-      font-size: 1.5rem;
-    }
-
-    @media (max-width: 375px) {
-      font-size: 1.5rem;
-      margin-bottom: 30px;
     }
   }
 }
 
 .my-favorite-exercise-cards-container {
-  gap: 50px;
-  padding: 25px;
-  display: flex;
-  justify-content: center;
-  flex-flow: wrap row;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  padding: 0 40px 40px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
 
-  @media (max-width: 1024px) {
-    gap: 25px;
+  @media (max-width: 1200px) {
+    grid-template-columns: repeat(2, 1fr);
+    padding: 0 24px 24px;
   }
 
   @media (max-width: 768px) {
-    gap: 25px;
-  }
-
-  @media (max-width: 426px) {
-    gap: 25px;
-  }
-
-  @media (max-width: 375px) {
-    gap: 25px;
+    grid-template-columns: 1fr;
+    padding: 0 16px 16px;
+    gap: 20px;
   }
 }
 
 .no-favorite-exercises {
-  color: $text;
-  font-size: 1.5rem;
-  margin-top: 50px;
-
-  @media (max-width: 1024px) {
-    font-size: 1.25rem;
-  }
-
-  @media (max-width: 768px) {
-    font-size: 1.25rem;
-  }
-
-  @media (max-width: 426px) {
-    font-size: 1.25rem;
-  }
-
-  @media (max-width: 375px) {
-    font-size: 1.25rem;
-  }
+  color: rgba($text, 0.5);
+  font-size: 1.2rem;
+  font-weight: 600;
+  grid-column: 1 / -1;
+  margin-top: 40px;
 }

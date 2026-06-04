@@ -1,13 +1,48 @@
-.exercise-card-div {
-  width: 100vw;
-  margin-top: 10%;
-  display: flex;
-  justify-content: space-around;
-}
+.section-cards-wrapper {
+  padding: 80px 60px;
+  max-width: 1200px;
+  margin: 0 auto;
 
-@media screen and (max-width: 320px) {
-  .exercise-card-div {
-    margin-top: 30px;
-    // flex-direction: column;
+  @media (max-width: 1024px) {
+    padding: 60px 30px;
+  }
+
+  @media (max-width: 768px) {
+    padding: 50px 20px;
+  }
+
+  .section-cards-eyebrow {
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+    color: $accent;
+    margin-bottom: 14px;
+    text-align: center;
+  }
+
+  .section-cards-heading {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: $text;
+    text-align: center;
+    margin-bottom: 48px;
+    line-height: 1.2;
+
+    span {
+      color: $accent;
+      text-shadow: 0 0 20px rgba($accent, 0.3);
+    }
+
+    @media (max-width: 768px) {
+      font-size: 1.6rem;
+      margin-bottom: 30px;
+    }
+  }
+
+  .section-cards-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
   }
 }

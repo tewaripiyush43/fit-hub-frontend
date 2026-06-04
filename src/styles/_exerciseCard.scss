@@ -1,16 +1,43 @@
 .exercise-card {
-  width: 400px;
-  height: 445px;
-  border-top: 4px solid $accent;
-  border-bottom-left-radius: 20px;
+  width: 100%;
+  border-radius: 20px;
+  overflow: visible; // allow dropdown to overflow
   text-decoration: none;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  padding-bottom: 10px;
-  transform: scale(1, 1);
-  transition: 0.3s transform ease-in-out;
+  position: relative;
   background: $exercise-card-background;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  z-index: 1;
+
+  &.active-dropdown {
+    z-index: 50 !important;
+  }
+
+  // clip the image area only
+  .exercise-card-img-wrapper {
+    border-radius: 20px 20px 0 0;
+    overflow: hidden;
+    flex-shrink: 0;
+    position: relative;
+  }
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba($accent, 0.1);
+    border-color: rgba($accent, 0.3);
+    z-index: 30;
+
+    img {
+      filter: invert(1) contrast(1.2) brightness(1.1);
+      transform: scale(1.03);
+    }
+
+    .exercise-name {
+      color: $accent;
+    }
+  }
 
   &.animation {
     &::before {
@@ -19,196 +46,267 @@
       top: 0;
       left: 0;
       width: 0;
-      height: 4px;
-      background-color: $accent;
-      border-top-left-radius: 20px;
+      height: 3px;
+      background: linear-gradient(90deg, $accent, darken($accent, 15%));
+      border-radius: 20px 20px 0 0;
+      transition: width 0.4s ease 0.05s;
+      z-index: 2;
     }
 
     &:hover::before {
-      border: none;
       width: 100%;
-      transition: 0.4s width ease;
-      transition-delay: 0.1s;
     }
   }
 
   img {
-    height: 326px;
+    width: 100%;
+    height: 300px;
+    object-fit: contain; // don't crop the gif — show the whole exercise
+    object-position: center;
     cursor: pointer;
-    filter: invert(90%);
+    filter: invert(1) contrast(1.3) brightness(0.95);
+    mix-blend-mode: screen;
+    display: block;
+    transition: filter 0.3s ease, transform 0.35s ease;
+    background: transparent;
   }
 
-  .exercise-card-icon-container {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    color: $secondary-button;
+  .exercise-card-body {
     display: flex;
     flex-direction: column;
+    gap: 10px;
+    padding: 14px 16px 18px;
+    flex: 1;
   }
 
-  .exercise-card-favorite-icon {
-    cursor: pointer;
+  // Icon overlay (heart + add) — top-right corner
+  .exercise-card-icon-container {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    flex-direction: row;
+    gap: 6px;
+    z-index: 5;
   }
 
+  .exercise-card-favorite-icon,
   .exercise-card-more-icon {
-    margin-left: 5px;
     cursor: pointer;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 50%;
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.15rem !important;
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: $accent;
+      color: #000;
+      border-color: transparent;
+      transform: scale(1.1);
+    }
+
+    &.active-favorite {
+      color: $accent !important;
+      border-color: rgba($accent, 0.3);
+      
+      &:hover {
+        background: rgba($accent, 0.15);
+        color: $accent !important;
+        border-color: $accent;
+      }
+    }
   }
 
+  // "Add to Workout" dropdown panel
   .exercise-card-more-options {
-    background-color: $background;
+    background: rgba(18, 18, 26, 0.97);
     color: $text;
-    border-radius: 5px;
-    border: 1px solid $background-hover;
-    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba($accent, 0.08);
     overflow: hidden;
     position: absolute;
-    padding: 3px;
-    right: 10px;
-    top: 30px;
+    right: 0;
+    top: 48px;
+    z-index: 100;
+    min-width: 220px;
+    backdrop-filter: blur(20px);
 
     .exercise-card-more-options-list {
-      width: max-content;
+      list-style: none;
+      padding: 0;
+      margin: 0;
       text-align: left;
-      list-style: disc;
 
+      // "Add To" header
       .exercise-card-more-options-label {
-        padding: 5px;
-        border-bottom: 1px solid $background-hover;
+        padding: 12px 16px 8px;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: $accent;
+        font-weight: 800;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        display: flex;
+        align-items: center;
+        gap: 6px;
       }
 
+      // Each workout item
       .exercise-card-more-options-list-item {
-        padding: 5px;
+        padding: 11px 16px;
         font-size: 0.875rem;
-        transition: all 0.2s ease;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.15s ease;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: rgba($text, 0.85);
 
-        &:hover {
-          background-color: $background-hover;
-          transform: translateY(-2px);
+        &:last-child {
+          border-bottom: none;
         }
 
+        &::before {
+          content: "";
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background: rgba($accent, 0.35);
+          flex-shrink: 0;
+          transition: background 0.15s ease;
+        }
+
+        &:hover {
+          background: rgba($accent, 0.1);
+          color: $accent;
+          padding-left: 20px;
+
+          &::before {
+            background: $accent;
+          }
+        }
+
+        &.workout-full {
+          opacity: 0.55;
+          cursor: not-allowed;
+
+          &::before {
+            background: rgba($primary-button, 0.5) !important;
+          }
+
+          &:hover {
+            background: transparent !important;
+            color: rgba($text, 0.85) !important;
+            padding-left: 16px !important;
+
+            &::before {
+              background: rgba($primary-button, 0.5) !important;
+            }
+          }
+        }
+
+        // "Create Workout" and "View Workouts" rows
         &.exercise-card-create-workout-btn {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          border-top: 1px solid $background-hover;
-          // color: #191919;
+          color: rgba($text, 0.6);
+          border-top: 1px solid rgba(255, 255, 255, 0.06);
+          gap: 8px;
+
+          &::before {
+            display: none; // no dot for action rows
+          }
+
+          &:hover {
+            color: $accent;
+            background: rgba($accent, 0.08);
+            padding-left: 16px;
+          }
 
           .exercise-card-create-workout-input-field {
-            letter-spacing: 1px;
-            background-color: transparent;
+            background: transparent;
             outline: none;
-            border: 0;
+            border: none;
             color: $text;
+            width: 100%;
+            font-size: 0.875rem;
+            font-family: inherit;
+
+            &::placeholder {
+              color: rgba($text, 0.3);
+            }
           }
         }
       }
     }
   }
 
-  .add-icon:hover {
-    color: $accent;
-  }
-
-  .remove-icon:hover {
-    color: $primary-button;
-  }
+  .add-icon:hover { color: $accent; }
+  .remove-icon:hover { color: $primary-button; }
 
   .card-info {
     display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
 
     .exercise-button {
       cursor: pointer;
-      margin-left: 21px;
-      padding: 10px;
-      color: $text-secondary;
-      background-color: $primary-button;
-      font-size: 14px;
+      padding: 5px 13px;
+      color: $text;
+      font-size: 0.75rem;
+      font-weight: 600;
       border-radius: 20px;
       border: none;
       text-transform: capitalize;
-    }
+      transition: all 0.2s ease;
+      letter-spacing: 0.3px;
 
-    .exercise-button:nth-child(2) {
-      border-color: $secondary-button;
-      color: $text;
-      background-color: $secondary-button;
+      &:nth-child(1) {
+        background: rgba($primary-button, 0.75);
+      }
+      &:nth-child(2) {
+        background: rgba($secondary-button, 0.7);
+      }
+
+      &:hover {
+        filter: brightness(1.2);
+        transform: translateY(-1px);
+      }
     }
   }
 
   .exercise-name {
-    color: lightgray;
-
-    font-weight: bold;
-    margin-top: 11px;
-    padding-bottom: 10px;
-
+    color: $text;
+    font-weight: 700;
+    font-size: 0.98rem;
     text-transform: capitalize;
+    line-height: 1.4;
+    margin: 0;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    transition: color 0.2s ease;
+    // No clamping — let the card grow naturally
   }
 }
 
-.exercise-card:hover,
-.bodyPart-card:hover {
-  border-top: none;
-  transform: scale(1.1, 1.1);
-}
-
-@media screen and (max-width: 1200px) {
-}
+// Responsive widths handled by the grid
 @media screen and (max-width: 1024px) {
-  .exercise-card {
-    width: 330px;
-    height: 400px;
-
-    img {
-      height: 250px;
-    }
-
-    .card-info {
-      padding-top: 0.5rem;
-    }
+  .exercise-card img {
+    height: 260px;
   }
 }
+
 @media screen and (max-width: 768px) {
-  .exercise-card {
-    width: 330px;
-    height: 400px;
-
-    img {
-      height: 250px;
-    }
-
-    .card-info {
-      padding-top: 0.5rem;
-    }
-  }
-}
-@media screen and (max-width: 480px) {
-  .exercise-card {
-    width: 330px;
-    height: 400px;
-
-    img {
-      height: 250px;
-    }
-
-    .card-info {
-      padding-top: 0.5rem;
-    }
-  }
-}
-@media screen and (max-width: 320px) {
-  .exercise-card {
-    width: 280px;
-    height: 350px;
-
-    img {
-      height: 250px;
-    }
-
-    .card-info {
-      padding-top: 0.5rem;
-    }
+  .exercise-card img {
+    height: 240px;
   }
 }

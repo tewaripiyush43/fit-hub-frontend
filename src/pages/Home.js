@@ -6,6 +6,8 @@ import Exercises from "../components/Exercises";
 import Carousel from "../components/Carousel";
 import HomeBanner from "../components/HomeBanner";
 import SectionCards from "../components/SectionCards";
+import StatsSection from "../components/StatsSection";
+import FeaturesSection from "../components/FeaturesSection";
 import { errorPopUp } from "../helpers/errorPopUp";
 
 import axios from "axios";
@@ -21,7 +23,6 @@ export default function Home() {
       .get(`${REACT_APP_BASE_URL}/exercise/fetchCarouselDataHome`)
       .then((res) => setCarouselData(res.data))
       .catch((err) => {
-        // console.log(err.message);
         setErrorMessage("Something went wrong. Please try again.");
       });
   };
@@ -46,6 +47,8 @@ export default function Home() {
   return (
     <div className="home-container">
       <HomeBanner />
+      <StatsSection />
+      <FeaturesSection />
       <SectionCards />
       <Carousel
         id="exercise-carousel"
@@ -60,3 +63,4 @@ export default function Home() {
     </div>
   );
 }
+

@@ -1,6 +1,6 @@
 .user-profile-side-bar-container {
   width: 20%;
-  min-width: 200px;
+  min-width: 240px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -8,7 +8,7 @@
   left: 0;
   top: 0;
   z-index: 1000;
-  transition: all 0.5s ease-in-out;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 
   &.hide {
     transform: translateX(-93%);
@@ -32,77 +32,73 @@
 }
 
 .user-profile-side-bar {
-  background-color: $background;
+  background: $glass-bg;
+  backdrop-filter: $glass-blur;
+  border-right: 1px solid $glass-border;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-evenly;
+  justify-content: flex-start;
   width: 100%;
   height: 100vh;
-  padding-top: 30%;
+  padding-top: 100px;
   color: $text;
-  box-shadow: 1px 1px 5px 1px rgba(0, 0, 0, 0.5);
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.25);
   overflow-x: hidden;
-  transition: all 0.5s ease-in-out;
+  transition: all 0.4s ease;
 
   .user-profile-side-bar-list {
-    width: 98%;
+    width: 100%;
+    list-style: none;
+    padding: 0;
+    margin: 0;
 
     .user-profile-side-bar-list-item {
-      padding-left: 20%;
-      padding-block: 15px;
-      letter-spacing: 1px;
-      font-size: larger;
-      font-weight: 700;
+      padding: 18px 24px 18px 32px;
+      letter-spacing: 0.5px;
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: $text-input-field-secondary;
+      border-left: 4px solid transparent;
+      transition: all 0.3s ease;
 
       &.user-profile-side-bar-list-item-active {
         color: $accent;
-        background-color: $background-hover;
+        background: rgba($accent, 0.08);
+        border-left-color: $accent;
+        font-weight: 600;
       }
 
       &:hover {
         cursor: pointer;
-        color: $accent-hover;
-        background-color: $background-hover;
+        color: $text;
+        background: rgba(255, 255, 255, 0.03);
+        padding-left: 36px;
       }
-    }
-  }
-
-  .user-profile-delete-btn {
-    width: 100%;
-    color: $primary-button;
-    background-color: transparent;
-    font-size: 1rem;
-    border: none;
-    padding-left: 20%;
-    text-align: left;
-    cursor: pointer;
-    padding-block: 15px;
-
-    &:hover {
-      color: $primary-button-hover;
-      background-color: $background-input-field;
     }
   }
 }
 
 .show-sidebar {
-  writing-mode: vertical-rl;
-  text-orientation: upright;
-  text-align: center;
-  letter-spacing: 15px;
-  width: 18px;
-  height: 60%;
-  border-radius: 0 15px 15px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 52px;
+  border-radius: 0 12px 12px 0;
   background-color: $accent;
-  box-shadow: 1px 1px 5px 1px rgba(0, 0, 0, 0.5);
-  transition: all 0.5s ease-in-out;
+  color: $text-secondary;
+  box-shadow: 4px 0 15px rgba($accent, 0.3);
+  transition: all 0.3s ease;
   cursor: pointer;
 
-  // &.hide {
-  //   position: fixed;
-  //   left: 0%;
-  //   top: 20%;
-  //   // transform: translateX(-95%);
-  // }
+  &:hover {
+    background-color: $accent-hover;
+    box-shadow: 6px 0 20px rgba($accent, 0.45);
+    width: 38px;
+  }
+
+  svg {
+    font-size: 1.3rem;
+  }
 }

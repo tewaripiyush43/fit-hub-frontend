@@ -1,150 +1,198 @@
-// @import "~@mui/icons-material/ArrowRightAltRounded";
-
-.exercises-carousel-container {
+.body-parts-grid-section {
   text-align: center;
-  margin-block: 100px;
+  padding: 60px 40px 40px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
 
-  .carousel-title {
-    font-size: 2rem;
-    letter-spacing: 0.8px;
-    text-transform: capitalize;
-    font-family: "Roboto", sans-serif;
+  @media (max-width: 768px) {
+    padding: 40px 20px 20px;
+  }
+
+  .section-eyebrow {
+    font-size: 0.72rem;
     font-weight: 800;
-
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
     color: $accent;
-  }
-  .swiper {
-    width: 97%;
-    height: 100%;
-    padding-top: 50px;
-    padding-bottom: 50px;
-    overflow: hidden;
-    position: relative;
-
-    .swiper-pagination-bullet {
-      background-color: $accent !important;
-    }
+    margin-bottom: 10px;
   }
 
-  .swiper-wrapper {
-    // width: 70px !important;
-  }
-  .swiper-slide {
-    background-color: #1b1b1b;
+  .section-heading {
+    font-size: 2.2rem;
+    font-weight: 800;
     color: $text;
-    background-position: center;
-    background-size: cover;
-    width: 325px;
-    height: 100%;
-    text-transform: capitalize;
-    margin: 0px;
-    cursor: pointer;
-    box-shadow: 0px 0px 3px 1px $accent;
+    margin-bottom: 12px;
+    letter-spacing: -0.5px;
 
-    img {
-      opacity: 0.9;
-      object-fit: cover;
-      display: block;
-      width: 100%;
-      height: 100%;
-      filter: invert(90%);
+    span {
+      color: $accent;
+      text-shadow: 0 0 20px rgba($accent, 0.35);
     }
 
-    .carousel-slide-text {
-      text-shadow: 1px 1px 7px $accent;
-      margin: 0;
-      padding: 0;
-      padding-top: 20px;
+    @media (max-width: 768px) {
       font-size: 1.7rem;
     }
   }
 
-  .swiper-button-next,
-  .swiper-button-prev {
-    color: $accent;
-    font-size: 20px;
+  .section-subtitle {
+    font-size: 0.95rem;
+    color: rgba($text, 0.6);
+    max-width: 600px;
+    margin: 0 auto 36px;
+    line-height: 1.5;
+  }
+}
+
+// Category Cards Grid
+.body-parts-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
+  width: 100%;
+
+  @media (max-width: 1200px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  @media (max-width: 992px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (max-width: 600px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+
+  @media (max-width: 400px) {
+    grid-template-columns: 1fr;
+  }
+
+  .body-part-card {
+    background: rgba(30, 30, 36, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    overflow: hidden;
     cursor: pointer;
-    top: 96% !important;
-  }
+    position: relative;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex;
+    flex-direction: column;
 
-  .swiper-button-next {
-    right: 40% !important;
-  }
-
-  .swiper-button-prev {
-    left: 40% !important;
-  }
-}
-
-@media screen and (max-width: 1200px) {
-}
-@media screen and (max-width: 1024px) {
-}
-@media screen and (max-width: 768px) {
-}
-@media screen and (max-width: 480px) {
-  .exercises-carousel-container {
-    margin-block: 50px;
-
-    .carousel-title {
-      font-size: 2rem;
-      letter-spacing: 0.8px;
-      font-weight: 900;
+    .card-inner {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
     }
 
-    .swiper-slide {
-      width: 250px;
+    .card-graphic-header {
+      height: 110px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
 
-      .carousel-slide-text {
-        padding-top: 20px;
+      &::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0) 40%, rgba(30, 30, 36, 0.8) 100%);
+      }
+
+      .icon-wrapper {
+        background: rgba(255, 255, 255, 0.12);
+        backdrop-filter: blur(4px);
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        z-index: 2;
+        transition: all 0.3s ease;
+
+        svg {
+          font-size: 1.45rem;
+        }
       }
     }
 
-    .swiper-button-prev {
-      left: -7px;
-    }
+    .card-body-content {
+      padding: 16px;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex-grow: 1;
 
-    .swiper-button-next:after,
-    .swiper-button-prev:after {
-      font-size: 1.7rem !important;
-      font-weight: 900;
-    }
+      .card-title-text {
+        font-size: 1rem;
+        font-weight: 700;
+        color: $text;
+        text-transform: capitalize;
+        margin: 0;
+        transition: color 0.2s ease;
+      }
 
-    .swiper-button-next {
-      right: -7px;
-    }
-  }
-}
-@media screen and (max-width: 320px) {
-  .exercises-carousel-container {
-    margin-block: 50px;
-
-    .carousel-title {
-      font-size: 2rem;
-      letter-spacing: 0.8px;
-      font-weight: 900;
-    }
-
-    .swiper-slide {
-      width: 250px;
-
-      .carousel-slide-text {
-        padding-top: 20px;
+      .card-desc-text {
+        font-size: 0.75rem;
+        color: rgba($text, 0.45);
+        line-height: 1.35;
+        margin: 0;
       }
     }
 
-    .swiper-button-prev {
-      left: -7px;
+    // Hover States
+    &:hover {
+      transform: translateY(-4px);
+      border-color: rgba($accent, 0.3);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4), 0 0 15px rgba($accent, 0.05);
+
+      .icon-wrapper {
+        transform: scale(1.1);
+        background: rgba($accent, 0.2);
+        color: $accent;
+        border-color: rgba($accent, 0.3);
+        box-shadow: 0 0 12px rgba($accent, 0.2);
+      }
+
+      .card-title-text {
+        color: $accent;
+      }
     }
 
-    .swiper-button-next:after,
-    .swiper-button-prev:after {
-      font-size: 1.7rem !important;
-      font-weight: 900;
-    }
+    // Active Card State
+    &.active-card {
+      border-color: $accent;
+      background: rgba($accent, 0.03);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5), 0 0 25px rgba($accent, 0.15);
+      transform: translateY(-4px) scale(1.02);
 
-    .swiper-button-next {
-      right: -7px;
+      .icon-wrapper {
+        background: $accent;
+        color: #000;
+        border-color: transparent;
+        box-shadow: 0 0 15px rgba($accent, 0.4);
+      }
+
+      .card-title-text {
+        color: $accent;
+      }
+
+      .card-active-indicator {
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 40%;
+        height: 3px;
+        background: $accent;
+        border-radius: 3px 3px 0 0;
+        box-shadow: 0 0 10px $accent;
+      }
     }
   }
 }

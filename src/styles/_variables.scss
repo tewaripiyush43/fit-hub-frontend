@@ -112,23 +112,31 @@ $text: #ffffff;
 $text-secondary: #000000;
 
 // Background Colors
-$background: #333333;
-$background-hover: #404040;
-$background-transparent: #333333ba;
+$background: #1e1e24;
+$background-hover: #2a2a35;
+$background-transparent: rgba(30, 30, 36, 0.73);
 
 // Button Colors
-$primary-button: #ff6b6b;
-$primary-button-hover: #ff4d4d;
-$secondary-button: #808080;
-$secondary-button-hover: #a6a6a6;
+$primary-button: #ff5e62;
+$primary-button-hover: #ff474b;
+$secondary-button: #4b4b5a;
+$secondary-button-hover: #5d5d70;
 
 // Accent Colors
-$accent: #00b3e6;
-$accent-hover: #00a3cc;
+$accent: #00e5ff;
+$accent-hover: #00b8cc;
 $accent-invert: #ff4c19;
 
 // Specific Element Colors
-$exercise-card-background: #1b1b1b;
-$background-input-field: #606060;
-$text-input-field: #c4c4c4;
-$text-input-field-secondary: #ccc;
+$exercise-card-background: #121216;
+$background-input-field: #2d2d3a;
+$text-input-field: #e2e2e9;
+$text-input-field-secondary: #b3b3c3;
+
+// Glassmorphism & Shadow variables
+$glass-bg: rgba(30, 30, 36, 0.65);
+$glass-border: rgba(255, 255, 255, 0.08);
+$glass-blur: blur(12px);
+$neon-glow: 0 0 15px rgba(0, 229, 255, 0.35);
+$card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+$danger-glow: 0 0 15px rgba(255, 94, 98, 0.35);

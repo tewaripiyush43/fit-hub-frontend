@@ -179,6 +179,22 @@ html.modal-open {
   border-radius: 10px;
 }
 
+.App {
+  display: flex;
+  flex-direction: row;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.main-app-content {
+  flex-grow: 1;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  transition: margin-left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 .testing {
   position: absolute;
   top: 20%;
@@ -217,3 +233,9 @@ html.modal-open {
 @import "confirmationPopUp";
 @import "forgotPassword";
 @import "resetPassword";
+@import "aiWorkoutGenerator";
+@import "fitnessTools";
+@import "statsSection";
+@import "featuresSection";
+
+

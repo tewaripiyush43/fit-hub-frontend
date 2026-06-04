@@ -1,0 +1,511 @@
+// Fitness Tools Dashboard
+.fitness-tools-dashboard {
+  padding: 40px 30px;
+  max-width: 960px;
+  margin: 0 auto;
+  min-height: 80vh;
+  color: $text;
+
+  @media (max-width: 768px) {
+    padding: 24px 16px;
+  }
+}
+
+.fitness-tools-header {
+  margin-bottom: 32px;
+
+  .dashboard-title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: $text;
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+
+    @media (max-width: 768px) {
+      font-size: 1.6rem;
+    }
+  }
+
+  .dashboard-subtitle {
+    font-size: 0.95rem;
+    color: $text-input-field-secondary;
+    line-height: 1.5;
+  }
+}
+
+// Tab Navigation
+.fitness-tools-tabs-nav {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+
+  .tab-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: 50px;
+    border: 1px solid $glass-border;
+    background: $glass-bg;
+    backdrop-filter: $glass-blur;
+    color: $text-input-field-secondary;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+
+    .tab-icon {
+      font-size: 1.1rem;
+    }
+
+    &:hover {
+      color: $text;
+      border-color: rgba($accent, 0.4);
+      background: rgba($accent, 0.06);
+    }
+
+    &.active {
+      background: rgba($accent, 0.12);
+      border-color: $accent;
+      color: $accent;
+      box-shadow: 0 0 12px rgba($accent, 0.2);
+    }
+
+    @media (max-width: 480px) {
+      padding: 8px 14px;
+      font-size: 0.82rem;
+    }
+  }
+}
+
+// Tab content panes
+.fitness-tools-content-wrapper {
+  .tab-content-pane {
+    &.fade-in {
+      animation: ftFadeIn 0.3s ease;
+    }
+  }
+}
+
+// Shared premium calculator card
+.premium-calculator-card {
+  background: $glass-bg;
+  backdrop-filter: $glass-blur;
+  border: 1px solid $glass-border;
+  border-radius: 24px;
+  padding: 32px;
+  box-shadow: $card-shadow;
+  transition: border-color 0.3s ease;
+
+  &:hover {
+    border-color: rgba($accent, 0.2);
+  }
+
+  @media (max-width: 768px) {
+    padding: 22px 18px;
+    border-radius: 18px;
+  }
+}
+
+// Card header
+.card-header {
+  margin-bottom: 28px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid $glass-border;
+
+  .card-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: $text;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+
+    .title-icon {
+      color: $accent;
+      font-size: 1.6rem;
+    }
+
+    @media (max-width: 768px) {
+      font-size: 1.2rem;
+    }
+  }
+
+  .card-subtitle {
+    font-size: 0.88rem;
+    color: $text-input-field-secondary;
+    line-height: 1.5;
+    margin: 0;
+    padding-left: 34px;
+  }
+}
+
+// Calculator inputs grid
+.calculator-body {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.calculator-inputs-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+
+    &.span-2 {
+      grid-column: span 2;
+
+      @media (max-width: 600px) {
+        grid-column: span 1;
+      }
+    }
+
+    label {
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: $text-input-field-secondary;
+    }
+
+    input[type="number"],
+    select {
+      background: $background-input-field;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      color: $text;
+      padding: 11px 14px;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      width: 100%;
+
+      &:focus {
+        border-color: $accent;
+        box-shadow: 0 0 8px rgba($accent, 0.2);
+      }
+
+      option {
+        background: $background-input-field;
+        color: $text;
+      }
+    }
+  }
+}
+
+// Radio buttons in a row
+.radio-options-row {
+  display: flex;
+  gap: 20px;
+  margin-top: 4px;
+
+  .radio-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: $text;
+
+    input[type="radio"] {
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border: 2px solid $text-input-field-secondary;
+      border-radius: 50%;
+      cursor: pointer;
+      display: grid;
+      place-content: center;
+      transition: all 0.2s ease;
+
+      &:checked {
+        border-color: $accent;
+
+        &::before {
+          content: "";
+          width: 10px;
+          height: 10px;
+          border-radius: 50%;
+          background: $accent;
+          box-shadow: 0 0 6px $accent;
+        }
+      }
+    }
+  }
+}
+
+// Action button row
+.action-button-row {
+  display: flex;
+  justify-content: flex-end;
+
+  .calculate-btn {
+    background: rgba($accent, 0.1);
+    border: 1px solid rgba($accent, 0.4);
+    color: $accent;
+    padding: 11px 28px;
+    border-radius: 50px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    letter-spacing: 0.3px;
+
+    &:hover {
+      background: $accent;
+      color: $text-secondary;
+      box-shadow: 0 0 20px rgba($accent, 0.4);
+      border-color: transparent;
+    }
+  }
+}
+
+// Results section
+.results-display-section {
+  margin-top: 4px;
+  border-top: 1px solid $glass-border;
+  padding-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  &.fade-in {
+    animation: ftFadeIn 0.4s ease;
+  }
+}
+
+.section-subtitle {
+  font-size: 1rem;
+  font-weight: 700;
+  color: $text;
+  margin: 0;
+  letter-spacing: 0.3px;
+}
+
+// Calorie Summary cards
+.calories-summary-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
+
+  .stat-card {
+    background: $background-input-field;
+    border: 1px solid $glass-border;
+    border-radius: 16px;
+    padding: 18px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    transition: border-color 0.2s ease;
+
+    &:hover {
+      border-color: rgba($accent, 0.2);
+    }
+
+    &.highlighted {
+      background: rgba($accent, 0.08);
+      border-color: rgba($accent, 0.35);
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: $text-input-field-secondary;
+    }
+
+    .stat-number {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: $accent;
+    }
+
+    .stat-desc {
+      font-size: 0.75rem;
+      color: $text-input-field-secondary;
+    }
+  }
+}
+
+// Macros progress bars
+.macros-progress-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  .macro-progress-item {
+    .macro-info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+
+      .macro-name {
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: $text;
+      }
+
+      .macro-values {
+        font-size: 0.85rem;
+        color: $text-input-field-secondary;
+
+        strong {
+          color: $text;
+        }
+      }
+    }
+
+    .progress-track {
+      height: 8px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 4px;
+
+      .progress-bar {
+        height: 100%;
+        border-radius: 4px;
+        transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+    }
+
+    .macro-percentage {
+      font-size: 0.72rem;
+      color: $text-input-field-secondary;
+      font-weight: 500;
+    }
+
+    &.carbs .progress-bar {
+      background: linear-gradient(90deg, #4fc3f7, #0288d1);
+    }
+
+    &.protein .progress-bar {
+      background: linear-gradient(90deg, $accent, darken($accent, 15%));
+    }
+
+    &.fat .progress-bar {
+      background: linear-gradient(90deg, #ffb74d, #f57c00);
+    }
+  }
+}
+
+// 1RM Results
+.rm-main-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  background: rgba($accent, 0.07);
+  border: 1px solid rgba($accent, 0.25);
+  border-radius: 16px;
+  padding: 24px;
+  text-align: center;
+
+  .rm-main-label {
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: $text-input-field-secondary;
+  }
+
+  .rm-main-number {
+    font-size: 3rem;
+    font-weight: 900;
+    color: $accent;
+    text-shadow: 0 0 20px rgba($accent, 0.4);
+    line-height: 1;
+
+    .unit {
+      font-size: 1rem;
+      font-weight: 500;
+      color: $text-input-field-secondary;
+    }
+  }
+}
+
+// 1RM Table
+.rm-table-wrapper {
+  overflow-x: auto;
+  border-radius: 14px;
+  border: 1px solid $glass-border;
+
+  .rm-percentages-table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th, td {
+      padding: 12px 16px;
+      font-size: 0.88rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    th {
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.5px;
+      color: $text-input-field-secondary;
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    td {
+      color: $text-input-field;
+
+      &:first-child strong {
+        color: $accent;
+        font-size: 0.95rem;
+      }
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .intensity-tag {
+      background: rgba($accent, 0.08);
+      color: $accent;
+      border: 1px solid rgba($accent, 0.25);
+      border-radius: 20px;
+      padding: 3px 10px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+  }
+}
+
+@keyframes ftFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

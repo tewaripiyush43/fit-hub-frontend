@@ -1,24 +1,23 @@
 import React from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 const WorkoutsSmallComponent = () => {
   const navigate = useNavigate();
-  const { username } = useParams();
   const user = useSelector((state) => state.auth.user);
-  // console.log(user);
+  const username = user?.username;
 
   return (
     <div className="workouts-small-component-container">
       <h2 className="workouts-small-component-header">My Workouts</h2>
       <ul className="wsc-list">
         {user?.workouts
-          ?.map((workout) => (
-            <li key={workout?._id} className="wsc-item">
-              {workout?.name}
+          ?.slice(0, 3)
+          ?.map((workout, index) => (
+            <li key={typeof workout === "string" ? workout : (workout?._id || workout?.name || index)} className="wsc-item">
+              {typeof workout === "string" ? workout : (workout?.name || "Untitled Workout")}
             </li>
-          ))
-          .slice(0, 3)}
+          ))}
       </ul>
       {user?.workouts?.length === 0 && (
         <p className="wsc-no-workouts">No Workouts Added</p>

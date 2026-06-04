@@ -1,18 +1,17 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { authActions } from "../store/index.js";
-import axios from "axios";
-import ConfirmationPopup from "../components/ConfirmationPopUp.jsx";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
+import MenuIcon from "@mui/icons-material/Menu";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 
 const UserProfileSideBar = () => {
-  const REACT_APP_BASE_URL = process.env.REACT_APP_BASE_URL;
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const location = useLocation();
   const sidebarRef = useRef(null);
-  const { username, page } = useParams();
+  const { page } = useParams();
+  const user = useSelector((state) => state.auth.user);
+  const username = user?.username;
   const [isSidebarShown, setIsSidebarShown] = useState(false);
-  const [showConfirmation, setShowConfirmation] = useState(false);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -27,52 +26,53 @@ const UserProfileSideBar = () => {
   }, [sidebarRef]);
 
   const sidebarItems = [
-    { id: "1", name: "My Profile" },
-    { id: "2", name: "My Workouts" },
-    { id: "3", name: "My Favorite" },
+    { id: "1", name: "Home" },
+    { id: "8", name: "Dashboard" },
+    { id: "2", name: "My Profile" },
+    { id: "3", name: "My Workouts" },
+    { id: "4", name: "My Favorite" },
+    { id: "6", name: "Fitness Tools" },
+    { id: "7", name: "Settings" },
   ];
 
-  const currPage = {
-    myprofile: "1",
-    myworkouts: "2",
-    myfavorite: "3",
-  }[page];
-
-  const [activeItem, setActiveItem] = useState(currPage);
+  const [activeItem, setActiveItem] = useState("1");
 
   useEffect(() => {
-    setActiveItem(currPage);
-  }, [currPage]);
+    const pathname = location.pathname;
+    let activeId = "1";
+    if (pathname === "/") {
+      activeId = "1";
+    } else if (pathname.includes("/dashboard") || pathname.includes("/myachievements")) {
+      activeId = "8";
+    } else if (pathname.includes("/myprofile")) {
+      activeId = "2";
+    } else if (pathname.includes("/myworkouts")) {
+      activeId = "3";
+    } else if (pathname.includes("/myfavorite")) {
+      activeId = "4";
+    } else if (pathname.includes("/fitnesstools")) {
+      activeId = "6";
+    } else if (pathname.includes("/settings")) {
+      activeId = "7";
+    }
+    setActiveItem(activeId);
+  }, [location.pathname]);
 
   const handleItemClick = (e) => {
-    // console.log(username);
-    const nextpath = sidebarItems[e.target.id - 1].name
-      .toLowerCase()
-      .replace(" ", "");
+    const item = sidebarItems.find((x) => x.id === e.target.id);
+    if (!item) return;
+
+    if (item.id === "1") {
+      navigate("/");
+      setIsSidebarShown(false);
+      return;
+    }
+
+    if (!username) return;
+    const nextpath = item.name.toLowerCase().replace(" ", "");
     navigate(`/${username}/${nextpath}`);
-    setActiveItem(e.target.id);
-  };
-
-  const sendDeleteReq = async () => {
-    await axios
-      .delete(`${REACT_APP_BASE_URL}/auth/delete`, {
-        withCredentials: true,
-      })
-      .then((res) => {
-        if (res.status === 200) {
-          localStorage.clear();
-          dispatch(authActions.logout());
-          dispatch(authActions.setUser({}));
-          navigate(`/`);
-          // console.log(isLoggedIn);
-          return;
-        }
-        return new Error("Unable to delete account. Please try again");
-      })
-
-      .catch((err) => {
-        return new Error("Unable to delete account. Please try again");
-      });
+    setActiveItem(item.id);
+    setIsSidebarShown(false);
   };
 
   return (
@@ -82,16 +82,6 @@ const UserProfileSideBar = () => {
         !isSidebarShown ? "hide" : ""
       }`}
     >
-      {showConfirmation && (
-        <ConfirmationPopup
-          onClose={() => setShowConfirmation(false)}
-          textContent="account"
-          onDelete={() => {
-            sendDeleteReq();
-            setShowConfirmation(false);
-          }}
-        />
-      )}
       <div className="user-profile-side-bar">
         <ul className="user-profile-side-bar-list">
           {sidebarItems.map((item) => (
@@ -110,19 +100,13 @@ const UserProfileSideBar = () => {
             </li>
           ))}
         </ul>
-        <button
-          onClick={() => setShowConfirmation(true)}
-          className="user-profile-delete-btn"
-        >
-          Delete Account
-        </button>
       </div>
-      <p
+      <div
         className="show-sidebar"
         onClick={() => setIsSidebarShown((prev) => !prev)}
       >
-        SIDEBAR
-      </p>
+        {isSidebarShown ? <ChevronLeftIcon /> : <MenuIcon />}
+      </div>
     </div>
   );
 };

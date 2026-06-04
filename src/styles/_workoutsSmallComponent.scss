@@ -1,6 +1,5 @@
 .workouts-small-component-container {
-  width: 80%;
-  // min-width: 400px;
+  width: 100%;
   height: auto;
   background-color: $background;
   border-radius: 20px;
@@ -10,23 +9,6 @@
   color: $text;
   overflow: hidden;
   transition: all 0.5s ease-in-out;
-
-  @media (max-width: 1024px) {
-    width: 85%;
-  }
-
-  @media (max-width: 768px) {
-    width: 80%;
-    margin-block: 20px;
-  }
-
-  @media (max-width: 426px) {
-    width: 90%;
-  }
-
-  @media (max-width: 375px) {
-    width: 100%;
-  }
 }
 
 .workouts-small-component-header {

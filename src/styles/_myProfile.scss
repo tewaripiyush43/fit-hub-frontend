@@ -1,44 +1,33 @@
 .my-profile-container {
-  padding: 25px;
-  min-height: 86vh;
-  // height: 90vh;
+  padding: 30px;
   width: 100%;
   display: flex;
-  justify-content: space-evenly;
-  // align-items: center;
+  gap: 30px;
+  align-items: flex-start;
+
+  @media (max-width: 1024px) {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 20px;
+    gap: 25px;
+  }
 
   .user-profile-info-card-container {
-    height: inherit;
+    flex: 1;
+    min-width: 320px;
+    max-width: 400px;
     width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+
+    @media (max-width: 1024px) {
+      max-width: 100%;
+    }
   }
 
   .user-profile-small-card-container {
-    // height: ;
+    flex: 2;
     width: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
-    align-items: center;
-  }
-}
-
-@media (max-width: 768px) {
-  .my-profile-container {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-  }
-}
-
-@media (max-width: 425px) {
-  .my-profile-container {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
+    gap: 30px;
   }
 }
