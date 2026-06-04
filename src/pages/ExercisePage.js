@@ -29,7 +29,7 @@ const ExercisePage = () => {
   const [exercisesForBodyPart, setExercisesForBodyPart] = useState([]);
   const [exercisesForMuscle, setExercisesForMuscle] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
-  
+
   // Quote State
   const [selectedQuote, setSelectedQuote] = useState(null);
   const [activeQuoteCategory, setActiveQuoteCategory] = useState("all");
@@ -54,6 +54,7 @@ const ExercisePage = () => {
     { id: "motivation", label: "Motivation" },
     { id: "roast", label: "Roast Me" },
     { id: "intelligence", label: "AI Trainer" },
+    { id: "challenge", label: "Challenge" }
   ];
 
   const shuffleQuote = (category) => {

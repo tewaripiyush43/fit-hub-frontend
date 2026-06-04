@@ -754,5 +754,235 @@ export const quotes = [
   {
     "quote": "Every transformation begins the moment excuses lose their authority.",
     "category": "discipline"
+  },
+  {
+    "quote": "The body you're chasing isn't built during your best days. It's built on the days you almost quit but showed up anyway.",
+    "category": "motivation"
+  },
+  {
+    "quote": "Every workout is a deposit into a future version of yourself you'll either be proud of or wish you had started building sooner.",
+    "category": "motivation"
+  },
+  {
+    "quote": "A year from now, today's workout won't feel difficult. Skipping it might.",
+    "category": "motivation"
+  },
+  {
+    "quote": "The difference between average and exceptional is often one more rep, one more walk, one more day of consistency.",
+    "category": "motivation"
+  },
+  {
+    "quote": "Results don't arrive when you're motivated. They arrive when motivation leaves and discipline stays.",
+    "category": "motivation"
+  },
+  {
+    "quote": "Your future self is watching every excuse you make today and hoping you choose differently.",
+    "category": "motivation"
+  },
+  {
+    "quote": "Most people stop when they're tired. Winners stop when they're done.",
+    "category": "motivation"
+  },
+  {
+    "quote": "Nobody can see today's effort yet. That's exactly why it matters.",
+    "category": "motivation"
+  },
+  {
+    "quote": "You don't need a new plan. You need to trust the one you're already avoiding.",
+    "category": "motivation"
+  },
+  {
+    "quote": "Progress is often invisible until one day it becomes impossible to ignore.",
+    "category": "motivation"
+  },
+
+  {
+    "quote": "I analyzed your progress. The data suggests you're capable of far more than your excuses claim.",
+    "category": "intelligence"
+  },
+  {
+    "quote": "Your plan evolves as you evolve. Fitness isn't static, and neither is FitHub AI.",
+    "category": "intelligence"
+  },
+  {
+    "quote": "The smartest workout isn't the hardest one. It's the one you'll consistently complete.",
+    "category": "intelligence"
+  },
+  {
+    "quote": "Behind every recommendation is a single goal: helping tomorrow's version of you outperform today's.",
+    "category": "intelligence"
+  },
+  {
+    "quote": "Fitness becomes easier when decisions become automatic. That's where intelligence beats willpower.",
+    "category": "intelligence"
+  },
+  {
+    "quote": "Your body leaves clues. I read the patterns so you can focus on the work.",
+    "category": "intelligence"
+  },
+  {
+    "quote": "Data doesn't replace discipline. It simply points discipline in the right direction.",
+    "category": "intelligence"
+  },
+  {
+    "quote": "Great athletes trust feedback. Great transformations are built the same way.",
+    "category": "intelligence"
+  },
+  {
+    "quote": "Every workout teaches me more about your journey. Every recommendation becomes a little smarter.",
+    "category": "intelligence"
+  },
+  {
+    "quote": "The best fitness plan is not the most advanced one. It's the one that adapts when life gets complicated.",
+    "category": "intelligence"
+  },
+
+  {
+    "quote": "You said you'd start tomorrow. Tomorrow asked me to tell you it's getting crowded.",
+    "category": "sarcastic"
+  },
+  {
+    "quote": "Don't worry. Your dream physique understands you're very busy watching workout videos instead of doing workouts.",
+    "category": "sarcastic"
+  },
+  {
+    "quote": "Congratulations. You've successfully completed another week of planning to start next week.",
+    "category": "sarcastic"
+  },
+  {
+    "quote": "Your gym membership is beginning to feel financially supported but emotionally neglected.",
+    "category": "sarcastic"
+  },
+  {
+    "quote": "Interesting strategy. Let's see if thinking about squats eventually develops leg muscles.",
+    "category": "sarcastic"
+  },
+  {
+    "quote": "You burned more energy deciding whether to work out than the workout itself would've required.",
+    "category": "sarcastic"
+  },
+  {
+    "quote": "Your dumbbells have started telling stories about you to the treadmill.",
+    "category": "sarcastic"
+  },
+  {
+    "quote": "The 'perfect time to start' called. It said it doesn't exist.",
+    "category": "sarcastic"
+  },
+  {
+    "quote": "Rest days are important. You just accidentally turned yours into a season.",
+    "category": "sarcastic"
+  },
+  {
+    "quote": "At this point, your excuses are getting more exercise than you are.",
+    "category": "sarcastic"
+  },
+
+  {
+    "quote": "The mirror never lies. It simply reflects the habits you've repeated long enough to become visible.",
+    "category": "mindset"
+  },
+  {
+    "quote": "Every choice is shaping someone. The only question is whether it's shaping the person you want to become.",
+    "category": "mindset"
+  },
+  {
+    "quote": "You become what you repeatedly do, not what you occasionally promise yourself.",
+    "category": "mindset"
+  },
+  {
+    "quote": "Confidence isn't found. It's earned through promises kept to yourself.",
+    "category": "mindset"
+  },
+  {
+    "quote": "Most limits aren't physical. They're stories you've repeated so often they started sounding true.",
+    "category": "mindset"
+  },
+  {
+    "quote": "A strong body attracts attention. A strong mindset survives adversity.",
+    "category": "mindset"
+  },
+  {
+    "quote": "The goal isn't to beat everyone else. It's to stop losing to yesterday's version of yourself.",
+    "category": "mindset"
+  },
+  {
+    "quote": "Discipline feels difficult in the moment. Regret feels difficult for years.",
+    "category": "mindset"
+  },
+  {
+    "quote": "Most people underestimate what they can achieve in a year and overestimate what they can achieve in a week.",
+    "category": "mindset"
+  },
+  {
+    "quote": "The strongest people aren't the ones who never fail. They're the ones who never stay down.",
+    "category": "mindset"
+  },
+
+  {
+    "quote": "Recovery isn't taking a break from progress. Recovery is part of progress.",
+    "category": "recovery"
+  },
+  {
+    "quote": "Growth happens during training. Transformation happens during recovery.",
+    "category": "recovery"
+  },
+  {
+    "quote": "The strongest athletes know when to push. The smartest ones know when to rest.",
+    "category": "recovery"
+  },
+  {
+    "quote": "Your muscles don't grow when you train. They grow when you recover from training.",
+    "category": "recovery"
+  },
+  {
+    "quote": "Rest is not weakness. It's preparation disguised as patience.",
+    "category": "recovery"
+  },
+
+  {
+    "quote": "Every meal is either feeding your goals or feeding the distance between you and them.",
+    "category": "nutrition"
+  },
+  {
+    "quote": "Food is more than fuel. It's information your body uses to build its future.",
+    "category": "nutrition"
+  },
+  {
+    "quote": "You can't out-train poor habits forever. Eventually the math catches up.",
+    "category": "nutrition"
+  },
+  {
+    "quote": "Nutrition isn't about eating less. It's about giving your body more of what it actually needs.",
+    "category": "nutrition"
+  },
+  {
+    "quote": "Every bite is a vote. Cast enough votes and your body reveals the winner.",
+    "category": "nutrition"
+  },
+  {
+    "quote": "Nobody cares about the plan you almost followed.",
+    "category": "challenge"
+  },
+  {
+    "quote": "Your competition is already training while you're negotiating with yourself.",
+    "category": "challenge"
+  },
+  {
+    "quote": "One year from now you'll have results or excuses. Both require time.",
+    "category": "challenge"
+  },
+  {
+    "quote": "The life you want is expensive. The currency is discipline.",
+    "category": "challenge"
+  },
+  {
+    "quote": "Potential is the world's most common wasted resource.",
+    "category": "challenge"
+  },
+  {
+    "quote": "Every excuse feels valid until you meet someone who succeeded with less.",
+    "category": "challenge"
   }
+
 ];
