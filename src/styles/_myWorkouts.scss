@@ -424,10 +424,14 @@
 
     .dashboard-prs-subgrid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
       gap: 16px;
       margin-top: 15px;
       width: 100%;
+
+      @media (max-width: 480px) {
+        grid-template-columns: 1fr;
+      }
     }
 
     .pr-subcard-item {
@@ -439,7 +443,13 @@
       flex-direction: column;
       justify-content: space-between;
       min-height: 220px;
+      overflow: hidden;
       transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+
+      @media (max-width: 480px) {
+        padding: 14px;
+        min-height: 200px;
+      }
 
       &:hover {
         transform: translateY(-2px);
@@ -471,7 +481,8 @@
             text-overflow: ellipsis;
             white-space: nowrap;
             overflow: hidden;
-            max-width: 130px;
+            min-width: 0;
+            flex: 1;
           }
         }
 
@@ -491,7 +502,9 @@
       .weight-display-row {
         display: flex;
         justify-content: space-between;
-        align-items: center;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 8px;
 
         .weight-block {
           display: flex;
@@ -554,6 +567,7 @@
         display: flex;
         gap: 8px;
         margin-top: 5px;
+        flex-wrap: wrap;
 
         .edit-pr-btn,
         .delete-pr-btn {
@@ -600,27 +614,41 @@
         align-items: center;
         cursor: pointer;
         min-height: 220px;
+        transition: border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
 
         &:hover {
           border-color: rgba($accent, 0.4);
-          background: rgba($accent, 0.015);
+          background: rgba($accent, 0.025);
+          box-shadow: inset 0 0 30px rgba($accent, 0.03);
         }
 
         .add-placeholder-content {
           display: flex;
           flex-direction: column;
           align-items: center;
-          gap: 6px;
+          gap: 10px;
 
           .add-icon {
-            font-size: 2.2rem !important;
-            color: rgba($text, 0.35);
+            font-size: 2.5rem !important;
+            color: rgba($accent, 0.25);
+            transition: color 0.3s ease, transform 0.3s ease;
           }
 
           .add-text {
             font-size: 0.88rem;
             font-weight: 700;
-            color: rgba($text, 0.8);
+            color: rgba($text, 0.5);
+            transition: color 0.3s ease;
+          }
+        }
+
+        &:hover .add-placeholder-content {
+          .add-icon {
+            color: $accent;
+            transform: scale(1.15);
+          }
+          .add-text {
+            color: $accent;
           }
         }
 
@@ -801,9 +829,12 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 5px;
+      flex-wrap: wrap;
+      gap: 8px;
 
       h3 {
         margin: 0;
+        min-width: 0;
       }
 
       .reset-history-trigger-btn {
@@ -875,20 +906,23 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        gap: 10px;
+        gap: 8px;
+        flex-wrap: wrap;
 
         .log-workout-name {
-          font-size: 0.98rem;
+          font-size: 0.95rem;
           font-weight: 700;
           color: $text;
           margin: 0;
           text-overflow: ellipsis;
           white-space: nowrap;
           overflow: hidden;
+          min-width: 0;
+          flex: 1;
         }
 
         .log-date {
-          font-size: 0.8rem;
+          font-size: 0.78rem;
           color: $text-input-field-secondary;
           font-weight: 500;
           flex-shrink: 0;

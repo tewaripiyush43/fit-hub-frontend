@@ -4,4 +4,22 @@
   width: 90%;
   background-color: $background-hover;
   border-radius: 50px;
+  overflow: hidden;
+  box-sizing: border-box;
+
+  @media (max-width: 1024px) {
+    width: 95%;
+    border-radius: 32px;
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
+    margin-inline: 0;
+    border-radius: 20px;
+    padding-inline: 4px;
+  }
+
+  @media (max-width: 480px) {
+    border-radius: 0;
+  }
 }
