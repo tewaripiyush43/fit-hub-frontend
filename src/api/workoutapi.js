@@ -140,7 +140,17 @@ export const updateWorkout = async (
     // console.log(response);
     // console.log(data, status);
     if (status === 201) {
-      dispatch(workoutActions.setWorkoutData(data.workout));
+      const workoutResult = { ...data.workout };
+      const hasPopulatedExercises =
+        workoutResult.exercises &&
+        workoutResult.exercises.length > 0 &&
+        typeof workoutResult.exercises[0] === "object";
+
+      if (!hasPopulatedExercises && updatedData.exercises) {
+        workoutResult.exercises = updatedData.exercises;
+      }
+
+      dispatch(workoutActions.setWorkoutData(workoutResult));
       dispatch(authActions.setUser(data.user));
     }
   } catch (err) {

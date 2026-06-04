@@ -70,6 +70,7 @@
         justify-content: flex-end;
       }
 
+      // Legacy icon refs kept for safety (now replaced by buttons)
       .workout-page-edit-icon,
       .workout-page-delete-icon {
         cursor: pointer;
@@ -94,6 +95,47 @@
         border-color: rgba($primary-button, 0.2);
       }
 
+      // New labeled pill buttons
+      .workout-page-edit-btn,
+      .workout-page-delete-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 7px 16px;
+        border-radius: 30px;
+        font-size: 0.82rem;
+        font-weight: 700;
+        cursor: pointer;
+        letter-spacing: 0.3px;
+        transition: all 0.2s ease;
+      }
+
+      .workout-page-edit-btn {
+        background: rgba($accent, 0.1);
+        color: $accent;
+        border: 1px solid rgba($accent, 0.3);
+
+        &:hover {
+          background: $accent;
+          color: #000;
+          border-color: transparent;
+          box-shadow: 0 0 12px rgba($accent, 0.35);
+        }
+      }
+
+      .workout-page-delete-btn {
+        background: rgba($primary-button, 0.08);
+        color: $primary-button;
+        border: 1px solid rgba($primary-button, 0.25);
+
+        &:hover {
+          background: $primary-button;
+          color: #fff;
+          border-color: transparent;
+          box-shadow: 0 0 12px rgba($primary-button, 0.35);
+        }
+      }
+
       .workout-page-save-info-btn {
         background: $accent;
         color: #000;
@@ -111,6 +153,7 @@
           box-shadow: 0 0 14px rgba($accent, 0.4);
         }
       }
+
 
       .privacy-toggle-btn,
       .workout-share-btn {

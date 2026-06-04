@@ -480,29 +480,33 @@ const WorkoutPage = () => {
 
           {editMode ? (
             <button
-              onClick={() => {
-                setEditMode((prev) => !prev);
-                updateWorkout(dispatch, id, workoutData, REACT_APP_BASE_URL);
+              onClick={async () => {
+                setEditMode(false);
+                await updateWorkout(dispatch, id, workoutData, REACT_APP_BASE_URL);
+                // Re-fetch so exercises are always populated (prevents broken GIFs)
+                await fetchWorkout(dispatch, id, REACT_APP_BASE_URL);
               }}
-              title="Save Info"
+              title="Save Changes"
               className="workout-page-save-info-btn"
             >
               Save Changes
             </button>
           ) : (
-            <EditIcon
-              onClick={() => setEditMode((prev) => !prev)}
+            <button
+              onClick={() => setEditMode(true)}
               title="Edit Title/Description"
-              className="workout-page-edit-icon"
-            />
+              className="workout-page-edit-btn"
+            >
+              <EditIcon style={{ fontSize: "1rem" }} /> Edit
+            </button>
           )}
-          <DeleteTwoToneIcon
-            onClick={() => {
-              setShowConfirmation(true);
-            }}
+          <button
+            onClick={() => setShowConfirmation(true)}
             title="Delete Workout"
-            className="workout-page-delete-icon"
-          />
+            className="workout-page-delete-btn"
+          >
+            <DeleteTwoToneIcon style={{ fontSize: "1rem" }} /> Delete
+          </button>
         </div>
       </div>
 
