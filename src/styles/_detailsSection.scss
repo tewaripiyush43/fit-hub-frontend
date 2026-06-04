@@ -195,20 +195,18 @@
     .exercise-card {
       border: none;
       border-radius: 10%;
+
       img {
         border-radius: 10%;
       }
 
       .card-info {
-        .exercise-button {
-        }
+        .exercise-button {}
 
-        .exercise-button:nth-child(2) {
-        }
+        .exercise-button:nth-child(2) {}
       }
 
-      .exercise-name {
-      }
+      .exercise-name {}
     }
 
     .exercise-card:hover,

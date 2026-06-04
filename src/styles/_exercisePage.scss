@@ -1,312 +1,842 @@
 .exercise-page {
-  background-color: #191919;
-  padding-bottom: 20px;
-  transition: all 0.3s ease-in-out;
+  background-color: #121212; // deep modern slate/dark
+  padding: 100px 24px 40px 24px; // clear fixed navbar
+  min-height: 100vh;
+  color: $text;
+  font-family: 'Outfit', 'Inter', sans-serif;
 
-  .quote-container {
-    text-align: center;
-    backdrop-filter: blur(40px);
-    width: 100vw;
-    height: 40vh;
-    color: #e3e3e3;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    border-bottom: 1px solid $accent;
-    box-shadow: 0 50px 20px -5px $accent;
-    background-color: $background;
-    transition: all 0.3s ease-in-out;
-
-    @media (max-width: 1024px) {
-      height: 40vh;
-    }
-
-    @media (max-width: 768px) {
-      height: 40vh;
-    }
-
-    @media (max-width: 480px) {
-      height: 35vh;
-    }
-
-    @media (max-width: 375px) {
-      height: 35vh;
-    }
-
-    .quote-icon .quote-text {
-      font-style: italic;
-      text-transform: capitalize;
-      letter-spacing: 0.8px;
-      font-family: "Roboto", sans-serif;
-    }
-
-    .quote-icon {
-      font-weight: 500;
-      font-size: 2.5rem;
-      color: $accent;
-      transition: all 0.3s ease-in-out;
-
-      @media (max-width: 1024px) {
-        font-size: 2rem;
+  // Header quote panel
+  .exercise-page-header-container {
+    max-width: 1200px;
+    margin: 0 auto 40px auto;
+    
+    .exercise-page-quote-panel {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 20px;
+      padding: 24px;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      position: relative;
+      overflow: hidden;
+      
+      &::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba($accent, 0.04) 0%, transparent 60%);
+        pointer-events: none;
       }
-
-      @media (max-width: 768px) {
-        font-size: 2rem;
+      
+      .quote-panel-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        gap: 16px;
+        position: relative;
+        z-index: 2;
+        
+        .quote-category-tabs {
+          display: flex;
+          gap: 8px;
+          flex-wrap: wrap;
+          background: rgba(0, 0, 0, 0.25);
+          padding: 4px;
+          border-radius: 30px;
+          border: 1px solid rgba(255, 255, 255, 0.04);
+          
+          .quote-tab-btn {
+            background: transparent;
+            border: none;
+            color: rgba($text, 0.6);
+            padding: 6px 16px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            
+            &:hover {
+              color: $text;
+              background: rgba(255, 255, 255, 0.03);
+            }
+            
+            &.active {
+              color: #000;
+              background: $accent;
+              box-shadow: 0 4px 12px rgba($accent, 0.3);
+            }
+          }
+        }
+        
+        .quote-shuffle-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          color: $text;
+          padding: 8px 16px;
+          border-radius: 30px;
+          font-size: 0.82rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          
+          &:hover {
+            background: rgba($accent, 0.1);
+            border-color: rgba($accent, 0.3);
+            color: $accent;
+            transform: translateY(-1px);
+          }
+        }
       }
-
-      @media (max-width: 480px) {
-        font-size: 1.5rem;
-      }
-
-      @media (max-width: 375px) {
-        font-size: 1.5rem;
-      }
-    }
-
-    .quote-text {
-      font-weight: 600;
-      font-size: 1.3rem;
-      text-shadow: 2px 2px 2px #000000ba;
-      color: #e3e3e3;
-      transition: all 0.3s ease-in-out;
-
-      @media (max-width: 1024px) {
-        font-size: 1.1rem;
-      }
-
-      @media (max-width: 768px) {
-        font-size: 1rem;
-      }
-
-      @media (max-width: 480px) {
-        font-size: 0.9rem;
-      }
-
-      @media (max-width: 375px) {
-        font-size: 0.9rem;
+      
+      .quote-body {
+        position: relative;
+        padding: 10px 40px;
+        min-height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        z-index: 2;
+        
+        .quote-bg-icon {
+          position: absolute;
+          font-size: 3rem !important;
+          color: rgba($accent, 0.08);
+          pointer-events: none;
+          
+          &.start {
+            top: -10px;
+            left: 0;
+          }
+          
+          &.end {
+            bottom: -10px;
+            right: 0;
+            transform: scale(-1);
+          }
+        }
+        
+        .quote-text-content {
+          font-size: 1.15rem;
+          line-height: 1.6;
+          font-weight: 550;
+          color: rgba($text, 0.95);
+          letter-spacing: 0.2px;
+          font-style: italic;
+          
+          @media (max-width: 768px) {
+            font-size: 1rem;
+          }
+        }
       }
     }
   }
 
-  .exercise-gif-info {
-    width: 100%;
-    backdrop-filter: blur(40px);
-    background-color: #191919ba;
-    padding: 2rem 1.3rem;
-    display: flex;
-    justify-content: space-evenly;
-    position: relative;
-    transition: all 0.3s ease-in-out;
-
-    @media (max-width: 1024px) {
-      padding: 1.5rem 1rem;
+  // Dual Card Grid Layout
+  .exercise-detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.3fr;
+    gap: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+    align-items: start;
+    
+    @media (max-width: 992px) {
+      grid-template-columns: 1fr;
+      gap: 30px;
     }
-
-    @media (max-width: 768px) {
+    
+    // Left Card (Visuals)
+    .exercise-visual-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 24px;
+      padding: 24px;
+      position: relative;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+      display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-    }
-
-    .exericse-page-img-container {
-      width: 45%;
-      height: 100%;
-      min-height: 350px;
-      transition: all 0.3s ease-in-out;
-
-      @media (max-width: 1024px) {
-        width: 50%;
+      transition: all 0.3s ease;
+      
+      &:hover {
+        transform: translateY(-4px);
+        border-color: rgba($accent, 0.15);
+        box-shadow: 0 16px 48px rgba($accent, 0.1);
       }
-
-      @media (max-width: 768px) {
-        width: 100%;
-      }
-
-      @media (max-width: 480px) {
-        // height: 250px;
-      }
-
-      @media (max-width: 320px) {
-        // height: 300px;
-      }
-
-      .exercise-page-img {
-        border-radius: 15%;
-        width: 30%;
-        max-width: 400px;
-        height: 100%;
-        max-height: 450px;
+      
+      .gif-badge {
         position: absolute;
-        top: -12%;
-        left: 7.5%;
-        filter: invert(1) contrast(1.3) brightness(0.95);
-        mix-blend-mode: screen;
-        transition: all 0.3s ease-in-out;
-        box-shadow: 0 0 50px -30px $accent-invert;
-
-        @media (max-width: 1024px) {
-          width: 35%;
-          height: 70%;
-          top: 10%;
-          left: 6%;
-        }
-
-        @media (max-width: 768px) {
-          width: 65%;
-          height: 50%;
-          top: -6%;
-          left: 50%;
-          transform: translate(-50%, 0%);
-        }
-
-        @media (max-width: 480px) {
-          width: 80%;
-          height: 45%;
-          top: -5%;
-          left: 50%;
-          transform: translate(-50%, 0%);
-        }
-
-        @media (max-width: 375px) {
-          width: 90%;
-          height: 40%;
-          top: -5%;
-          left: 50%;
-          transform: translate(-50%, 0%);
-        }
+        top: 20px;
+        left: 20px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(0, 0, 0, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 6px 12px;
+        border-radius: 30px;
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: rgba($text, 0.8);
       }
-    }
-
-    .exercise-info {
-      width: 52%;
-      color: $text;
-      font-weight: 500;
-      background: transparent;
-      transition: all 0.3s ease-in-out;
-
-      @media (max-width: 1024px) {
-        width: 50%;
-      }
-
-      @media (max-width: 768px) {
-        width: 80%;
-      }
-
-      @media (max-width: 480px) {
-        width: 90%;
-      }
-
-      .exercise-info-name {
-        text-transform: capitalize;
-        letter-spacing: 0.8px;
-        font-family: "Roboto", sans-serif;
-        font-weight: 900;
-        font-size: 2rem;
-        background-image: linear-gradient(45deg, $accent, $text);
-        background-size: 100%;
-        background-repeat: repeat;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        -moz-background-clip: text;
-        -moz-text-fill-color: transparent;
-        margin-block: 1rem;
-        transition: all 0.3s ease-in-out;
-
-        @media (max-width: 1024px) {
-          font-size: 1.8rem;
+      
+      .gif-image-wrapper {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.015);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 18px;
+        overflow: hidden;
+        aspect-ratio: 1;
+        margin-top: 15px;
+        
+        .gif-img {
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
+          filter: invert(1) contrast(1.3) brightness(0.95);
+          mix-blend-mode: screen;
         }
-
-        @media (max-width: 768px) {
-          font-size: 1.8rem;
-        }
-
-        @media (max-width: 480px) {
-          font-size: 1.5rem;
-        }
-
-        @media (max-width: 375px) {
-          font-size: 1.3rem;
-        }
-      }
-      .exercise-info-ruler {
-        display: block;
-        background: $accent;
-        height: 0.25rem;
-        width: 6.25rem;
-        border: none;
-        margin: 1.125rem 0 1.875rem 0;
-      }
-      .exercise-info-detail {
-        line-height: 1.5;
-        font-weight: 500;
-        font-size: 1.1rem;
-        letter-spacing: 1px;
-        color: $text;
-        transition: all 0.3s ease-in-out;
-
-        @media (max-width: 1024px) {
-          font-size: 1rem;
-        }
-
-        @media (max-width: 768px) {
-          font-size: 1rem;
-        }
-
-        @media (max-width: 480px) {
+        
+        .gif-placeholder {
+          color: rgba(255, 255, 255, 0.3);
+          font-weight: 600;
           font-size: 0.9rem;
         }
-
-        @media (max-width: 375px) {
-          font-size: 0.8rem;
-        }
-
-        .exercise-info-target {
-          font-size: 1.2rem;
-          margin-left: 0.3rem;
-          color: $accent;
-          font-weight: lighter;
+      }
+    }
+    
+    // Right Card (Info)
+    .exercise-info-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 24px;
+      padding: 36px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+      
+      @media (max-width: 576px) {
+        padding: 24px;
+      }
+      
+      .info-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 16px;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+        
+        .exercise-name-title {
+          font-size: 2.2rem;
+          font-weight: 850;
+          letter-spacing: -0.5px;
           text-transform: capitalize;
-          transition: all 0.3s ease-in-out;
-
-          @media (max-width: 1024px) {
-            font-size: 1.1rem;
-          }
-
+          margin: 0;
+          line-height: 1.15;
+          background: linear-gradient(135deg, #fff 40%, rgba($accent, 0.8));
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          
           @media (max-width: 768px) {
-            font-size: 1.1rem;
+            font-size: 1.8rem;
           }
-
-          @media (max-width: 480px) {
-            font-size: 1rem;
+        }
+        
+        // Add to workout dropdown
+        .add-to-workout-container {
+          position: relative;
+          
+          .add-to-workout-trigger-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: $accent;
+            color: #000;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 750;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 15px rgba($accent, 0.3);
+            
+            &:hover {
+              transform: translateY(-1px);
+              box-shadow: 0 6px 20px rgba($accent, 0.45);
+            }
           }
+          
+          .add-to-workout-dropdown-menu {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            width: 250px;
+            background: #1e1e1e;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            
+            .dropdown-menu-title {
+              font-size: 0.78rem;
+              font-weight: 750;
+              text-transform: uppercase;
+              letter-spacing: 0.8px;
+              color: rgba($text, 0.45);
+              margin: 0 0 8px 0;
+            }
+            
+            .dropdown-menu-divider {
+              border: none;
+              height: 1px;
+              background: rgba(255, 255, 255, 0.06);
+              margin: 0 0 10px 0;
+            }
+            
+            .dropdown-menu-list {
+              list-style: none;
+              padding: 0;
+              margin: 0;
+              max-height: 200px;
+              overflow-y: auto;
+              
+              &::-webkit-scrollbar {
+                width: 5px;
+              }
+              &::-webkit-scrollbar-thumb {
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 10px;
+              }
+              
+              .dropdown-menu-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 10px 12px;
+                border-radius: 8px;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                font-size: 0.88rem;
+                font-weight: 600;
+                color: rgba($text, 0.85);
+                margin-bottom: 4px;
+                
+                &:hover {
+                  background: rgba(255, 255, 255, 0.05);
+                  color: $accent;
+                }
+                
+                &.disabled {
+                  opacity: 0.4;
+                  cursor: not-allowed;
+                  &:hover {
+                    background: transparent;
+                    color: rgba($text, 0.85);
+                  }
+                }
+                
+                &.exists {
+                  color: rgba($accent, 0.5);
+                  cursor: default;
+                  pointer-events: none;
+                  .workout-name::after {
+                    content: " (Added)";
+                    font-size: 0.72rem;
+                    opacity: 0.6;
+                  }
+                }
+                
+                .workout-name {
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                  white-space: nowrap;
+                  max-width: 140px;
+                }
+                
+                .workout-count {
+                  font-size: 0.75rem;
+                  opacity: 0.55;
+                }
+              }
+            }
+            .dropdown-empty-state {
+              text-align: center;
+              padding: 8px 0;
+              
+              p {
+                font-size: 0.82rem;
+                color: rgba($text, 0.5);
+                margin: 0;
+              }
+            }
 
-          @media (max-width: 375px) {
-            font-size: 0.9rem;
+            .dropdown-create-section {
+              border-top: 1px solid rgba(255, 255, 255, 0.06);
+              margin-top: 8px;
+              padding-top: 8px;
+
+              .dropdown-create-btn-row {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                padding: 10px 12px;
+                border-radius: 8px;
+                font-size: 0.88rem;
+                font-weight: 600;
+                color: rgba($text, 0.6);
+                cursor: pointer;
+                transition: all 0.2s ease;
+
+                &:hover {
+                  color: $accent;
+                  background: rgba($accent, 0.08);
+                }
+              }
+
+              .dropdown-create-input-row {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 6px 12px;
+                border-radius: 8px;
+                background: rgba(0, 0, 0, 0.2);
+                border: 1px solid rgba(255, 255, 255, 0.06);
+
+                .dropdown-create-input-field {
+                  background: transparent;
+                  outline: none;
+                  border: none;
+                  color: $text;
+                  font-size: 0.88rem;
+                  font-family: inherit;
+                  width: 70%;
+
+                  &::placeholder {
+                    color: rgba($text, 0.35);
+                  }
+                }
+
+                .dropdown-action-icons {
+                  display: flex;
+                  align-items: center;
+                  gap: 8px;
+
+                  svg {
+                    font-size: 1.15rem;
+                    cursor: pointer;
+                    transition: color 0.2s;
+
+                    &.add-icon:hover {
+                      color: $accent;
+                    }
+
+                    &.remove-icon:hover {
+                      color: $primary-button;
+                    }
+                  }
+                }
+              }
+            }
+
+            .dropdown-view-all-row {
+              margin-top: 8px;
+              border-top: 1px solid rgba(255, 255, 255, 0.06);
+              padding: 10px 12px 0 12px;
+              font-size: 0.88rem;
+              font-weight: 600;
+              color: rgba($text, 0.6);
+              cursor: pointer;
+              transition: all 0.2s ease;
+              text-align: center;
+
+              &:hover {
+                color: $accent;
+              }
+            }
           }
         }
       }
-
-      .exercise-page-info-instructions-list {
-        list-style-type: none;
-        // margin: 0;
-        // color: green;
-
-        li {
-          position: relative;
-          display: block;
-          // margin-bottom: 10px;
-
-          &::before {
-            content: "\2022";
-            // display: inline-block;
+      
+      // Badges
+      .badge-pills-row {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-bottom: 24px;
+        
+        .badge-pill {
+          display: inline-flex;
+          flex-direction: column;
+          padding: 8px 16px;
+          border-radius: 14px;
+          background: rgba(255, 255, 255, 0.025);
+          border: 1px solid rgba(255, 255, 255, 0.05);
+          
+          .badge-label {
+            font-size: 0.7rem;
+            font-weight: 750;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: rgba($text, 0.4);
+            margin-bottom: 2px;
+          }
+          
+          .badge-value {
+            font-size: 0.92rem;
+            font-weight: 700;
+            text-transform: capitalize;
+            color: rgba($text, 0.9);
+          }
+          
+          &.target .badge-value {
             color: $accent;
-            font-size: 24px;
-            margin-right: 10px;
-            position: absolute;
-            left: -20px;
-            top: 0;
-            // transform: translateY(-50%);
+          }
+        }
+      }
+      
+      // Secondary Muscles
+      .secondary-muscles-section {
+        margin-bottom: 24px;
+        
+        .section-label {
+          font-size: 0.8rem;
+          font-weight: 750;
+          color: rgba($text, 0.5);
+          display: block;
+          margin-bottom: 8px;
+        }
+        
+        .secondary-muscles-list {
+          display: flex;
+          gap: 8px;
+          flex-wrap: wrap;
+          
+          .secondary-muscle-tag {
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 0.78rem;
+            font-weight: 650;
+            background: rgba($accent, 0.05);
+            color: rgba($accent, 0.85);
+            border: 1px solid rgba($accent, 0.15);
+            text-transform: capitalize;
+          }
+        }
+      }
+      
+      .info-divider {
+        border: none;
+        height: 1px;
+        background: rgba(255, 255, 255, 0.06);
+        margin: 28px 0;
+      }
+      
+      // Interactive Stepper Checklist
+      .instructions-section {
+        .instructions-title {
+          font-size: 1.15rem;
+          font-weight: 800;
+          margin: 0 0 16px 0;
+          color: rgba($text, 0.95);
+        }
+        
+        .instructions-checklist {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+          
+          .instruction-step-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            padding: 14px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.015);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            
+            &:hover {
+              background: rgba(255, 255, 255, 0.035);
+              border-color: rgba(255, 255, 255, 0.08);
+              transform: translateX(4px);
+            }
+            
+            &.completed {
+              background: rgba($accent, 0.02);
+              border-color: rgba($accent, 0.12);
+              
+              .step-text {
+                color: rgba($text, 0.45);
+                text-decoration: line-through;
+              }
+              
+              .check-icon.active {
+                color: $accent;
+                filter: drop-shadow(0 0 4px rgba($accent, 0.3));
+              }
+            }
+            
+            .step-checkbox {
+              background: transparent;
+              border: none;
+              padding: 0;
+              margin: 0;
+              cursor: pointer;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              height: 24px;
+              color: rgba($text, 0.3);
+              transition: color 0.2s;
+              
+              &:hover {
+                color: $accent;
+              }
+              
+              .check-icon {
+                font-size: 1.25rem;
+              }
+            }
+            
+            .step-text {
+              font-size: 0.95rem;
+              line-height: 1.55;
+              color: rgba($text, 0.85);
+              font-weight: 500;
+              
+              .step-number {
+                font-weight: 800;
+                color: rgba($text, 0.35);
+                margin-right: 4px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Related exercises
+  .related-exercises-section {
+    max-width: 1200px;
+    margin: 50px auto 0 auto;
+    
+    // Customize swiper carousels inside DetailSection
+    .exercises-for-muscle-container {
+      width: 100% !important;
+      max-width: 100% !important;
+      box-sizing: border-box;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      border-radius: 24px;
+      padding: 36px;
+      margin: 0 auto 40px auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 60px;
+      
+      @media (max-width: 768px) {
+        flex-direction: column !important;
+        padding: 24px;
+        gap: 24px;
+      }
+      
+      .muscle-detail {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        max-width: 640px;
+        
+        .focus-label {
+          font-size: 0.75rem;
+          font-weight: 800;
+          text-transform: uppercase;
+          letter-spacing: 1.5px;
+          color: rgba($text, 0.4);
+          margin-bottom: 6px;
+        }
+
+        .muscle-detail-title {
+          font-size: 1.8rem;
+          font-weight: 850;
+          letter-spacing: -0.3px;
+          margin: 0 0 12px 0;
+          color: #fff;
+          text-transform: capitalize;
+          background: linear-gradient(135deg, #fff 50%, rgba($accent, 0.7));
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+        }
+        
+        .muscle-info-ruler {
+          display: block;
+          background: $accent;
+          height: 3px;
+          width: 50px;
+          border: none;
+          margin: 0 0 24px 0;
+        }
+        
+        .muscle-benefits-grid {
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+          margin-bottom: 30px;
+
+          .benefit-card {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.015);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            transition: all 0.25s ease;
+
+            &:hover {
+              background: rgba(255, 255, 255, 0.03);
+              border-color: rgba(255, 255, 255, 0.06);
+              transform: translateX(4px);
+            }
+
+            .benefit-icon-wrapper {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              width: 38px;
+              height: 38px;
+              border-radius: 10px;
+              flex-shrink: 0;
+
+              &.target-icon {
+                background: rgba($accent, 0.1);
+                color: $accent;
+              }
+
+              &.burn-icon {
+                background: rgba(#ff5722, 0.1);
+                color: #ff5722;
+              }
+
+              &.tips-icon {
+                background: rgba(#ffeb3b, 0.1);
+                color: #ffeb3b;
+              }
+
+              svg {
+                font-size: 1.15rem;
+              }
+            }
+
+            .benefit-info {
+              h4 {
+                font-size: 0.85rem;
+                font-weight: 750;
+                color: rgba($text, 0.9);
+                margin: 0 0 2px 0;
+              }
+
+              p {
+                font-size: 0.82rem;
+                color: rgba($text, 0.55);
+                margin: 0;
+                line-height: 1.4;
+
+                &.capitalize-text {
+                  text-transform: capitalize;
+                }
+              }
+            }
+          }
+        }
+        
+        .muscle-detail-link-btn {
+          display: inline-flex;
+          align-items: center;
+          align-self: flex-start;
+          gap: 8px;
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.15);
+          color: $text;
+          padding: 10px 22px;
+          border-radius: 30px;
+          font-size: 0.85rem;
+          font-weight: 750;
+          cursor: pointer;
+          transition: all 0.25s ease;
+          
+          &:hover {
+            background: $accent;
+            color: #000;
+            border-color: transparent;
+            box-shadow: 0 4px 12px rgba($accent, 0.25);
+            transform: translateY(-1px);
+
+            svg {
+              transform: translateX(3px);
+            }
+          }
+
+          svg {
+            font-size: 0.95rem;
+            transition: transform 0.2s ease;
+          }
+        }
+      }
+      
+      // Swiper container
+      & > div:last-child {
+        width: 320px;
+        flex-shrink: 0;
+        overflow: visible;
+        
+        @media (max-width: 480px) {
+          width: 100%;
+          max-width: 280px;
+        }
+        
+        .mySwiper.swiper {
+          width: 100% !important;
+          max-width: 320px;
+          height: 420px !important;
+          padding: 20px 0;
+          overflow: visible;
+
+          .swiper-slide {
+            background: transparent;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 360px !important;
+
+            .exercise-card {
+              height: 100%;
+              border-radius: 20px;
+
+              img {
+                height: 220px !important;
+                border-radius: 20px 20px 0 0;
+              }
+            }
           }
         }
       }

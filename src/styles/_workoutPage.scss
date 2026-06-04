@@ -60,14 +60,21 @@
       gap: 12px;
       flex-wrap: wrap;
 
-      @media (max-width: 576px) {
-        width: 100%;
-        justify-content: flex-start;
-        gap: 10px;
-      }
-
       @media (max-width: 768px) {
         justify-content: flex-end;
+      }
+
+      @media (max-width: 576px) {
+        width: 100%;
+        justify-content: center;
+        gap: 8px;
+
+        button {
+          flex: 1 1 calc(50% - 8px);
+          justify-content: center;
+          min-width: 120px;
+          box-sizing: border-box;
+        }
       }
 
       // Legacy icon refs kept for safety (now replaced by buttons)

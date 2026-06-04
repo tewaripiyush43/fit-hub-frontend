@@ -78,6 +78,39 @@ const MyWorkouts = () => {
       <p className="my-workouts-title">
         <span>M</span>y <span>W</span>orkouts
       </p>
+
+      {/* Premium AI Workout Generator Hero Banner */}
+      <div className="ai-workout-hero-banner">
+        <div className="ai-workout-banner-left">
+          <div className="ai-workout-banner-badge">
+            <AutoAwesomeIcon className="ai-workout-sparkle-icon" />
+            <span>AI Powered</span>
+          </div>
+          <h3 className="ai-workout-banner-title">
+            Generate custom routines in seconds
+          </h3>
+          <p className="ai-workout-banner-desc">
+            Get a tailored plan built by Gemini AI, customized to your biometric stats, target muscle areas, and training style.
+          </p>
+        </div>
+        <div className="ai-workout-banner-right">
+          {user?.workouts?.length >= 7 ? (
+            <div className="ai-workout-banner-limit">
+              <span className="ai-workout-banner-limit-badge">Routine Limit Reached (7/7)</span>
+              <p className="ai-workout-banner-limit-desc">Delete an existing workout to generate a new AI routine.</p>
+            </div>
+          ) : (
+            <button
+              className="ai-workout-banner-btn"
+              onClick={() => setShowAIModal(true)}
+            >
+              <AutoAwesomeIcon />
+              <span>Generate Workout</span>
+            </button>
+          )}
+        </div>
+      </div>
+
       <div className="my-workout-cards-container">
         {user?.workouts?.map((workout, index) => (
           <WorkoutCard
@@ -87,25 +120,15 @@ const MyWorkouts = () => {
           />
         ))}
         {user?.workouts?.length < 7 && (
-          <>
-            <div
-              onClick={() =>
-                addWorkout(dispatch, "Untitled Workout", REACT_APP_BASE_URL)
-              }
-              className="create-new-workout-card"
-            >
-              <div className="create-new-workout-card-icon">+ &nbsp;</div>
-              <p className="create-new-workout-card-text">Create New Workout</p>
-            </div>
-
-            <div
-              onClick={() => setShowAIModal(true)}
-              className="create-ai-workout-card"
-            >
-              <AutoAwesomeIcon className="create-ai-workout-card-icon" />
-              <p className="create-ai-workout-card-text">Generate AI Workout</p>
-            </div>
-          </>
+          <div
+            onClick={() =>
+              addWorkout(dispatch, "Untitled Workout", REACT_APP_BASE_URL)
+            }
+            className="create-new-workout-card"
+          >
+            <div className="create-new-workout-card-icon">+ &nbsp;</div>
+            <p className="create-new-workout-card-text">Create New Workout</p>
+          </div>
         )}
       </div>
 
