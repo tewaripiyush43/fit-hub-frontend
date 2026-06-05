@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { useDispatch } from "react-redux";
 
 import {
@@ -12,11 +11,8 @@ import {
 import { errorPopUp } from "../helpers/errorPopUp";
 import { portalActions } from "../store/index";
 import logo from "../assets/images/blue-theme-Logo-removebg-preview.webp";
-import { getUser } from "../api/authApi";
-
-axios.defaults.withCredentials = true;
+import { register } from "../api/authApi";
 const SignupModal = () => {
-  const REACT_APP_BASE_URL = process.env.REACT_APP_BASE_URL;
   const [inputs, setInputs] = useState({
     username: "",
     email: "",
@@ -45,30 +41,14 @@ const SignupModal = () => {
 
   const sendRegisterRequest = async () => {
     setLoading(true);
-    await axios
-      .post(`${REACT_APP_BASE_URL}/auth/register`, {
-        username: inputs.username.toLocaleLowerCase(),
-        email: inputs.email.toLowerCase(),
-        password: inputs.password,
-      })
-      .then((res) => {
-        // console.log(res);
-        if (res.data?.error) {
-          throw res.data?.error;
-        } else {
-          // console.log("User registered Successfully");
-          localStorage.setItem("accessToken", res.data.accessToken);
-          getUser(dispatch, REACT_APP_BASE_URL);
-          return;
-        }
-      })
-      .catch((err) => {
-        console.log(err.message);
-        setErrorMessage(err.message);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    try {
+      await register(dispatch, inputs);
+    } catch (err) {
+      const msg = err.response?.data?.error?.message || err.message || "Failed to register";
+      setErrorMessage(msg);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleSubmit = (e) => {

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import { authActions } from "../store/index.js";
 import ConfirmationPopup from "../components/ConfirmationPopUp.jsx";
+import { updateUserInfo } from "../api/userApi";
+import { deleteAccount } from "../api/authApi";
 
 import SettingsIcon from "@mui/icons-material/Settings";
 import PersonIcon from "@mui/icons-material/Person";
@@ -14,7 +14,6 @@ import SaveIcon from "@mui/icons-material/Save";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 
 const Settings = () => {
-  const REACT_APP_BASE_URL = process.env.REACT_APP_BASE_URL;
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
@@ -97,21 +96,7 @@ const Settings = () => {
     e.preventDefault();
     setIsSavingProfile(true);
     try {
-      const accessToken = localStorage.accessToken;
-      if (!accessToken) throw new Error("Access token not found");
-
-      const response = await axios.put(
-        `${REACT_APP_BASE_URL}/user/updateUserInfo`,
-        { ...profileInfo },
-        {
-          withCredentials: true,
-          headers: {
-            "Content-Type": "application/json",
-            authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      dispatch(authActions.setUser(response.data));
+      await updateUserInfo(dispatch, profileInfo);
       setSaveSuccess(true);
       setTimeout(() => setSaveSuccess(false), 3000);
     } catch (err) {
@@ -122,23 +107,12 @@ const Settings = () => {
   };
 
   const sendDeleteReq = async () => {
-    await axios
-      .delete(`${REACT_APP_BASE_URL}/auth/delete`, {
-        withCredentials: true,
-      })
-      .then((res) => {
-        if (res.status === 200) {
-          localStorage.clear();
-          dispatch(authActions.logout());
-          dispatch(authActions.setUser({}));
-          navigate(`/`);
-          return;
-        }
-        console.error("Unable to delete account.");
-      })
-      .catch((err) => {
-        console.error("Unable to delete account:", err);
-      });
+    try {
+      await deleteAccount(dispatch);
+      navigate(`/`);
+    } catch (err) {
+      console.error("Unable to delete account:", err);
+    }
   };
 
   const joinedDate = user?.createdAt

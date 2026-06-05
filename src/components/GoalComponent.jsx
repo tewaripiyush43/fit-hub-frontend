@@ -3,11 +3,10 @@ import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import FlagIcon from "@mui/icons-material/Flag";
-import axios from "axios";
 import { errorPopUp } from "../helpers/errorPopUp";
+import { fetchGoals, updateGoals } from "../api/goalApi";
 
 const GoalComponent = () => {
-  const REACT_APP_BASE_URL = process.env.REACT_APP_BASE_URL;
   const [errorMessage, setErrorMessage] = useState("");
   const [editMode, setEditMode] = useState(false);
   const [progress, setProgress] = useState({
@@ -41,19 +40,10 @@ const GoalComponent = () => {
   useEffect(() => {
     const fetchUserGoals = async () => {
       try {
-        const accessToken = localStorage.accessToken;
-        if (!accessToken) throw new Error("Access token not found");
+        const data = await fetchGoals();
 
-        const res = await axios.get(`${REACT_APP_BASE_URL}/goal/`, {
-          withCredentials: true,
-          headers: {
-            "Content-Type": "application/json",
-            authorization: `Bearer ${accessToken}`,
-          },
-        });
-
-        if (res.data && res.data.length > 0) {
-          const adjustedGoals = res.data.map((goal) => ({
+        if (data && data.length > 0) {
+          const adjustedGoals = data.map((goal) => ({
             ...goal,
             startDate: new Date(goal.startDate).toISOString(),
             deadline: new Date(goal.deadline).toISOString(),
@@ -96,22 +86,9 @@ const GoalComponent = () => {
 
   const handleSaveClick = async () => {
     try {
-      const accessToken = localStorage.accessToken;
-      if (!accessToken) throw new Error("Access token not found");
+      const data = await updateGoals(goals);
 
-      const res = await axios.put(
-        `${REACT_APP_BASE_URL}/goal/updateGoals`,
-        goals,
-        {
-          withCredentials: true,
-          headers: {
-            "Content-Type": "application/json",
-            authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-
-      const adjustedGoals = res.data.map((goal) => ({
+      const adjustedGoals = data.map((goal) => ({
         ...goal,
         startDate: new Date(goal.startDate).toISOString(),
         deadline: new Date(goal.deadline).toISOString(),

@@ -245,7 +245,7 @@ html.modal-open {
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  // Sidebar Open State: Shift main content and fixed navbar to the right
+  // Sidebar Open State: Shift main content to the right
   .user-profile-side-bar-container:not(.hide) ~ .main-app-content {
     margin-left: 20%;
     width: 80%;
@@ -259,36 +259,12 @@ html.modal-open {
       margin-left: 0;
       width: 100%;
     }
-
-    #nav {
-      margin-left: 20%;
-      width: 80%;
-
-      @media (max-width: 1200px) {
-        margin-left: 240px;
-        width: calc(100% - 240px);
-      }
-
-      @media (max-width: 768px) {
-        margin-left: 0;
-        width: 100%;
-      }
-    }
   }
 
   // Sidebar Closed State: No shift, content spans 100%
   .user-profile-side-bar-container.hide ~ .main-app-content {
     margin-left: 0;
     width: 100%;
-
-    #nav {
-      margin-left: 0;
-      width: 100%;
-    }
-  }
-
-  #nav {
-    transition: margin-left 0.4s cubic-bezier(0.4, 0, 0.2, 1), width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
 }
 

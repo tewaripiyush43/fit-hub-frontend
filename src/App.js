@@ -2,7 +2,6 @@ import "./styles/styles.scss";
 import React, { useState, useEffect, lazy, Suspense } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
 import { ToastContainer } from "react-toastify";
 
 import Navbar from "./components/Navbar";
@@ -24,12 +23,9 @@ const ForgotPassword = lazy(() => import("./components/ForgotPassword"));
 const ResetPassword = lazy(() => import("./components/ResetPassword"));
 const AICoachChat = lazy(() => import("./components/AICoachChat"));
 
-axios.defaults.withCredentials = true;
-
 function App() {
   const dispatch = useDispatch();
   const location = useLocation();
-  const REACT_APP_BASE_URL = process.env.REACT_APP_BASE_URL;
   // console.log(REACT_APP_BASE_URL);
 
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
@@ -77,12 +73,12 @@ function App() {
   }, [location.pathname]);
 
   useEffect(() => {
-    getUser(dispatch, REACT_APP_BASE_URL);
+    getUser(dispatch);
   }, []);
 
   useEffect(() => {
     if (isLoggedIn) {
-      getUser(dispatch, REACT_APP_BASE_URL);
+      getUser(dispatch);
     }
   }, [isLoggedIn]);
 

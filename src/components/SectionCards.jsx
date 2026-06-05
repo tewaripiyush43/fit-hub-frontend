@@ -1,7 +1,7 @@
 import React from "react";
 
-import ExerciseImg from "../assets/images/home-img-4.webp";
-import foodImg from "../assets/images/anime-food.jpeg";
+import ExerciseImg from "../assets/images/exercises-home.webp";
+import foodImg from "../assets/images/recipes-home.webp";
 
 import Card from "../components/Card";
 

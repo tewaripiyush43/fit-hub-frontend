@@ -9,22 +9,20 @@ import SectionCards from "../components/SectionCards";
 import StatsSection from "../components/StatsSection";
 import FeaturesSection from "../components/FeaturesSection";
 import { errorPopUp } from "../helpers/errorPopUp";
-
-import axios from "axios";
+import { fetchCarouselDataHome } from "../api/exerciseApi";
 
 export default function Home() {
-  const REACT_APP_BASE_URL = process.env.REACT_APP_BASE_URL;
   const [carouselData, setCarouselData] = useState([]);
   const [searchByCarousel, setSearchByCarousel] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
   const getCarouselHomeData = async () => {
-    await axios
-      .get(`${REACT_APP_BASE_URL}/exercise/fetchCarouselDataHome`)
-      .then((res) => setCarouselData(res.data))
-      .catch((err) => {
-        setErrorMessage("Something went wrong. Please try again.");
-      });
+    try {
+      const data = await fetchCarouselDataHome();
+      setCarouselData(data);
+    } catch (err) {
+      setErrorMessage("Something went wrong. Please try again.");
+    }
   };
 
   useEffect(() => {

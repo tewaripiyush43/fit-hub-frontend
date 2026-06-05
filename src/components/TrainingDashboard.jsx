@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import axios from "axios";
 import WhatshotIcon from "@mui/icons-material/Whatshot";
 import HistoryIcon from "@mui/icons-material/History";
 import TimerIcon from "@mui/icons-material/Timer";
@@ -10,10 +9,9 @@ import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
 import AddIcon from "@mui/icons-material/Add";
-import { authActions } from "../store/index.js";
+import { clearSessionHistory, updatePRs } from "../api/userApi";
 
 const TrainingDashboard = () => {
-  const REACT_APP_BASE_URL = process.env.REACT_APP_BASE_URL;
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
   
@@ -58,21 +56,7 @@ const TrainingDashboard = () => {
 
   const handleClearHistory = async () => {
     try {
-      const accessToken = localStorage.accessToken;
-      const res = await axios.post(
-        `${REACT_APP_BASE_URL}/user/clear-session-history`,
-        {},
-        {
-          withCredentials: true,
-          headers: {
-            "Content-Type": "application/json",
-            authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      if (res.status === 200) {
-        dispatch(authActions.setUser(res.data));
-      }
+      await clearSessionHistory(dispatch);
       setShowClearConfirm(false);
     } catch (error) {
       console.error("Failed to clear session history:", error);
@@ -82,21 +66,7 @@ const TrainingDashboard = () => {
   // PR handlers
   const syncPRsToDb = async (updatedPRs) => {
     try {
-      const accessToken = localStorage.accessToken;
-      const res = await axios.put(
-        `${REACT_APP_BASE_URL}/user/update-prs`,
-        { prs: updatedPRs },
-        {
-          withCredentials: true,
-          headers: {
-            "Content-Type": "application/json",
-            authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      if (res.status === 200) {
-        dispatch(authActions.setUser(res.data));
-      }
+      await updatePRs(dispatch, updatedPRs);
     } catch (error) {
       console.error("Failed to update PRs in DB:", error);
     }

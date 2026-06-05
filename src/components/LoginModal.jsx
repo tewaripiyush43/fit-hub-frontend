@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { useDispatch } from "react-redux";
-import { authActions, portalActions } from "../store";
+import { portalActions } from "../store";
+import { login } from "../api/authApi";
 
 import { errorPopUp } from "../helpers/errorPopUp";
 
@@ -14,7 +14,6 @@ import {
 } from "@ant-design/icons";
 
 const LoginModal = () => {
-  const REACT_APP_BASE_URL = process.env.REACT_APP_BASE_URL;
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [inputs, setInputs] = useState({
@@ -41,29 +40,15 @@ const LoginModal = () => {
 
   const sendRequest = async () => {
     setLoading(true);
-    await axios
-      .post(`${REACT_APP_BASE_URL}/auth/login`, {
-        emailOrUsername: inputs.emailOrUsername.toLocaleLowerCase(),
-        password: inputs.password,
-      })
-      .then((res) => {
-        // console.log(res);
-        if (res.data?.error) {
-          throw res.data.error;
-        } else {
-          localStorage.setItem("accessToken", res.data.accessToken);
-          dispatch(authActions.login());
-          dispatch(authActions.setUser(res.data.user));
-          dispatch(portalActions.setPortalClose());
-          navigate("/");
-        }
-      })
-      .catch((err) => {
-        setErrorMessage(err.message);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    try {
+      await login(dispatch, inputs);
+      navigate("/");
+    } catch (err) {
+      const msg = err.response?.data?.error?.message || err.message || "Failed to log in";
+      setErrorMessage(msg);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleSubmit = (e) => {

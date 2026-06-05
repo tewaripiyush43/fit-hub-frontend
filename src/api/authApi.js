@@ -1,76 +1,70 @@
-import axios from "axios";
+import api from "./client";
 import { authActions, portalActions } from "../store/index";
+import { setAccessToken, clearAccessToken } from "../utils/tokenService";
 
-let isRefreshing = false;
-let refreshPromise = null;
-
-export const getUser = async (dispatch, REACT_APP_BASE_URL) => {
+export const getUser = async (dispatch) => {
   try {
-    const accessToken = localStorage.accessToken;
-    if (!accessToken) {
-      throw new Error("Access token not found");
-    }
-    // console.log(accessToken);
-
-    const response = await axios.get(`${REACT_APP_BASE_URL}/auth/private`, {
-      withCredentials: true,
-      headers: {
-        "Content-Type": "application/json",
-        authorization: `Bearer ${accessToken}`,
-      },
-    });
-
+    const response = await api.get("/auth/private");
     const { data } = response;
-    const status = data.error?.status;
-    // console.log(data, status);
-    if (status === 401) {
-      if (!isRefreshing) {
-        isRefreshing = true;
-        refreshPromise = handleTokenRefresh(dispatch, REACT_APP_BASE_URL);
-      }
-
-      await refreshPromise;
-      isRefreshing = false;
-      await getUser(dispatch, REACT_APP_BASE_URL);
-    } else if (status === 404) {
-      dispatch(authActions.setUser({}));
-      dispatch(authActions.logout());
-    } else {
-      const { user, accessToken } = data;
-      dispatch(authActions.setUser(user));
-      dispatch(authActions.login());
-      dispatch(portalActions.setPortalClose());
+    const { user, accessToken: newAccessToken } = data;
+    dispatch(authActions.setUser(user));
+    dispatch(authActions.login());
+    if (newAccessToken) {
+      setAccessToken(newAccessToken);
     }
+    dispatch(portalActions.setPortalClose());
   } catch (error) {
-    // console.error("Error fetching user data:", error);
+    dispatch(authActions.setUser({}));
+    dispatch(authActions.logout());
+    clearAccessToken();
   }
 };
 
-const handleTokenRefresh = async (dispatch, REACT_APP_BASE_URL) => {
-  try {
-    const response = await axios.post(
-      `${REACT_APP_BASE_URL}/auth/refreshToken`,
-      {},
-      {
-        withCredentials: true,
-      }
-    );
+export const login = async (dispatch, inputs) => {
+  const response = await api.post("/auth/login", {
+    emailOrUsername: inputs.emailOrUsername.toLocaleLowerCase(),
+    password: inputs.password,
+  });
+  const { data } = response;
+  setAccessToken(data.accessToken);
+  dispatch(authActions.login());
+  dispatch(authActions.setUser(data.user));
+  dispatch(portalActions.setPortalClose());
+  return data;
+};
 
-    const { data } = response;
-    const status = data.error?.status;
-    if (status === 400 || status === 401) {
-      if (localStorage.accessToken) delete localStorage.accessToken;
-      dispatch(authActions.setUser({}));
-      dispatch(authActions.logout());
-      throw new Error("Token refresh failed");
-    } else {
-      // console.log(data);
-      localStorage.setItem("accessToken", data.accessToken);
-    }
-  } catch (error) {
-    console.error("Error refreshing token:", error);
-    // Handle the error or remove the token if needed
-    // delete localStorage.accessToken;
-    throw error;
+export const register = async (dispatch, inputs) => {
+  const response = await api.post("/auth/register", {
+    username: inputs.username.toLocaleLowerCase(),
+    email: inputs.email.toLowerCase(),
+    password: inputs.password,
+  });
+  const { data } = response;
+  setAccessToken(data.accessToken);
+  dispatch(authActions.login());
+  dispatch(authActions.setUser(data.user));
+  dispatch(portalActions.setPortalClose());
+  return data;
+};
+
+export const logout = async (dispatch) => {
+  try {
+    await api.post("/auth/logout");
+  } finally {
+    localStorage.clear();
+    clearAccessToken();
+    dispatch(authActions.logout());
+    dispatch(authActions.setUser({}));
+  }
+};
+
+export const deleteAccount = async (dispatch) => {
+  try {
+    await api.delete("/auth/delete");
+  } finally {
+    localStorage.clear();
+    clearAccessToken();
+    dispatch(authActions.logout());
+    dispatch(authActions.setUser({}));
   }
 };

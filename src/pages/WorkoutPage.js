@@ -2,9 +2,9 @@ import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 import { createPortal } from "react-dom";
-import axios from "axios";
 import { fetchWorkout, deleteWorkout, updateWorkout } from "../api/workoutApi";
-import { workoutActions, authActions } from "../store/index";
+import { logWorkoutSession } from "../api/userApi";
+import { workoutActions } from "../store/index";
 import ExerciseCard from "../components/ExerciseCard";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
@@ -63,7 +63,6 @@ const renderFormattedDescription = (text) => {
 };
 
 const WorkoutPage = () => {
-  const REACT_APP_BASE_URL = process.env.REACT_APP_BASE_URL;
   const navigate = useNavigate();
   const { username, workoutId } = useParams();
   const [id, name] = workoutId.split("-");
@@ -91,8 +90,7 @@ const WorkoutPage = () => {
       await updateWorkout(
         dispatch, 
         id, 
-        { ...workoutData, isPrivate: updatedPrivate }, 
-        REACT_APP_BASE_URL
+        { ...workoutData, isPrivate: updatedPrivate }
       );
     } catch (err) {
       console.error("Failed to update privacy:", err);
@@ -197,7 +195,7 @@ const WorkoutPage = () => {
     });
   };
 
-  const handleFinishWorkout = () => {
+  const handleFinishWorkout = async () => {
     let volumeSum = 0;
     let completedCount = 0;
     let totalCount = 0;
@@ -226,22 +224,11 @@ const WorkoutPage = () => {
       totalSets: totalCount,
     };
 
-    const accessToken = localStorage.accessToken;
-    axios.post(`${REACT_APP_BASE_URL}/user/log-session`, logPayload, {
-      withCredentials: true,
-      headers: {
-        "Content-Type": "application/json",
-        authorization: `Bearer ${accessToken}`,
-      },
-    })
-      .then((res) => {
-        if (res.status === 200) {
-          dispatch(authActions.setUser(res.data));
-        }
-      })
-      .catch((err) => {
-        console.error("Failed to log workout session in DB:", err);
-      });
+    try {
+      await logWorkoutSession(dispatch, logPayload);
+    } catch (err) {
+      console.error("Failed to log workout session in DB:", err);
+    }
   };
 
   const handleCloseSummary = () => {
@@ -264,7 +251,7 @@ const WorkoutPage = () => {
   };
 
   useEffect(() => {
-    fetchWorkout(dispatch, id, REACT_APP_BASE_URL);
+    fetchWorkout(dispatch, id);
   }, []);
 
   function handleChange(e) {
@@ -439,7 +426,7 @@ const WorkoutPage = () => {
           onClose={() => setShowConfirmation(false)}
           textContent="workout"
           onDelete={() => {
-            deleteWorkout(dispatch, id, REACT_APP_BASE_URL);
+            deleteWorkout(dispatch, id);
             setShowConfirmation(false);
             navigate(`/${username}/myworkouts`);
           }}
@@ -482,9 +469,9 @@ const WorkoutPage = () => {
             <button
               onClick={async () => {
                 setEditMode(false);
-                await updateWorkout(dispatch, id, workoutData, REACT_APP_BASE_URL);
+                await updateWorkout(dispatch, id, workoutData);
                 // Re-fetch so exercises are always populated (prevents broken GIFs)
-                await fetchWorkout(dispatch, id, REACT_APP_BASE_URL);
+                await fetchWorkout(dispatch, id);
               }}
               title="Save Changes"
               className="workout-page-save-info-btn"

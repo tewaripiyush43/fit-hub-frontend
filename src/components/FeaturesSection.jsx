@@ -8,6 +8,8 @@ import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import TrackChangesIcon from "@mui/icons-material/TrackChanges";
 import CalculateIcon from "@mui/icons-material/Calculate";
+import ForumIcon from "@mui/icons-material/Forum";
+import WhatshotIcon from "@mui/icons-material/Whatshot";
 
 const features = [
   {
@@ -68,6 +70,26 @@ const features = [
       "BMI, TDEE, Macro splits, and One-Rep Max calculators — all the numbers you need to train and eat with precision.",
     accentColor: "#ef5350",
     path: "/fitnesstools",
+    protected: true,
+  },
+  {
+    icon: <ForumIcon className="feature-icon" />,
+    tag: "Coaching",
+    title: "AI Fitness Coach Chatbot",
+    description:
+      "Get real-time feedback, personalized form tips, meal advice, and workout encouragement from your Gemini-powered personal trainer.",
+    accentColor: "#00b3e6",
+    path: "/dashboard",
+    protected: true,
+  },
+  {
+    icon: <WhatshotIcon className="feature-icon" />,
+    tag: "Gamified",
+    title: "Daily Streaks & Badges",
+    description:
+      "Maintain active streaks, record workout volume milestones, and level up through custom ranks from Gym Beast to Hercules Tier.",
+    accentColor: "#ff5e62",
+    path: "/dashboard",
     protected: true,
   },
 ];

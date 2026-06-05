@@ -2,17 +2,15 @@ import React from "react";
 import { useState, useEffect, useRef, useCallback } from "react";
 
 import ExerciseCard from "./ExerciseCard";
-import axios from "axios";
-
 import Pagination from "@mui/material/Pagination";
 import SearchIcon from "@mui/icons-material/Search";
 // import { useSelector } from "react-redux";
 import { errorPopUp } from "../helpers/errorPopUp";
+import { fetchExerciseCount, fetchExercises, fetchExerciseNames } from "../api/exerciseApi";
 
 /* Todays workout eg. if monday back bi, tuesday chest tri */
 
 const Exercises = ({ searchByCarousel }) => {
-  const REACT_APP_BASE_URL = process.env.REACT_APP_BASE_URL;
   const [searchValue, setSearchValue] = useState(searchByCarousel || "");
   const [suggestion, setSuggestion] = useState([]);
   const [exercises, setExercises] = useState([]);
@@ -31,17 +29,13 @@ const Exercises = ({ searchByCarousel }) => {
       setLoading(true);
       try {
         if (lastSearchTerm.current !== searchValue) {
-          const countRes = await axios.get(
-            `${REACT_APP_BASE_URL}/exercise/fetchCount?exercise=${searchValue}`
-          );
-          setTotalPages(Math.ceil(countRes.data / 9));
+          const count = await fetchExerciseCount(searchValue);
+          setTotalPages(Math.ceil(count / 9));
           lastSearchTerm.current = searchValue;
         }
 
-        const exercisesRes = await axios.get(
-          `${REACT_APP_BASE_URL}/exercise/exercises?exercise=${searchValue}&page=${currentPage}`
-        );
-        setExercises(exercisesRes.data);
+        const data = await fetchExercises(searchValue, currentPage);
+        setExercises(data);
       } catch (err) {
         console.log(err.message);
         setErrorMessage("Something went wrong. Please try again later.");
@@ -88,13 +82,13 @@ const Exercises = ({ searchByCarousel }) => {
     setDropdownActive(true);
     if (suggestion.length === 0) {
       try {
-        const res = await axios.get(`${REACT_APP_BASE_URL}/exercise/fetchnames`);
-        setSuggestion(res.data);
+        const data = await fetchExerciseNames();
+        setSuggestion(data);
       } catch (err) {
         setErrorMessage("Something went wrong. Please try again later.");
       }
     }
-  }, [REACT_APP_BASE_URL, suggestion]);
+  }, [suggestion]);
 
   const handleInputChange = useCallback((e) => {
     const value = e.target.value;

@@ -3,6 +3,8 @@ import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import PushPinIcon from "@mui/icons-material/PushPin";
+import PushPinOutlinedIcon from "@mui/icons-material/PushPinOutlined";
 
 import HomeIcon from "@mui/icons-material/Home";
 import DashboardIcon from "@mui/icons-material/Dashboard";
@@ -11,6 +13,7 @@ import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import CalculateIcon from "@mui/icons-material/Calculate";
 import SettingsIcon from "@mui/icons-material/Settings";
+import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 
 const UserProfileSideBar = () => {
   const navigate = useNavigate();
@@ -20,9 +23,24 @@ const UserProfileSideBar = () => {
   const user = useSelector((state) => state.auth.user);
   const username = user?.username;
   const [isSidebarShown, setIsSidebarShown] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [isPinned, setIsPinned] = useState(() => {
+    return localStorage.getItem("sidebar-pinned") === "true";
+  });
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const activePinned = isPinned && !isMobile;
 
   useEffect(() => {
     const handleClickOutside = (event) => {
+      if (activePinned) return;
       if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
         setIsSidebarShown(false);
       }
@@ -31,13 +49,14 @@ const UserProfileSideBar = () => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [sidebarRef]);
+  }, [sidebarRef, activePinned]);
 
   const sidebarItems = [
     { id: "1", name: "Home", icon: <HomeIcon /> },
     { id: "8", name: "Dashboard", icon: <DashboardIcon /> },
     { id: "2", name: "My Profile", icon: <PersonIcon /> },
     { id: "3", name: "My Workouts", icon: <FitnessCenterIcon /> },
+    { id: "10", name: "AI Generator", icon: <AutoAwesomeIcon /> },
     { id: "4", name: "My Favorite", icon: <FavoriteIcon /> },
     { id: "6", name: "Fitness Tools", icon: <CalculateIcon /> },
     { id: "7", name: "Settings", icon: <SettingsIcon /> },
@@ -55,7 +74,7 @@ const UserProfileSideBar = () => {
     } else if (pathname.includes("/myprofile")) {
       activeId = "2";
     } else if (pathname.includes("/myworkouts")) {
-      activeId = "3";
+      activeId = location.search.includes("ai=true") ? "10" : "3";
     } else if (pathname.includes("/myfavorite")) {
       activeId = "4";
     } else if (pathname.includes("/fitnesstools")) {
@@ -64,7 +83,7 @@ const UserProfileSideBar = () => {
       activeId = "7";
     }
     setActiveItem(activeId);
-  }, [location.pathname]);
+  }, [location.pathname, location.search]);
 
   const handleItemClick = (item) => {
     if (!item) return;
@@ -76,6 +95,14 @@ const UserProfileSideBar = () => {
     }
 
     if (!username) return;
+
+    if (item.id === "10") {
+      navigate(`/${username}/myworkouts?ai=true`);
+      setActiveItem(item.id);
+      setIsSidebarShown(false);
+      return;
+    }
+
     const nextpath = item.name.toLowerCase().replace(" ", "");
     navigate(`/${username}/${nextpath}`);
     setActiveItem(item.id);
@@ -86,7 +113,7 @@ const UserProfileSideBar = () => {
     <div
       ref={sidebarRef}
       className={`user-profile-side-bar-container ${
-        !isSidebarShown ? "hide" : ""
+        activePinned ? "pinned" : (!isSidebarShown ? "hide" : "")
       }`}
     >
       <div className="user-profile-side-bar">
@@ -107,13 +134,32 @@ const UserProfileSideBar = () => {
             </li>
           ))}
         </ul>
+        {!isMobile && (
+          <div
+            className={`sidebar-pin-btn ${activePinned ? "pinned" : ""}`}
+            onClick={() => {
+              const nextPinned = !isPinned;
+              setIsPinned(nextPinned);
+              if (nextPinned) {
+                setIsSidebarShown(true);
+              }
+              localStorage.setItem("sidebar-pinned", String(nextPinned));
+            }}
+            title={activePinned ? "Unpin sidebar" : "Pin sidebar"}
+          >
+            {activePinned ? <PushPinIcon /> : <PushPinOutlinedIcon />}
+            <span className="pin-text">{activePinned ? "Pinned" : "Pin"}</span>
+          </div>
+        )}
       </div>
-      <div
-        className="show-sidebar"
-        onClick={() => setIsSidebarShown((prev) => !prev)}
-      >
-        {isSidebarShown ? <ChevronLeftIcon /> : <MenuIcon />}
-      </div>
+      {!activePinned && (
+        <div
+          className="show-sidebar"
+          onClick={() => setIsSidebarShown((prev) => !prev)}
+        >
+          {isSidebarShown ? <ChevronLeftIcon /> : <MenuIcon />}
+        </div>
+      )}
     </div>
   );
 };

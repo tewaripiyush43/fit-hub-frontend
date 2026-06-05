@@ -1,18 +1,40 @@
 import { configureStore, createSlice } from "@reduxjs/toolkit";
+import { clearAccessToken } from "../utils/tokenService";
 
 const authSlice = createSlice({
   name: "auth",
-  initialState: { isLoggedIn: false, user: {} },
+  initialState: {
+    isLoggedIn: localStorage.getItem("isLoggedIn") === "true",
+    user: (() => {
+      try {
+        return JSON.parse(localStorage.getItem("user") || "{}");
+      } catch (e) {
+        return {};
+      }
+    })(),
+  },
   reducers: {
     login(state) {
       state.isLoggedIn = true;
+      localStorage.setItem("isLoggedIn", "true");
     },
     logout(state) {
       state.isLoggedIn = false;
+      state.user = {};
+      localStorage.removeItem("isLoggedIn");
+      localStorage.removeItem("user");
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("sidebar-pinned");
+      clearAccessToken();
     },
     setUser(state, action) {
       state.user = action.payload;
-      // console.log("user from state ", state.user);
+      if (action.payload && Object.keys(action.payload).length > 0) {
+        localStorage.setItem("user", JSON.stringify(action.payload));
+        localStorage.setItem("isLoggedIn", "true");
+      } else {
+        localStorage.removeItem("user");
+      }
     },
   },
 });

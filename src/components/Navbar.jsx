@@ -3,13 +3,12 @@ import { useEffect, useState } from "react";
 
 import Portal from "./Portal.jsx";
 import { useSelector, useDispatch } from "react-redux";
-import { authActions, portalActions } from "../store/index.js";
-import axios from "axios";
+import { portalActions } from "../store/index.js";
+import { logout } from "../api/authApi";
 
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Divider from "@mui/material/Divider";
-import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import Avatar from "@mui/material/Avatar";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -18,10 +17,10 @@ import Logout from "@mui/icons-material/Logout";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import WhatshotIcon from "@mui/icons-material/Whatshot";
+import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
-axios.defaults.withCredentials = true;
 const Navbar = () => {
-  const REACT_APP_BASE_URL = process.env.REACT_APP_BASE_URL;
   const [anchorEl, setAnchorEl] = useState(null);
   const [accountMenuClicked, setAccountMenuClicked] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
@@ -54,26 +53,9 @@ const Navbar = () => {
   };
 
   const sendLogoutReq = async () => {
-    // console.log("logout");
-    await axios
-      .post(`${REACT_APP_BASE_URL}/auth/logout`, {
-        withCredentials: true,
-      })
-      .then((res) => {
-        if (res.status === 200) {
-          localStorage.clear();
-          dispatch(authActions.logout());
-          dispatch(authActions.setUser({}));
-          navigate(`/`);
-          // console.log(isLoggedIn);
-          handleDropDownClose();
-          return;
-        }
-        return new Error("Unable to log out. Please try again");
-      })
-      .catch((err) => {
-        return new Error("Unable to log out. Please try again");
-      });
+    await logout(dispatch);
+    navigate(`/`);
+    handleDropDownClose();
   };
 
   const [navVisible, setNavVisible] = useState(true);
@@ -97,17 +79,23 @@ const Navbar = () => {
       
       if (currentScrollY <= 20) {
         setNavVisible(true);
+        document.body.classList.remove("navbar-hidden");
       } else if (currentScrollY > lastScrollY && currentScrollY > 120) {
         setNavVisible(false);
+        document.body.classList.add("navbar-hidden");
       } else if (currentScrollY < lastScrollY) {
         setNavVisible(true);
+        document.body.classList.remove("navbar-hidden");
       }
       
       setLastScrollY(currentScrollY);
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      document.body.classList.remove("navbar-hidden");
+    };
   }, [lastScrollY]);
 
   return (
@@ -170,21 +158,23 @@ const Navbar = () => {
                 </div>
               )}
               <Tooltip title="Account settings">
-                <IconButton
+                <div
+                  className={`avatar-pill-container ${open ? "active" : ""}`}
                   onClick={handleClick}
-                  size="small"
-                  sx={{ ml: 2 }}
                   aria-controls={open ? "account-menu" : undefined}
                   aria-haspopup="true"
                   aria-expanded={open ? "true" : undefined}
                 >
-                  <Avatar
-                    className="profile-avatar"
-                    sx={{ width: 32, height: 32 }}
-                  >
+                  <Avatar className="profile-avatar">
                     {user?.username[0]?.toUpperCase()}
                   </Avatar>
-                </IconButton>
+                  {!isMobile && (
+                    <span className="avatar-username">
+                      {user?.username}
+                    </span>
+                  )}
+                  <KeyboardArrowDownIcon className="avatar-dropdown-arrow" />
+                </div>
               </Tooltip>
               <Menu
                 anchorEl={anchorEl}
@@ -211,6 +201,15 @@ const Navbar = () => {
                   }}
                 >
                   <Avatar className="account-menu-dropdown-icon" /> Profile
+                </MenuItem>
+                <MenuItem
+                  className="ai-menu-item"
+                  onClick={() => {
+                    handleDropDownClose();
+                    navigate(`/${user?.username}/myworkouts?ai=true`);
+                  }}
+                >
+                  <AutoAwesomeIcon className="account-menu-dropdown-icon" /> AI Generator
                 </MenuItem>
                 <MenuItem
                   onClick={() => {

@@ -84,18 +84,80 @@
     align-items: center;
     gap: 28px;
 
-    .profile-avatar {
+    .avatar-pill-container {
       cursor: pointer;
-      background-color: $background;
-      color: $accent;
-      border: 2px solid $accent;
-      width: 40px;
-      height: 40px;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 4px 14px 4px 4px;
+      border-radius: 30px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      user-select: none;
+      margin-left: 8px;
+
+      .profile-avatar {
+        background-color: $background !important;
+        color: $accent !important;
+        border: 2px solid $accent !important;
+        width: 32px !important;
+        height: 32px !important;
+        font-size: 0.9rem !important;
+        font-weight: 800 !important;
+        box-shadow: 0 0 10px rgba($accent, 0.2) !important;
+        transition: all 0.3s ease !important;
+        margin: 0 !important;
+      }
+
+      .avatar-username {
+        color: $text;
+        font-size: 0.88rem;
+        font-weight: 600;
+        letter-spacing: 0.3px;
+        transition: all 0.3s ease;
+      }
+
+      .avatar-dropdown-arrow {
+        color: rgba($text, 0.5);
+        font-size: 1.1rem;
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), color 0.3s ease;
+        margin: 0 !important;
+      }
 
       &:hover {
-        transform: scale(1.08);
-        box-shadow: 0 0 12px rgba($accent, 0.4);
+        background: rgba(255, 255, 255, 0.06);
+        border-color: rgba($accent, 0.4);
+        box-shadow: 0 0 12px rgba($accent, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+
+        .profile-avatar {
+          transform: scale(1.05);
+          box-shadow: 0 0 12px rgba($accent, 0.5) !important;
+        }
+
+        .avatar-username {
+          color: $accent;
+        }
+
+        .avatar-dropdown-arrow {
+          color: $accent;
+        }
+      }
+
+      &.active {
+        background: rgba($accent, 0.08);
+        border-color: $accent;
+        box-shadow: 0 0 15px rgba($accent, 0.25);
+
+        .avatar-dropdown-arrow {
+          color: $accent;
+          transform: rotate(180deg);
+        }
+
+        .avatar-username {
+          color: $accent;
+        }
       }
     }
 
@@ -127,6 +189,26 @@
 
       &:hover::after {
         width: 100%;
+      }
+    }
+
+    .ai-workout-link {
+      color: $accent !important;
+      font-weight: 800 !important;
+      display: flex !important;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.3s ease;
+
+      .ai-nav-icon {
+        font-size: 1rem;
+        filter: drop-shadow(0 0 4px rgba($accent, 0.4));
+        animation: pulse-sparkle 2s infinite ease-in-out;
+      }
+
+      &:hover {
+        text-shadow: 0 0 8px rgba($accent, 0.6);
+        transform: translateY(-1px);
       }
     }
 
@@ -169,41 +251,77 @@
 }
 
 .MuiMenu-paper {
-  background-color: $background-hover !important;
+  background-color: rgba(20, 20, 25, 0.9) !important;
+  backdrop-filter: blur(16px) !important;
   color: $text !important;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 1px $accent !important;
-  border-radius: 12px !important;
-  border: 1px solid rgba($accent, 0.15) !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.08) !important;
+  border-radius: 16px !important;
+  border: 1px solid rgba($accent, 0.2) !important;
+  padding: 6px !important;
 }
 
-.account-menu-dropdown-icon {
-  margin: 0 10px 0 -4px !important;
-  width: 23px !important;
-  height: 23px !important;
-  color: $accent !important;
-  background-color: $background-hover !important;
+.MuiMenu-list {
+  padding: 4px 0 !important;
 
-  @media (max-width: 1024px) {
-    width: 20px !important;
-    height: 20px !important;
+  .MuiMenuItem-root {
+    font-family: "Outfit", "Inter", "Roboto", sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 0.92rem !important;
+    padding: 10px 16px !important;
+    margin: 4px !important;
+    border-radius: 10px !important;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    color: rgba($text, 0.8) !important;
+    display: flex !important;
+    align-items: center !important;
+
+    &:hover {
+      background-color: rgba($accent, 0.1) !important;
+      color: $accent !important;
+      transform: translateX(4px);
+    }
+
+    .account-menu-dropdown-icon {
+      margin: 0 12px 0 -4px !important;
+      width: 20px !important;
+      height: 20px !important;
+      color: rgba($text, 0.6) !important;
+      background-color: transparent !important;
+      transition: all 0.25s ease;
+    }
+
+    &:hover .account-menu-dropdown-icon {
+      color: $accent !important;
+      transform: scale(1.1);
+    }
   }
 
-  @media (max-width: 768px) {
-    width: 20px !important;
-    height: 20px !important;
-  }
+  .ai-menu-item {
+    color: $accent !important;
+    font-weight: 700 !important;
+    background: linear-gradient(90deg, rgba($accent, 0.08) 0%, rgba($accent, 0.01) 100%) !important;
+    border-left: 3px solid $accent !important;
+    border-radius: 0 10px 10px 0 !important;
+    margin-left: 0 !important;
 
-  @media (max-width: 480px) {
-    width: 18px !important;
-    height: 18px !important;
-  }
+    .account-menu-dropdown-icon {
+      color: $accent !important;
+      animation: pulse-sparkle 2s infinite ease-in-out;
+    }
 
-  @media (max-width: 320px) {
-    width: 18px !important;
-    height: 18px !important;
+    &:hover {
+      background: linear-gradient(90deg, rgba($accent, 0.15) 0%, rgba($accent, 0.03) 100%) !important;
+      color: lighten($accent, 10%) !important;
+    }
   }
 }
 
 .line {
-  background-color: $accent !important;
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  margin: 6px 0 !important;
+}
+
+@keyframes pulse-sparkle {
+  0%, 100% { transform: scale(1); opacity: 0.9; }
+  50% { transform: scale(1.15); opacity: 1; filter: drop-shadow(0 0 8px $accent); }
 }

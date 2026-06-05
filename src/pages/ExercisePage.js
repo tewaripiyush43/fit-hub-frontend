@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import axios from "axios";
 import { toast } from "react-toastify";
 
 import { quotes } from "../constants/quotes";
 import { addWorkout, addExerciseToWorkout } from "../api/workoutApi";
+import { findExerciseById as findExerciseByIdApi, findExercisesByBodyPart as findExercisesByBodyPartApi, findExercisesByMuscle as findExercisesByMuscleApi } from "../api/exerciseApi";
 import DetailSection from "../components/DetailsSection";
 import { errorPopUp } from "../helpers/errorPopUp";
 
@@ -19,7 +19,6 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 
 const ExercisePage = () => {
-  const REACT_APP_BASE_URL = process.env.REACT_APP_BASE_URL;
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { id } = useParams();
@@ -77,11 +76,11 @@ const ExercisePage = () => {
 
   const findExercise = async () => {
     try {
-      const res = await axios.get(`${REACT_APP_BASE_URL}/exercise/findex/${id}`);
-      setexercise(res.data);
+      const data = await findExerciseByIdApi(id);
+      setexercise(data);
       setCompletedSteps({}); // Reset steps when exercise changes
-      findExercisesByBodyPart(res.data.bodyPart);
-      findExercisesByMuscle(res.data.target);
+      findExercisesByBodyPart(data.bodyPart);
+      findExercisesByMuscle(data.target);
     } catch (err) {
       setErrorMessage("Something went wrong. Please try again.");
     }
@@ -89,8 +88,8 @@ const ExercisePage = () => {
 
   const findExercisesByBodyPart = async (bodyPart) => {
     try {
-      const res = await axios.get(`${REACT_APP_BASE_URL}/exercise/exercises/bodyParts/${bodyPart}`);
-      setExercisesForBodyPart(res.data);
+      const data = await findExercisesByBodyPartApi(bodyPart);
+      setExercisesForBodyPart(data);
     } catch (err) {
       setErrorMessage("Something went wrong. Please try again.");
     }
@@ -98,8 +97,8 @@ const ExercisePage = () => {
 
   const findExercisesByMuscle = async (muscle) => {
     try {
-      const res = await axios.get(`${REACT_APP_BASE_URL}/exercise/exercises/${muscle}`);
-      setExercisesForMuscle(res.data);
+      const data = await findExercisesByMuscleApi(muscle);
+      setExercisesForMuscle(data);
     } catch (err) {
       setErrorMessage("Something went wrong. Please try again.");
     }
@@ -158,8 +157,7 @@ const ExercisePage = () => {
     try {
       await addWorkout(
         dispatch,
-        trimmedName,
-        REACT_APP_BASE_URL
+        trimmedName
       );
 
       setTakingInput(false);
@@ -280,8 +278,7 @@ const ExercisePage = () => {
                                 const success = await addExerciseToWorkout(
                                   dispatch,
                                   workout._id,
-                                  id,
-                                  REACT_APP_BASE_URL
+                                  id
                                 );
                                 if (success) {
                                   toast.success(`Added ${exercise.name} to ${workout.name}!`);

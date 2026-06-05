@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import axios from "axios";
 import { toast } from "react-toastify";
 import ExerciseCard from "../components/ExerciseCard";
 import { cloneWorkout } from "../api/workoutApi";
+import api from "../api/client";
 import Loader from "../components/Loader";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import FavoriteIcon from "@mui/icons-material/Favorite";
@@ -54,7 +54,6 @@ const SharedWorkoutPage = () => {
   const [id] = workoutId.split("-");
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const REACT_APP_BASE_URL = process.env.REACT_APP_BASE_URL;
   
   const [workout, setWorkout] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -69,15 +68,7 @@ const SharedWorkoutPage = () => {
     const fetchSharedWorkout = async () => {
       try {
         setLoading(true);
-        const headers = {};
-        if (localStorage.accessToken) {
-          headers.authorization = `Bearer ${localStorage.accessToken}`;
-        }
-        
-        const response = await axios.get(
-          `${REACT_APP_BASE_URL}/workout/get/${id}`,
-          { headers }
-        );
+        const response = await api.get(`/workout/get/${id}`);
         
         if (response.status === 201) {
           setWorkout(response.data.workout);
@@ -102,7 +93,7 @@ const SharedWorkoutPage = () => {
     
     try {
       setSaving(true);
-      const newId = await cloneWorkout(dispatch, id, REACT_APP_BASE_URL);
+      const newId = await cloneWorkout(dispatch, id);
       if (newId) {
         toast.success("Workout saved successfully to your routines!");
         navigate(`/${user.username}/myworkouts/${newId}`);

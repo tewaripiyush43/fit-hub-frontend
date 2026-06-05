@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 
 import { addWorkout, generateAIWorkout } from "../api/workoutApi";
@@ -9,6 +9,7 @@ import WorkoutCard from "./WorkoutCard";
 const MyWorkouts = () => {
   const REACT_APP_BASE_URL = process.env.REACT_APP_BASE_URL;
   const navigate = useNavigate();
+  const location = useLocation();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
   
@@ -23,6 +24,15 @@ const MyWorkouts = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    if (params.get("ai") === "true") {
+      setShowAIModal(true);
+    } else {
+      setShowAIModal(false);
+    }
+  }, [location.search]);
 
   useEffect(() => {
     let interval;
@@ -202,11 +212,11 @@ const MyWorkouts = () => {
                 <button
                   className="ai-btn-cancel"
                   onClick={() => {
-                    setShowAIModal(false);
                     setAiPrompt("");
                     setAiGoal("General");
                     setAiWeight("");
                     setAiHeight("");
+                    navigate(location.pathname, { replace: true });
                   }}
                 >
                   Cancel

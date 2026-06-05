@@ -6,10 +6,9 @@ import AddTwoToneIcon from "@mui/icons-material/AddTwoTone";
 import RemoveTwoToneIcon from "@mui/icons-material/RemoveTwoTone";
 import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
 import { useDispatch, useSelector } from "react-redux";
-import { authActions } from "../store/index.js";
-import axios from "axios";
 import { errorPopUp } from "../helpers/errorPopUp.js";
 import { toast } from "react-toastify";
+import { addToFavorites as addFavoriteService, removeFromFavorites as removeFavoriteService } from "../api/userApi";
 
 import {
   addWorkout,
@@ -24,7 +23,6 @@ const ExerciseCard = ({
 }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const REACT_APP_BASE_URL = process.env.REACT_APP_BASE_URL;
   // const favoriteIcon = useRef();
   const moreOptionsRef = useRef(null);
   const [showMore, setShowMore] = useState(false);
@@ -61,72 +59,20 @@ const ExerciseCard = ({
 
   async function addToFavorites(e) {
     e.stopPropagation();
-
     try {
-      const accessToken = localStorage.accessToken;
-      if (!accessToken) throw new Error("Access token not found");
-
-      const response = await axios.put(
-        `${REACT_APP_BASE_URL}/user/addToFavorites/${_id}`,
-        {},
-        {
-          withCredentials: true,
-          headers: {
-            "Content-Type": "application/json",
-            authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-
-      const { data, status } = response;
-      if (data?.error?.status === 401) {
-        window.location.reload();
-        throw new Error("Unauthorized");
-      }
-      // console.log(response);
-      // console.log(data, status);
-      if (status === 201) {
-        dispatch(authActions.setUser(data.user));
-        setIsFavorite(true);
-      }
+      await addFavoriteService(dispatch, _id);
+      setIsFavorite(true);
     } catch (err) {
-      // console.log(err);
       setErrorMessage("Something went wrong. Please try again later.");
     }
   }
 
   async function removeFromFavorites(e) {
     e.stopPropagation();
-
     try {
-      const accessToken = localStorage.accessToken;
-      if (!accessToken) throw new Error("Access token not found");
-
-      const response = await axios.put(
-        `${REACT_APP_BASE_URL}/user/removeFromFavorites/${_id}`,
-        {},
-        {
-          withCredentials: true,
-          headers: {
-            "Content-Type": "application/json",
-            authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-
-      const { data, status } = response;
-      if (data?.error?.status === 401) {
-        window.location.reload();
-        throw new Error("Unauthorized");
-      }
-      // console.log(response);
-      // console.log(data, status);
-      if (status === 201) {
-        dispatch(authActions.setUser(data.user));
-        setIsFavorite(false);
-      }
+      await removeFavoriteService(dispatch, _id);
+      setIsFavorite(false);
     } catch (err) {
-      // console.log(err);
       setErrorMessage("Something went wrong. Please try again later.");
     }
   }
@@ -184,8 +130,7 @@ const ExerciseCard = ({
     try {
       const workoutId = await addWorkout(
         dispatch,
-        trimmedName,
-        REACT_APP_BASE_URL
+        trimmedName
       );
 
       setTakingInput(false);
@@ -236,8 +181,7 @@ const ExerciseCard = ({
                   removeExerciseFromWorkout(
                     dispatch,
                     workoutData._id,
-                    _id,
-                    REACT_APP_BASE_URL
+                    _id
                   )
                 }
                 className="exercise-card-favorite-icon"
@@ -273,8 +217,7 @@ const ExerciseCard = ({
                         const success = await addExerciseToWorkout(
                           dispatch,
                           workout._id,
-                          _id,
-                          REACT_APP_BASE_URL
+                          _id
                         );
                         if (success) {
                           toast.success(`Added ${name} to ${workout.name}!`);
