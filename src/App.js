@@ -6,6 +6,8 @@ import { ToastContainer } from "react-toastify";
 
 import Navbar from "./components/Navbar";
 import UserProfileSideBar from "./components/UserProfileSideBar";
+import BottomNavigation from "./components/BottomNavigation";
+import InstallBanner from "./components/InstallBanner";
 
 import "react-toastify/dist/ReactToastify.css";
 import { getUser } from "./api/authApi";
@@ -115,6 +117,7 @@ function App() {
       {isLoggedIn && <UserProfileSideBar />}
       <div className="main-app-content">
         {!shouldRenderNavbar && <Navbar />}
+        <InstallBanner />
         <Suspense fallback={<div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "60vh" }}><div style={{ width: "32px", height: "32px", border: "2px solid rgba(0, 240, 255, 0.1)", borderTopColor: "#00f0ff", borderRadius: "50%", animation: "spin 0.8s infinite linear" }}></div></div>}>
           <Routes>
             <Route path="/" element={<Home />} />
@@ -146,6 +149,7 @@ function App() {
       <Suspense fallback={null}>
         <AICoachChat />
       </Suspense>
+      <BottomNavigation />
     </div>
   );
 }

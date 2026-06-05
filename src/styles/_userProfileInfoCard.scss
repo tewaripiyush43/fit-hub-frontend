@@ -220,8 +220,13 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-evenly;
-  flex-wrap: wrap;
-  gap: 18px;
+  gap: 12px;
+
+  @media (max-width: 480px) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
 }
 
 .user-profile-detail {

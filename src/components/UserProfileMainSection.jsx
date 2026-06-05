@@ -2,7 +2,7 @@ import React from "react";
 import MyProfile from "./MyProfile";
 import MyWorkouts from "./MyWorkouts";
 import MyFavorite from "./MyFavorite";
-import UserProfileSmallCard from "./UserProfileSmallCard";
+import ProgressAnalytics from "./ProgressAnalytics";
 import Settings from "./Settings";
 import FitnessTools from "./FitnessTools";
 import PageNotFound from "./PageNotFound";
@@ -18,7 +18,7 @@ const UserProfileMainSection = () => {
     myprofile: <MyProfile />,
     myworkouts: <MyWorkouts />,
     myfavorite: <MyFavorite />,
-    myachievements: <UserProfileSmallCard />,
+    analytics: <ProgressAnalytics />,
     fitnesstools: <FitnessTools />,
     settings: <Settings />,
   };

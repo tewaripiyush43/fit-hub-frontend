@@ -145,22 +145,23 @@ const GoalComponent = () => {
 
   return (
     <div className="user-goal-premium">
-      <div className="goal-edit-icon-container">
-        {editMode ? (
-          <button onClick={handleSaveClick} title="Save Goals" className="goal-save-info-btn">
-            <SaveIcon style={{ fontSize: "1.1rem" }} /> Save
-          </button>
-        ) : (
-          <button onClick={handleEditClick} title="Edit Goals" className="goal-edit-btn">
-            <EditIcon style={{ fontSize: "1.1rem" }} /> Edit
-          </button>
-        )}
-      </div>
-
       <div className="goal-header-premium">
-        <h2 className="goal-header-title">
-          <FlagIcon className="header-icon" /> My Fitness Goals
-        </h2>
+        <div className="goal-header-top-row">
+          <h2 className="goal-header-title">
+            <FlagIcon className="header-icon" /> My Fitness Goals
+          </h2>
+          <div className="goal-edit-icon-container">
+            {editMode ? (
+              <button onClick={handleSaveClick} title="Save Goals" className="goal-save-info-btn">
+                <SaveIcon style={{ fontSize: "1.1rem" }} /> Save
+              </button>
+            ) : (
+              <button onClick={handleEditClick} title="Edit Goals" className="goal-edit-btn">
+                <EditIcon style={{ fontSize: "1.1rem" }} /> Edit
+              </button>
+            )}
+          </div>
+        </div>
         <p className="goal-subtitle">Stay Committed, Achieve Your Goals</p>
       </div>
 

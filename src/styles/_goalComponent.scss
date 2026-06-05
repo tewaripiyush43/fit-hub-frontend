@@ -13,9 +13,8 @@
   font-family: "Arial", sans-serif;
 
   .goal-edit-icon-container {
-    position: absolute;
-    top: 25px;
-    right: 25px;
+    position: static;
+    flex-shrink: 0;
     z-index: 10;
   }
 
@@ -36,8 +35,8 @@
     border: 1px solid rgba($accent, 0.3);
     color: $accent;
     border-radius: 8px;
-    padding: 8px 16px;
-    font-size: 0.9rem;
+    padding: 6px 12px;
+    font-size: 0.85rem;
     font-weight: 700;
     cursor: pointer;
     display: flex;
@@ -58,22 +57,38 @@
     border-bottom: 1px solid $glass-border;
     padding-bottom: 15px;
 
+    .goal-header-top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
     .goal-header-title {
-      font-size: 1.8rem;
+      font-size: 1.6rem;
       font-weight: 700;
       color: $accent;
       display: flex;
       align-items: center;
-      gap: 10px;
-      margin: 0 0 8px 0;
+      gap: 8px;
+      margin: 0;
 
       .header-icon {
-        font-size: 2rem;
+        font-size: 1.8rem;
+      }
+
+      @media (max-width: 480px) {
+        font-size: 1.25rem;
+
+        .header-icon {
+          font-size: 1.4rem;
+        }
       }
     }
 
     .goal-subtitle {
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       color: $text-input-field-secondary;
       margin: 0;
     }

@@ -14,6 +14,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import CalculateIcon from "@mui/icons-material/Calculate";
 import SettingsIcon from "@mui/icons-material/Settings";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
+import BarChartIcon from "@mui/icons-material/BarChart";
 
 const UserProfileSideBar = () => {
   const navigate = useNavigate();
@@ -36,7 +37,7 @@ const UserProfileSideBar = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const activePinned = isPinned && !isMobile;
+  const activePinned = isPinned && !isMobile && window.innerWidth > 1024;
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -54,6 +55,7 @@ const UserProfileSideBar = () => {
   const sidebarItems = [
     { id: "1", name: "Home", icon: <HomeIcon /> },
     { id: "8", name: "Dashboard", icon: <DashboardIcon /> },
+    { id: "9", name: "Analytics", icon: <BarChartIcon /> },
     { id: "2", name: "My Profile", icon: <PersonIcon /> },
     { id: "3", name: "My Workouts", icon: <FitnessCenterIcon /> },
     { id: "10", name: "AI Generator", icon: <AutoAwesomeIcon /> },
@@ -69,8 +71,10 @@ const UserProfileSideBar = () => {
     let activeId = "1";
     if (pathname === "/") {
       activeId = "1";
-    } else if (pathname.includes("/dashboard") || pathname.includes("/myachievements")) {
+    } else if (pathname.includes("/dashboard")) {
       activeId = "8";
+    } else if (pathname.includes("/analytics")) {
+      activeId = "9";
     } else if (pathname.includes("/myprofile")) {
       activeId = "2";
     } else if (pathname.includes("/myworkouts")) {
@@ -103,6 +107,13 @@ const UserProfileSideBar = () => {
       return;
     }
 
+    if (item.id === "9") {
+      navigate(`/${username}/analytics`);
+      setActiveItem(item.id);
+      setIsSidebarShown(false);
+      return;
+    }
+
     const nextpath = item.name.toLowerCase().replace(" ", "");
     navigate(`/${username}/${nextpath}`);
     setActiveItem(item.id);
@@ -112,9 +123,8 @@ const UserProfileSideBar = () => {
   return (
     <div
       ref={sidebarRef}
-      className={`user-profile-side-bar-container ${
-        activePinned ? "pinned" : (!isSidebarShown ? "hide" : "")
-      }`}
+      className={`user-profile-side-bar-container ${activePinned ? "pinned" : (!isSidebarShown ? "hide" : "")
+        }`}
     >
       <div className="user-profile-side-bar">
         <ul className="user-profile-side-bar-list">

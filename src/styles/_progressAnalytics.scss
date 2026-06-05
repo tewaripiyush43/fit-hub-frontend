@@ -1,0 +1,508 @@
+// Progress Analytics Page Styles
+
+.progress-analytics-container {
+  padding: 32px 24px 80px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  color: $text;
+
+  @media (max-width: 768px) {
+    padding: 20px 16px 100px;
+  }
+
+  @media (max-width: 480px) {
+    padding: 16px 12px 100px;
+  }
+}
+
+.analytics-header {
+  text-align: center;
+  margin-bottom: 36px;
+
+  .analytics-title {
+    font-size: 2.2rem;
+    font-weight: 900;
+    color: $text;
+    margin: 0 0 10px;
+    letter-spacing: -0.5px;
+
+    span {
+      color: $accent;
+    }
+
+    @media (max-width: 480px) {
+      font-size: 1.6rem;
+    }
+  }
+
+  .analytics-subtitle {
+    font-size: 0.95rem;
+    color: $text-input-field-secondary;
+    margin: 0;
+    max-width: 480px;
+    margin-inline: auto;
+    line-height: 1.5;
+  }
+}
+
+// Hero Stats Row
+.analytics-hero-stats {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+  margin-bottom: 32px;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (max-width: 600px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .hero-stat-card {
+    background: $background-hover;
+    border: 1px solid $glass-border;
+    border-radius: 18px;
+    padding: 20px 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    backdrop-filter: $glass-blur;
+    box-shadow: $card-shadow;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+
+    &:hover {
+      transform: translateY(-3px);
+      border-color: rgba($accent, 0.3);
+    }
+
+    &.accent {
+      border-color: rgba($primary-button, 0.25);
+      background: rgba($primary-button, 0.06);
+
+      .hero-stat-icon {
+        color: $primary-button;
+        filter: drop-shadow(0 0 6px $primary-button);
+      }
+
+      .hero-stat-value {
+        color: $primary-button;
+      }
+    }
+
+    .hero-stat-icon {
+      font-size: 1.8rem !important;
+      color: $accent;
+      flex-shrink: 0;
+
+      @media (max-width: 480px) {
+        font-size: 1.4rem !important;
+      }
+    }
+
+    .hero-stat-body {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+
+      .hero-stat-value {
+        font-size: 1.4rem;
+        font-weight: 800;
+        color: $text;
+        white-space: nowrap;
+
+        @media (max-width: 480px) {
+          font-size: 1.1rem;
+        }
+      }
+
+      .hero-stat-label {
+        font-size: 0.72rem;
+        color: $text-input-field-secondary;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+// Main Grid
+.analytics-main-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+}
+
+.analytics-card {
+  background: $background-hover;
+  border: 1px solid $glass-border;
+  border-radius: 22px;
+  padding: 26px;
+  box-shadow: $card-shadow;
+  backdrop-filter: $glass-blur;
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+
+  @media (max-width: 480px) {
+    padding: 18px 14px;
+    border-radius: 16px;
+  }
+
+  &:hover {
+    border-color: rgba($accent, 0.15);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+  }
+
+  .analytics-card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 22px;
+
+    h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin: 0;
+      flex: 1;
+    }
+
+    .card-icon {
+      color: $accent;
+      font-size: 1.3rem !important;
+
+      &.gold {
+        color: #ffd700;
+        filter: drop-shadow(0 0 4px rgba(255, 215, 0, 0.4));
+      }
+    }
+
+    .pr-count-badge {
+      font-size: 0.72rem;
+      color: $text-input-field-secondary;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-weight: 600;
+    }
+  }
+}
+
+.analytics-empty {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 30px 20px;
+
+  p {
+    font-size: 0.88rem;
+    color: $text-input-field-secondary;
+    line-height: 1.5;
+    margin: 0;
+  }
+}
+
+// Bar Chart
+.monthly-chart-card {
+  .bar-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    height: 160px;
+    padding-bottom: 4px;
+
+    @media (max-width: 480px) {
+      gap: 6px;
+    }
+
+    .bar-group {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100%;
+
+      .bar-wrapper {
+        flex: 1;
+        width: 100%;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+
+        .bar-fill {
+          width: 70%;
+          min-height: 6px;
+          background: linear-gradient(180deg, $accent, rgba($accent, 0.5));
+          border-radius: 6px 6px 0 0;
+          position: relative;
+          transition: height 0.5s ease;
+          box-shadow: 0 0 8px rgba($accent, 0.3);
+
+          .bar-value {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: $accent;
+            white-space: nowrap;
+          }
+        }
+      }
+
+      .bar-label {
+        margin-top: 8px;
+        font-size: 0.65rem;
+        color: $text-input-field-secondary;
+        font-weight: 600;
+        text-align: center;
+        white-space: nowrap;
+      }
+    }
+  }
+}
+
+// Best Workout Card
+.best-workout-card {
+  .best-workout-content {
+    .best-workout-name {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: $text;
+      margin: 0 0 4px;
+    }
+
+    .best-workout-date {
+      font-size: 0.78rem;
+      color: $text-input-field-secondary;
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    .best-stats-row {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+
+      .best-stat {
+        flex: 1;
+        min-width: 80px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        border-radius: 12px;
+        padding: 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+
+        .best-stat-label {
+          font-size: 0.7rem;
+          color: $text-input-field-secondary;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          font-weight: 600;
+        }
+
+        .best-stat-value {
+          font-size: 1.1rem;
+          font-weight: 800;
+          color: $accent;
+        }
+      }
+    }
+  }
+}
+
+// PR Summary
+.pr-summary-card {
+  .pr-summary-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .pr-summary-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: 12px;
+    padding: 12px 14px;
+    transition: border-color 0.2s ease;
+
+    &:hover {
+      border-color: rgba($accent, 0.2);
+    }
+
+    .pr-summary-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+
+      .pr-trophy {
+        font-size: 1.3rem !important;
+        flex-shrink: 0;
+      }
+
+      .pr-info {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        min-width: 0;
+
+        .pr-exercise {
+          font-size: 0.88rem;
+          font-weight: 700;
+          color: $text;
+          text-transform: capitalize;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .pr-badge-label {
+          font-size: 0.7rem;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+      }
+    }
+
+    .pr-summary-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 4px;
+      flex-shrink: 0;
+
+      .pr-weights {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.78rem;
+
+        .pr-max {
+          font-weight: 800;
+          color: $text;
+        }
+
+        .pr-sep {
+          color: $text-input-field-secondary;
+        }
+
+        .pr-goal {
+          color: $text-input-field-secondary;
+        }
+      }
+
+      .pr-mini-bar {
+        width: 90px;
+        height: 4px;
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 2px;
+        overflow: hidden;
+
+        @media (max-width: 480px) {
+          width: 60px;
+        }
+
+        .pr-mini-fill {
+          height: 100%;
+          background: linear-gradient(90deg, $accent, lighten($accent, 15%));
+          border-radius: 2px;
+        }
+      }
+
+      .pr-pct {
+        font-size: 0.7rem;
+        color: $accent;
+        font-weight: 700;
+      }
+    }
+  }
+}
+
+// Completion Tracker
+.completion-card {
+  .completion-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .completion-row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    .completion-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+
+      .completion-name {
+        font-size: 0.84rem;
+        font-weight: 700;
+        color: $text;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        flex: 1;
+      }
+
+      .completion-date {
+        font-size: 0.72rem;
+        color: $text-input-field-secondary;
+        flex-shrink: 0;
+      }
+    }
+
+    .completion-bar-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      .completion-bar-track {
+        flex: 1;
+        height: 6px;
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 3px;
+        overflow: hidden;
+
+        .completion-bar-fill {
+          height: 100%;
+          background: linear-gradient(90deg, $accent, lighten($accent, 15%));
+          border-radius: 3px;
+          transition: width 0.5s ease;
+        }
+      }
+
+      .completion-pct {
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: $accent;
+        min-width: 32px;
+        text-align: right;
+      }
+    }
+  }
+}

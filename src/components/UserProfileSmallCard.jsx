@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { updatePRs } from "../api/userApi";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
@@ -6,7 +8,10 @@ import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-const UserProfileSmallCard = () => {
+const UserProfileSmallCard = ({ hideHeader }) => {
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.user);
+
   const defaultPRs = [
     { exercise: "Deadlift", maxWeight: 300, goalWeight: 400, unit: "lbs" },
     { exercise: "Bench Press", maxWeight: 225, goalWeight: 300, unit: "lbs" },
@@ -14,10 +19,7 @@ const UserProfileSmallCard = () => {
     { exercise: "Overhead Press", maxWeight: 135, goalWeight: 185, unit: "lbs" },
   ];
 
-  const [prs, setPRs] = useState(() => {
-    const saved = localStorage.getItem("fithub_prs");
-    return saved ? JSON.parse(saved) : defaultPRs;
-  });
+  const prs = user?.prs && user.prs.length > 0 ? user.prs : defaultPRs;
 
   const [editIndex, setEditIndex] = useState(null);
   const [editMaxWeight, setEditMaxWeight] = useState("");
@@ -29,9 +31,13 @@ const UserProfileSmallCard = () => {
   const [newGoalWeight, setNewGoalWeight] = useState("");
   const [newUnit, setNewUnit] = useState("lbs");
 
-  useEffect(() => {
-    localStorage.setItem("fithub_prs", JSON.stringify(prs));
-  }, [prs]);
+  const syncPRsToDb = async (updatedPRs) => {
+    try {
+      await updatePRs(dispatch, updatedPRs);
+    } catch (error) {
+      console.error("Failed to update PRs in DB:", error);
+    }
+  };
 
   const handleEditClick = (index) => {
     setEditIndex(index);
@@ -39,15 +45,22 @@ const UserProfileSmallCard = () => {
     setEditGoalWeight(prs[index].goalWeight || prs[index].maxWeight * 1.25);
   };
 
-  const handleSaveClick = (index) => {
-    const updatedPRs = [...prs];
-    updatedPRs[index].maxWeight = Number(editMaxWeight) || 0;
-    updatedPRs[index].goalWeight = Number(editGoalWeight) || 0;
-    setPRs(updatedPRs);
+  const handleSaveClick = async (index) => {
+    const updatedPRs = prs.map((pr, idx) => {
+      if (idx === index) {
+        return {
+          ...pr,
+          maxWeight: Number(editMaxWeight) || 0,
+          goalWeight: Number(editGoalWeight) || 0,
+        };
+      }
+      return pr;
+    });
+    await syncPRsToDb(updatedPRs);
     setEditIndex(null);
   };
 
-  const handleAddPR = (e) => {
+  const handleAddPR = async (e) => {
     e.preventDefault();
     if (!newExercise.trim()) return;
     if (prs.length >= 6) return;
@@ -59,7 +72,9 @@ const UserProfileSmallCard = () => {
       unit: newUnit,
     };
 
-    setPRs([...prs, newPR]);
+    const updated = [...prs, newPR];
+    await syncPRsToDb(updated);
+
     setNewExercise("");
     setNewMaxWeight("");
     setNewGoalWeight("");
@@ -67,9 +82,9 @@ const UserProfileSmallCard = () => {
     setShowAddForm(false);
   };
 
-  const handleDeletePR = (indexToDelete) => {
+  const handleDeletePR = async (indexToDelete) => {
     const updated = prs.filter((_, idx) => idx !== indexToDelete);
-    setPRs(updated);
+    await syncPRsToDb(updated);
   };
 
   const getBadgeColor = (maxWeight) => {
@@ -80,12 +95,14 @@ const UserProfileSmallCard = () => {
 
   return (
     <div className="user-pr-card-premium">
-      <div className="card-header-premium">
-        <h2 className="title">
-          <EmojiEventsIcon className="header-icon" /> Fitness Achievements & PRs
-        </h2>
-        <p className="subtitle">Track your personal records and watch your progress soar!</p>
-      </div>
+      {!hideHeader && (
+        <div className="card-header-premium">
+          <h2 className="title">
+            <EmojiEventsIcon className="header-icon" /> Fitness Achievements & PRs
+          </h2>
+          <p className="subtitle">Track your personal records and watch your progress soar!</p>
+        </div>
+      )}
 
       <div className="pr-grid-premium">
         {prs.map((pr, index) => {

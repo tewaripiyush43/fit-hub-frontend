@@ -143,7 +143,19 @@ const MyWorkouts = () => {
       </div>
 
       {showAIModal && (
-        <div className="ai-modal-overlay">
+        <div
+          className="ai-modal-overlay"
+          onClick={(e) => {
+            if (e.target === e.currentTarget && !isGenerating) {
+              setShowAIModal(false);
+              setAiPrompt("");
+              setAiGoal("General");
+              setAiWeight("");
+              setAiHeight("");
+              navigate(location.pathname, { replace: true });
+            }
+          }}
+        >
           {!isGenerating ? (
             <div className="ai-modal-content">
               <div className="ai-modal-header">
@@ -212,6 +224,7 @@ const MyWorkouts = () => {
                 <button
                   className="ai-btn-cancel"
                   onClick={() => {
+                    setShowAIModal(false);
                     setAiPrompt("");
                     setAiGoal("General");
                     setAiWeight("");

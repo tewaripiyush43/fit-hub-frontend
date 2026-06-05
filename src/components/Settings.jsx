@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import ConfirmationPopup from "../components/ConfirmationPopUp.jsx";
 import { updateUserInfo } from "../api/userApi";
 import { deleteAccount } from "../api/authApi";
+import { usePwa } from "../context/PwaContext";
 
 import SettingsIcon from "@mui/icons-material/Settings";
 import PersonIcon from "@mui/icons-material/Person";
@@ -12,11 +13,13 @@ import SecurityIcon from "@mui/icons-material/Security";
 import TuneIcon from "@mui/icons-material/Tune";
 import SaveIcon from "@mui/icons-material/Save";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import GetAppIcon from "@mui/icons-material/GetApp";
 
 const Settings = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
+  const { isInstallable, installApp, isAppInstalled } = usePwa();
 
   // Load preferences from localStorage or defaults
   const [unitSystem, setUnitSystem] = useState(
@@ -314,6 +317,45 @@ const Settings = () => {
                 >
                   Public
                 </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Section 3.5: Progressive Web App */}
+        <div className="settings-section">
+          <h2 className="section-title">
+            <GetAppIcon className="section-icon" /> Progressive Web App
+          </h2>
+          <div className="section-card">
+            <div className="setting-control-row pwa-settings-row">
+              <div className="control-text">
+                <span className="control-label">FitHub App Status</span>
+                <span className="control-description">
+                  {isAppInstalled 
+                    ? "FitHub is installed as a standalone app on your home screen or desktop." 
+                    : "Install the FitHub App on this device for quick offline tracking, faster performance, and a full-screen experience."}
+                </span>
+              </div>
+              <div className="pwa-status-action">
+                {isAppInstalled ? (
+                  <span className="pwa-installed-badge">
+                    <CheckCircleOutlineIcon style={{ fontSize: "1.1rem" }} /> Installed
+                  </span>
+                ) : isInstallable ? (
+                  <button 
+                    type="button" 
+                    className="bmi-submit-btn pwa-install-settings-btn"
+                    onClick={installApp}
+                    style={{ display: "flex", alignItems: "center", gap: "6px" }}
+                  >
+                    <GetAppIcon style={{ fontSize: "1.1rem" }} /> Install FitHub
+                  </button>
+                ) : (
+                  <span className="pwa-guide-text">
+                    Tap your browser's menu (or <span style={{ color: "#00f0ff" }}>Share</span> on iOS Safari) and select <span style={{ color: "#00f0ff" }}>'Add to Home Screen'</span>.
+                  </span>
+                )}
               </div>
             </div>
           </div>

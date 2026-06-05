@@ -11,7 +11,8 @@ import { fetchExerciseCount, fetchExercises, fetchExerciseNames } from "../api/e
 /* Todays workout eg. if monday back bi, tuesday chest tri */
 
 const Exercises = ({ searchByCarousel }) => {
-  const [searchValue, setSearchValue] = useState(searchByCarousel || "");
+  const cleanedSearch = searchByCarousel && searchByCarousel.toLowerCase() !== "all" ? searchByCarousel : "";
+  const [searchValue, setSearchValue] = useState(cleanedSearch);
   const [suggestion, setSuggestion] = useState([]);
   const [exercises, setExercises] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -54,7 +55,8 @@ const Exercises = ({ searchByCarousel }) => {
     }
 
     const searchByCarouselClick = () => {
-      setSearchValue(searchByCarousel);
+      const cleanValue = searchByCarousel && searchByCarousel.toLowerCase() !== "all" ? searchByCarousel : "";
+      setSearchValue(cleanValue);
       setSearchClick((prev) => !prev);
       const container = document.querySelector('.search-exercises-component-container');
       if (container) {
@@ -66,7 +68,7 @@ const Exercises = ({ searchByCarousel }) => {
       }
     };
 
-    if (searchByCarousel && searchByCarousel.length !== 0) {
+    if (searchByCarousel && searchByCarousel.toLowerCase() !== "all" && searchByCarousel.length !== 0) {
       searchByCarouselClick();
     }
   }, [searchByCarousel]);
@@ -108,6 +110,16 @@ const Exercises = ({ searchByCarousel }) => {
   const handleKeyDown = useCallback((e) => {
     if (e.key === "Enter") handleSearchBtnClick();
   }, [handleSearchBtnClick]);
+
+  const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth <= 480);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsSmallScreen(window.innerWidth <= 480);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   return (
     <div className="search-exercises-component-container">
@@ -226,6 +238,8 @@ const Exercises = ({ searchByCarousel }) => {
           count={totalPages}
           defaultPage={1}
           onChange={handlePageChange}
+          size={isSmallScreen ? "small" : "medium"}
+          siblingCount={isSmallScreen ? 0 : 1}
         />
       </div>
     </div>

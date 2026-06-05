@@ -1,0 +1,574 @@
+// ─── Training Dashboard ─────────────────────────────────────────────────────
+
+@keyframes pulseFire {
+  0%   { box-shadow: 0 0 10px rgba($primary-button, 0.4); }
+  100% { box-shadow: 0 0 25px rgba($primary-button, 0.8), 0 0 45px rgba($primary-button, 0.3); }
+}
+
+@keyframes rotateSlow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.db-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 20px 100px;
+  box-sizing: border-box;
+  color: $text;
+
+  @media (max-width: 600px) {
+    padding: 16px 12px 100px;
+  }
+}
+
+// ── Header ───────────────────────────────────────────────────────────────────
+
+.db-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+
+  .db-header-text {
+    .db-title {
+      font-size: clamp(1.5rem, 5vw, 2.4rem);
+      font-weight: 900;
+      margin: 0 0 4px;
+      letter-spacing: -0.5px;
+      line-height: 1.1;
+
+      span { color: $accent; }
+    }
+
+    .db-subtitle {
+      font-size: 0.875rem;
+      color: $text-input-field-secondary;
+      margin: 0;
+    }
+  }
+
+  .db-analytics-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba($accent, 0.08);
+    border: 1px solid rgba($accent, 0.25);
+    color: $accent;
+    padding: 8px 16px;
+    border-radius: 30px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+
+    svg { font-size: 1.1rem !important; }
+
+    &:hover {
+      background: $accent;
+      color: #000;
+      border-color: transparent;
+    }
+  }
+}
+
+// ── Streak Hero ───────────────────────────────────────────────────────────────
+
+.db-streak-hero {
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.03) 0%,
+    rgba(255, 255, 255, 0.01) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 24px;
+  padding: 24px 22px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  overflow: hidden;
+  flex-wrap: wrap;
+
+  // Background glow when active
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 5% 50%, rgba($primary-button, 0.06) 0%, transparent 65%);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  &.active {
+    border-color: rgba($primary-button, 0.2);
+
+    &::before { opacity: 1; }
+  }
+
+  @media (max-width: 480px) {
+    padding: 18px 16px;
+    gap: 14px;
+  }
+}
+
+.db-streak-left {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-shrink: 0;
+
+  @media (max-width: 360px) {
+    gap: 12px;
+  }
+}
+
+.db-fire-ring {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.04);
+  border: 2px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.4s ease;
+
+  &.lit {
+    background: rgba($primary-button, 0.12);
+    border-color: rgba($primary-button, 0.4);
+    animation: pulseFire 2s infinite alternate;
+  }
+
+  @media (max-width: 480px) {
+    width: 60px;
+    height: 60px;
+  }
+
+  .db-fire-icon {
+    font-size: 2rem !important;
+    color: rgba(255, 255, 255, 0.2);
+    transition: all 0.4s ease;
+
+    .lit & {
+      color: $primary-button;
+      filter: drop-shadow(0 0 8px $primary-button);
+    }
+  }
+}
+
+.db-streak-info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+
+  .db-streak-number {
+    font-size: clamp(2rem, 8vw, 3rem);
+    font-weight: 900;
+    color: $text;
+    letter-spacing: -1px;
+
+    .db-streak-hero.active & {
+      color: $primary-button;
+      text-shadow: 0 0 20px rgba($primary-button, 0.4);
+    }
+  }
+
+  .db-streak-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: $text-input-field-secondary;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 4px;
+  }
+}
+
+.db-streak-msg {
+  font-size: 0.88rem;
+  color: $text-input-field-secondary;
+  line-height: 1.4;
+  margin: 0;
+  font-style: italic;
+  flex: 1;
+  min-width: 120px;
+
+  @media (max-width: 480px) {
+    font-size: 0.8rem;
+    width: 100%;
+    flex: unset;
+  }
+}
+
+// ── Quick Stats Row ───────────────────────────────────────────────────────────
+
+.db-stats-row {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.db-stat-chip {
+  flex: 1;
+  min-width: 90px;
+  background: $background-hover;
+  border: 1px solid $glass-border;
+  border-radius: 18px;
+  padding: 16px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: $card-shadow;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    border-color: rgba($accent, 0.25);
+  }
+
+  @media (max-width: 360px) {
+    padding: 12px 10px;
+    gap: 8px;
+  }
+
+  .db-stat-chip-icon {
+    font-size: 1.5rem !important;
+    flex-shrink: 0;
+
+    &.blue  { color: $accent; }
+    &.orange { color: $primary-button; }
+    &.green  { color: #00ffd1; }
+
+    @media (max-width: 480px) {
+      font-size: 1.25rem !important;
+    }
+  }
+
+  .db-stat-chip-body {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+
+    .db-stat-chip-val {
+      font-size: clamp(0.9rem, 3vw, 1.15rem);
+      font-weight: 800;
+      color: $text;
+      white-space: nowrap;
+      line-height: 1.1;
+    }
+
+    .db-stat-chip-lbl {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+      color: $text-input-field-secondary;
+      white-space: nowrap;
+    }
+  }
+}
+
+// ── Main Grid ─────────────────────────────────────────────────────────────────
+
+.db-main-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// ── Card Base ─────────────────────────────────────────────────────────────────
+
+.db-card {
+  background: $background-hover;
+  border: 1px solid $glass-border;
+  border-radius: 22px;
+  padding: 24px;
+  box-shadow: $card-shadow;
+  backdrop-filter: $glass-blur;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+
+  &:hover {
+    border-color: rgba($accent, 0.12);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  }
+
+  @media (max-width: 480px) {
+    padding: 18px 14px;
+    border-radius: 18px;
+  }
+}
+
+.db-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+
+  .db-card-head-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    h2 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin: 0;
+      color: $text;
+    }
+
+    .db-card-head-icon {
+      font-size: 1.2rem !important;
+      color: $accent;
+      flex-shrink: 0;
+
+      &.gold {
+        color: #ffd700;
+        filter: drop-shadow(0 0 4px rgba(255, 215, 0, 0.5));
+      }
+    }
+  }
+
+  .db-reset-btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba($primary-button, 0.07);
+    border: 1px solid rgba($primary-button, 0.2);
+    color: $primary-button;
+    padding: 5px 12px;
+    border-radius: 30px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: $primary-button;
+      color: #fff;
+      border-color: transparent;
+    }
+  }
+}
+
+// ── Session List ──────────────────────────────────────────────────────────────
+
+.db-session-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+  max-height: 440px;
+  padding-right: 4px;
+
+  &::-webkit-scrollbar { width: 4px; }
+  &::-webkit-scrollbar-track { background: transparent; }
+  &::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+}
+
+.db-session-item {
+  background: rgba(0, 0, 0, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 14px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: border-color 0.2s ease, background 0.2s ease;
+
+  &:hover {
+    border-color: rgba($accent, 0.18);
+    background: rgba(0, 0, 0, 0.25);
+  }
+
+  .db-session-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+
+    .db-session-name {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: $text;
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .db-session-date {
+      font-size: 0.72rem;
+      color: $text-input-field-secondary;
+      flex-shrink: 0;
+    }
+  }
+
+  .db-session-stats {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+
+    span {
+      font-size: 0.78rem;
+      color: rgba($text, 0.6);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+  }
+
+  .db-session-bar-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .db-session-bar-track {
+      flex: 1;
+      height: 4px;
+      background: rgba(0,0,0,0.3);
+      border-radius: 2px;
+      overflow: hidden;
+
+      .db-session-bar-fill {
+        height: 100%;
+        background: linear-gradient(90deg, $accent, lighten($accent, 12%));
+        border-radius: 2px;
+        transition: width 0.5s ease;
+      }
+    }
+
+    .db-session-pct {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: $accent;
+      min-width: 30px;
+      text-align: right;
+    }
+  }
+}
+
+// ── Empty State ───────────────────────────────────────────────────────────────
+
+.db-empty-state {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px 16px;
+  gap: 10px;
+
+  .db-empty-icon {
+    font-size: 3rem !important;
+    color: rgba($text, 0.1);
+  }
+
+  p {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: rgba($text, 0.5);
+    margin: 0;
+  }
+
+  span {
+    font-size: 0.8rem;
+    color: rgba($text, 0.35);
+    line-height: 1.5;
+  }
+}
+
+// ── Confirm Box ───────────────────────────────────────────────────────────────
+
+.db-confirm-box {
+  background: rgba($primary-button, 0.06);
+  border: 1px solid rgba($primary-button, 0.18);
+  border-radius: 14px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+
+  p {
+    font-size: 0.88rem;
+    color: rgba($text, 0.8);
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  .db-confirm-actions {
+    display: flex;
+    gap: 10px;
+
+    button {
+      flex: 1;
+      padding: 9px;
+      border-radius: 10px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+    }
+
+    .db-confirm-yes {
+      background: $primary-button;
+      color: #fff;
+
+      &:hover { background: darken($primary-button, 8%); }
+    }
+
+    .db-confirm-no {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: rgba($text, 0.7);
+
+      &:hover { background: rgba(255, 255, 255, 0.1); }
+    }
+  }
+}
+
+// ── View All Button ───────────────────────────────────────────────────────────
+
+.db-view-all-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 16px;
+  background: rgba($accent, 0.06);
+  border: 1px solid rgba($accent, 0.18);
+  color: $accent;
+  padding: 10px;
+  border-radius: 12px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+
+  &:hover {
+    background: rgba($accent, 0.14);
+    border-color: rgba($accent, 0.35);
+  }
+}

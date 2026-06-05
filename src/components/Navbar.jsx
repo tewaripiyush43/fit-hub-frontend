@@ -185,15 +185,6 @@ const Navbar = () => {
                 transformOrigin={{ horizontal: "right", vertical: "top" }}
                 anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
               >
-                {isMobile && (
-                  <div>
-                    <MenuItem onClick={takeToExercisesPage}>Exercises</MenuItem>
-                    <MenuItem onClick={() => navigate(`/recipes`)}>
-                      Recipes
-                    </MenuItem>
-                    <Divider className="line" />
-                  </div>
-                )}
                 <MenuItem
                   onClick={() => {
                     handleDropDownClose();
