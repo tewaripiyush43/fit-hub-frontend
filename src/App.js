@@ -1,28 +1,28 @@
 import "./styles/styles.scss";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, lazy, Suspense } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { ToastContainer } from "react-toastify";
-
-import Home from "./pages/Home";
-import Recipes from "./pages/Recipes";
-import ExercisePage from "./pages/ExercisePage";
-import ExercisesPage from "./pages/Exercises";
-import UserProfile from "./pages/UserProfile";
-import WorkoutPage from "./pages/WorkoutPage";
-import SharedWorkoutPage from "./pages/SharedWorkoutPage";
 
 import Navbar from "./components/Navbar";
 import UserProfileSideBar from "./components/UserProfileSideBar";
 
 import "react-toastify/dist/ReactToastify.css";
 import { getUser } from "./api/authApi";
-import PageNotFound from "./components/PageNotFound";
-import ForgotPassword from "./components/ForgotPassword";
-import ResetPassword from "./components/ResetPassword";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import AICoachChat from "./components/AICoachChat";
+
+const Home = lazy(() => import("./pages/Home"));
+const Recipes = lazy(() => import("./pages/Recipes"));
+const ExercisePage = lazy(() => import("./pages/ExercisePage"));
+const ExercisesPage = lazy(() => import("./pages/Exercises"));
+const UserProfile = lazy(() => import("./pages/UserProfile"));
+const WorkoutPage = lazy(() => import("./pages/WorkoutPage"));
+const SharedWorkoutPage = lazy(() => import("./pages/SharedWorkoutPage"));
+const PageNotFound = lazy(() => import("./components/PageNotFound"));
+const ForgotPassword = lazy(() => import("./components/ForgotPassword"));
+const ResetPassword = lazy(() => import("./components/ResetPassword"));
+const AICoachChat = lazy(() => import("./components/AICoachChat"));
 
 axios.defaults.withCredentials = true;
 
@@ -119,22 +119,24 @@ function App() {
       {isLoggedIn && <UserProfileSideBar />}
       <div className="main-app-content">
         {!shouldRenderNavbar && <Navbar />}
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/reset-password/:token" element={<ResetPassword />} />
-          <Route path="/exercises/:search" element={<ExercisesPage />} />
-          <Route path="/recipes" element={<Recipes />} />
-          <Route path="/exercise/:id" element={<ExercisePage />} />
-          <Route path="/:username/:page" element={<UserProfile />} />
+        <Suspense fallback={<div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "60vh" }}><div style={{ width: "32px", height: "32px", border: "2px solid rgba(0, 240, 255, 0.1)", borderTopColor: "#00f0ff", borderRadius: "50%", animation: "spin 0.8s infinite linear" }}></div></div>}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password/:token" element={<ResetPassword />} />
+            <Route path="/exercises/:search" element={<ExercisesPage />} />
+            <Route path="/recipes" element={<Recipes />} />
+            <Route path="/exercise/:id" element={<ExercisePage />} />
+            <Route path="/:username/:page" element={<UserProfile />} />
 
-          <Route
-            path="/:username/myworkouts/:workoutId"
-            element={<WorkoutPage />}
-          />
-          <Route path="/share/workout/:workoutId" element={<SharedWorkoutPage />} />
-          <Route path="*" element={<PageNotFound />} />
-        </Routes>
+            <Route
+              path="/:username/myworkouts/:workoutId"
+              element={<WorkoutPage />}
+            />
+            <Route path="/share/workout/:workoutId" element={<SharedWorkoutPage />} />
+            <Route path="*" element={<PageNotFound />} />
+          </Routes>
+        </Suspense>
       </div>
       {showScrollButton && (
         <button
@@ -145,7 +147,9 @@ function App() {
           <KeyboardArrowUpIcon />
         </button>
       )}
-      <AICoachChat />
+      <Suspense fallback={null}>
+        <AICoachChat />
+      </Suspense>
     </div>
   );
 }
