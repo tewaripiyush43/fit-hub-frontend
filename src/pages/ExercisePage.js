@@ -5,7 +5,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 import { quotes } from "../constants/quotes";
-import { addWorkout, addExerciseToWorkout } from "../api/workoutapi";
+import { addWorkout, addExerciseToWorkout } from "../api/workoutApi";
 import DetailSection from "../components/DetailsSection";
 import { errorPopUp } from "../helpers/errorPopUp";
 

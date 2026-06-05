@@ -1,0 +1,411 @@
+// SCSS Styles for Fithub AI Fitness Coach Chatbot
+
+.ai-chat-container {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  z-index: 1050; // Above general page content but below navigation overlays if needed
+  font-family: "Inter", "Outfit", "Roboto", sans-serif;
+}
+
+// 1. Floating Action Button
+.ai-chat-toggle {
+  cursor: pointer;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, $accent 0%, darken($accent, 15%) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: $text-secondary;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 15px rgba($accent, 0.3);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  outline: none;
+  animation: fabPulse 2.5s infinite;
+
+  &:hover {
+    transform: scale(1.08) rotate(5deg);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5), 0 0 25px rgba($accent, 0.5);
+    background: linear-gradient(135deg, lighten($accent, 8%) 0%, $accent 100%);
+  }
+
+  &.open {
+    transform: rotate(90deg);
+    background: linear-gradient(135deg, $primary-button 0%, darken($primary-button, 15%) 100%);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 15px rgba($primary-button, 0.3);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: $text;
+    animation: none;
+  }
+}
+
+// 2. Chat Drawer Panel
+.ai-chat-drawer {
+  position: fixed;
+  bottom: 95px;
+  right: 25px;
+  width: 380px;
+  height: 520px;
+  max-height: calc(85vh - 120px);
+  background: rgba(20, 20, 25, 0.85); // premium dark glassmorphism
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6), 0 0 1px rgba(255, 255, 255, 0.1) inset;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 1051;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: chatSlideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+
+  @media (max-width: 480px) {
+    width: calc(100vw - 40px);
+    right: 20px;
+    bottom: 90px;
+    height: 480px;
+  }
+}
+
+// 3. Chat Header
+.ai-chat-header {
+  padding: 16px 20px;
+  background: rgba(255, 255, 255, 0.015);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .coach-profile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    .avatar-wrapper {
+      position: relative;
+      width: 40px;
+      height: 40px;
+      background: rgba($accent, 0.1);
+      border: 1px solid rgba($accent, 0.25);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .coach-avatar {
+        font-size: 1.35rem;
+      }
+
+      .online-dot {
+        position: absolute;
+        bottom: 1px;
+        right: 1px;
+        width: 9px;
+        height: 9px;
+        background: #00e676;
+        border: 2px solid rgba(20, 20, 25, 1);
+        border-radius: 50%;
+        box-shadow: 0 0 6px #00e676;
+        animation: dotFlash 1.8s infinite;
+      }
+    }
+
+    .coach-info {
+      h3 {
+        color: $text;
+        font-size: 0.95rem;
+        font-weight: 800;
+        margin: 0 0 2px 0;
+        letter-spacing: -0.2px;
+      }
+
+      span {
+        color: rgba($text, 0.45);
+        font-size: 0.72rem;
+        font-weight: 500;
+      }
+    }
+  }
+
+  .close-drawer-btn {
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    color: rgba($text, 0.45);
+    font-size: 1rem;
+    transition: color 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+    border-radius: 50%;
+
+    &:hover {
+      color: $text;
+      background: rgba(255, 255, 255, 0.05);
+    }
+  }
+}
+
+// 4. Messages Container
+.ai-chat-messages {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-sizing: border-box;
+
+  // Custom Thin Scrollbar
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    &:hover {
+      background: rgba($accent, 0.3);
+    }
+  }
+
+  .chat-message {
+    display: flex;
+    width: 100%;
+
+    .message-bubble {
+      max-width: 82%;
+      padding: 11px 15px;
+      border-radius: 16px;
+      font-size: 0.86rem;
+      line-height: 1.45;
+      font-weight: 500;
+      box-sizing: border-box;
+
+      p {
+        margin: 0;
+        white-space: pre-line;
+      }
+    }
+
+    // Coach message bubble
+    &.coach {
+      justify-content: flex-start;
+
+      .message-bubble {
+        background: rgba(255, 255, 255, 0.035);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        color: rgba($text, 0.95);
+        border-bottom-left-radius: 4px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+    }
+
+    // User message bubble
+    &.user {
+      justify-content: flex-end;
+
+      .message-bubble {
+        background: rgba($accent, 0.12);
+        border: 1px solid rgba($accent, 0.35);
+        color: $text;
+        border-bottom-right-radius: 4px;
+        box-shadow: 0 4px 12px rgba($accent, 0.05);
+      }
+    }
+
+    // Bouncing Dots Typing State
+    &.typing {
+      .typing-dots {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        height: 12px;
+
+        span {
+          width: 6px;
+          height: 6px;
+          background: rgba($accent, 0.6);
+          border-radius: 50%;
+          animation: dotBounce 1.4s infinite ease-in-out both;
+
+          &:nth-child(1) {
+            animation-delay: -0.32s;
+          }
+          &:nth-child(2) {
+            animation-delay: -0.16s;
+          }
+        }
+      }
+    }
+  }
+}
+
+// 5. Suggestion Chips
+.ai-chat-suggestions {
+  padding: 8px 16px 4px 16px;
+  background: transparent;
+
+  .suggestions-scroll {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    box-sizing: border-box;
+
+    // Hide Scrollbar
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+
+    .suggestion-chip {
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      color: rgba($text, 0.65);
+      padding: 6px 12px;
+      font-size: 0.76rem;
+      font-weight: 600;
+      white-space: nowrap;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      outline: none;
+
+      &:hover {
+        background: rgba($accent, 0.08);
+        border-color: rgba($accent, 0.3);
+        color: $accent;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 10px rgba($accent, 0.08);
+      }
+
+      &:active {
+        transform: translateY(0);
+      }
+    }
+  }
+}
+
+// 6. Input Footer
+.ai-chat-footer {
+  padding: 14px 16px 16px 16px;
+  background: rgba(255, 255, 255, 0.01);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-sizing: border-box;
+
+  .ai-chat-input {
+    flex-grow: 1;
+    height: 38px;
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    padding: 0 16px;
+    color: $text;
+    font-size: 0.86rem;
+    font-weight: 500;
+    box-sizing: border-box;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+
+    &::placeholder {
+      color: rgba($text, 0.3);
+    }
+
+    &:focus {
+      outline: none;
+      border-color: $accent;
+      background: rgba(0, 0, 0, 0.4);
+      box-shadow: 0 0 12px rgba($accent, 0.15);
+    }
+  }
+
+  .ai-chat-send {
+    cursor: pointer;
+    background: linear-gradient(135deg, $accent 0%, darken($accent, 10%) 100%);
+    border: none;
+    border-radius: 50%;
+    color: $text-secondary;
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.95rem;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 12px rgba($accent, 0.15);
+
+    &:hover:not(:disabled) {
+      transform: scale(1.05);
+      background: linear-gradient(135deg, lighten($accent, 10%) 0%, $accent 100%);
+      box-shadow: 0 6px 16px rgba($accent, 0.3);
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      background: rgba(255, 255, 255, 0.03) !important;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      color: rgba($text, 0.2) !important;
+      box-shadow: none !important;
+    }
+  }
+}
+
+// 7. Keyframe Animations
+@keyframes fabPulse {
+  0% {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0px rgba($accent, 0.3);
+  }
+  50% {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 16px rgba($accent, 0.55);
+  }
+  100% {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0px rgba($accent, 0.3);
+  }
+}
+
+@keyframes chatSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes dotFlash {
+  0% {
+    opacity: 0.5;
+    box-shadow: 0 0 4px #00e676;
+  }
+  50% {
+    opacity: 1;
+    box-shadow: 0 0 8px #00e676;
+  }
+  100% {
+    opacity: 0.5;
+    box-shadow: 0 0 4px #00e676;
+  }
+}
+
+@keyframes dotBounce {
+  0%, 80%, 100% {
+    transform: scale(0);
+  }
+  40% {
+    transform: scale(1);
+  }
+}

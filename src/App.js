@@ -1,6 +1,6 @@
 import "./styles/styles.scss";
 import React, { useState, useEffect } from "react";
-import { Route, Routes, useParams, useNavigate, useLocation } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { ToastContainer } from "react-toastify";
@@ -18,11 +18,12 @@ import Loader from "./components/Loader";
 import UserProfileSideBar from "./components/UserProfileSideBar";
 
 import "react-toastify/dist/ReactToastify.css";
-import { getUser } from "./api/authAPI";
+import { getUser } from "./api/authApi";
 import PageNotFound from "./components/PageNotFound";
 import ForgotPassword from "./components/ForgotPassword";
 import ResetPassword from "./components/ResetPassword";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import AICoachChat from "./components/AICoachChat";
 
 axios.defaults.withCredentials = true;
 
@@ -150,6 +151,7 @@ function App() {
           <KeyboardArrowUpIcon />
         </button>
       )}
+      <AICoachChat />
     </div>
   );
 }

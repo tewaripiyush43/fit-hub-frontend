@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { authActions, portalActions } from "../store";
 
 import { errorPopUp } from "../helpers/errorPopUp";
 
-import logo from "../assets/images/blue-theme-Logo-removebg-preview.png";
+import logo from "../assets/images/blue-theme-Logo-removebg-preview.webp";
 import {
   MailOutlined,
   EyeOutlined,
@@ -23,6 +23,7 @@ const LoginModal = () => {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setInputs((prev) => ({
@@ -39,6 +40,7 @@ const LoginModal = () => {
   }, [errorMessage]);
 
   const sendRequest = async () => {
+    setLoading(true);
     await axios
       .post(`${REACT_APP_BASE_URL}/auth/login`, {
         emailOrUsername: inputs.emailOrUsername.toLocaleLowerCase(),
@@ -58,6 +60,9 @@ const LoginModal = () => {
       })
       .catch((err) => {
         setErrorMessage(err.message);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
@@ -76,6 +81,22 @@ const LoginModal = () => {
       </button>
       <img className="login-logo" src={logo} alt="404" />
       <h2 className="login-welcome">Welcome to Fithub</h2>
+      <div className="portal-type">
+        <div className="segmented-control">
+          <div
+            onClick={() => dispatch(portalActions.setPortalTypeLogin())}
+            className="active-tab"
+          >
+            <span>LOGIN</span>
+          </div>
+          <div
+            onClick={() => dispatch(portalActions.setPortalTypeSignup())}
+            className="inactive-tab"
+          >
+            <span>SIGNUP</span>
+          </div>
+        </div>
+      </div>
       <form
         className="login-form"
         encType="multipart/form-data"
@@ -90,6 +111,7 @@ const LoginModal = () => {
             type="text"
             placeholder="Email or Username"
             required
+            disabled={loading}
           />
           <MailOutlined className="login-page-icon" />
         </div>
@@ -102,35 +124,45 @@ const LoginModal = () => {
             type={showPassword ? "text" : "password"}
             placeholder="Password"
             required
+            disabled={loading}
           />
           {showPassword ? (
             <EyeOutlined
-              onClick={() => setShowPassword(false)}
+              onClick={() => !loading && setShowPassword(false)}
               className="login-page-icon"
             />
           ) : (
             <EyeInvisibleOutlined
-              onClick={() => setShowPassword(true)}
+              onClick={() => !loading && setShowPassword(true)}
               className="login-page-icon"
             />
           )}
         </div>
         <div className="row1">
           <div className="remember-me">
-            <input type="checkbox" />
+            <input type="checkbox" disabled={loading} />
             <span className="remember-me-text">Remember me</span>
           </div>
           <p
             onClick={() => {
-              dispatch(portalActions.setPortalTypeForgotPassword());
+              if (!loading) {
+                dispatch(portalActions.setPortalTypeForgotPassword());
+              }
             }}
             className="forgot-password"
           >
             Forgot Password?
           </p>
         </div>
-        <button className="login-submit-btn" type="submit">
-          Login
+        <button className="login-submit-btn" type="submit" disabled={loading}>
+          {loading ? (
+            <div className="login-spinner-container">
+              <span className="login-spinner"></span>
+              <span>Logging you in...</span>
+            </div>
+          ) : (
+            "Login"
+          )}
         </button>
         {/* <div className="partition">
           <p>OR</p>

@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 
-import { addWorkout, generateAIWorkout } from "../api/workoutapi";
+import { addWorkout, generateAIWorkout } from "../api/workoutApi";
 import WorkoutCard from "./WorkoutCard";
 
 const MyWorkouts = () => {

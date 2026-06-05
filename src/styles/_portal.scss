@@ -17,70 +17,74 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(2px);
   z-index: 1000;
-  background-color: $background;
+  background-color: transparent; // Let the glassmorphic modal styling show through
   max-height: 100vh; /* Set a max height for the modal */
   overflow-y: auto; /* Allow vertical scrolling */
 }
 
 .portal-type {
-  text-align: center;
-  background-color: $background;
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
-  height: 50px;
-  width: 400px;
+  width: 100%;
+  margin: 12px 0 6px 0;
   transition: all 0.3s ease;
 
-  @media (max-width: 1024px) {
-    // width: 300px;
-  }
+  .segmented-control {
+    background: rgba(0, 0, 0, 0.35); // Sleek contrast track background
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: 22px;
+    display: flex;
+    width: 250px;
+    height: 40px;
+    padding: 3px;
+    box-sizing: border-box;
+    position: relative;
 
-  @media (max-width: 768px) {
-    // width: 250px;
-  }
+    div {
+      width: 50%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border-radius: 18px;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      user-select: none;
 
-  @media (max-width: 425px) {
-    width: 350px;
-  }
+      span {
+        font-size: 0.82rem;
+        font-weight: 800;
+        letter-spacing: 0.5px;
+        transition: color 0.25s ease, text-shadow 0.25s ease;
+      }
 
-  @media (max-width: 375px) {
-    width: 300px;
-  }
+      &.active-tab {
+        background: rgba($accent, 0.12);
+        border: 1px solid rgba($accent, 0.25);
+        box-shadow: 0 0 10px rgba($accent, 0.1);
 
-  div {
-    width: 100%;
-    padding: 10px;
-    cursor: pointer;
+        span {
+          color: $accent;
+          text-shadow: 0 0 8px rgba($accent, 0.4);
+        }
+      }
 
-    span {
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: $text;
-    }
-  }
+      &.inactive-tab {
+        background: transparent;
+        border: 1px solid transparent;
 
-  .login-selected {
-    background-color: $background-transparent;
-    border-right: 3px solid $accent;
-    border-bottom: 3px solid $accent;
-    border-bottom-right-radius: 50px;
+        span {
+          color: rgba($text, 0.35);
+        }
 
-    span {
-      filter: brightness(50%);
-    }
-  }
-  .signup-selected {
-    background-color: $background-transparent;
-    border-left: 3px solid $accent;
-    border-bottom: 3px solid $accent;
-    border-bottom-left-radius: 50px;
-
-    span {
-      filter: brightness(50%);
+        &:hover {
+          span {
+            color: rgba($text, 0.85);
+          }
+        }
+      }
     }
   }
 }

@@ -15,7 +15,7 @@ import {
   addWorkout,
   addExerciseToWorkout,
   removeExerciseFromWorkout,
-} from "../api/workoutapi";
+} from "../api/workoutApi";
 
 const ExerciseCard = ({
   exerciseData,

@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 import { createPortal } from "react-dom";
 import axios from "axios";
-import { fetchWorkout, deleteWorkout, updateWorkout } from "../api/workoutapi";
+import { fetchWorkout, deleteWorkout, updateWorkout } from "../api/workoutApi";
 import { workoutActions, authActions } from "../store/index";
 import ExerciseCard from "../components/ExerciseCard";
 import EditIcon from "@mui/icons-material/Edit";

@@ -1,5 +1,5 @@
 import React from "react";
-import profilePicture from "../assets/images/home-img-7.jpg";
+import profilePicture from "../assets/images/home-img-7.webp";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 

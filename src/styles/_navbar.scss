@@ -40,33 +40,35 @@
 
   #heading {
     cursor: pointer;
-    font-size: 2rem;
+    font-size: 2.1rem;
     margin: 0;
     text-transform: capitalize;
     font-family: "Outfit", "Inter", "Roboto", sans-serif;
-    font-weight: 900;
-    
-    // Gradient text with subtle shadow
-    background: linear-gradient(135deg, $accent 30%, lighten($accent, 20%) 100%);
+    font-weight: 800;
+    letter-spacing: -1px;
+
+    // Premium white-to-accent neon-cyan gradient
+    background: linear-gradient(135deg, #ffffff 40%, $accent 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0 0 15px rgba($accent, 0.25));
-    transition: filter 0.3s ease;
+    filter: drop-shadow(0 2px 10px rgba($accent, 0.2));
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 
     @media (max-width: 1024px) {
-      font-size: 1.8rem;
+      font-size: 1.9rem;
     }
 
     @media (max-width: 768px) {
-      font-size: 1.6rem;
+      font-size: 1.7rem;
     }
 
     @media (max-width: 480px) {
-      font-size: 1.4rem;
+      font-size: 1.5rem;
     }
 
     &:hover {
       filter: drop-shadow(0 0 22px rgba($accent, 0.45));
+      transform: scale(1.02);
     }
   }
 

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import {
   MailOutlined,
@@ -12,8 +11,8 @@ import {
 
 import { errorPopUp } from "../helpers/errorPopUp";
 import { portalActions } from "../store/index";
-import logo from "../assets/images/blue-theme-Logo-removebg-preview.png";
-import { getUser } from "../api/authAPI";
+import logo from "../assets/images/blue-theme-Logo-removebg-preview.webp";
+import { getUser } from "../api/authApi";
 
 axios.defaults.withCredentials = true;
 const SignupModal = () => {
@@ -26,6 +25,7 @@ const SignupModal = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [agreeToTerms, setAgreeToTerms] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
 
   const handleChange = (e) => {
@@ -44,6 +44,7 @@ const SignupModal = () => {
   }, [errorMessage]);
 
   const sendRegisterRequest = async () => {
+    setLoading(true);
     await axios
       .post(`${REACT_APP_BASE_URL}/auth/register`, {
         username: inputs.username.toLocaleLowerCase(),
@@ -64,11 +65,15 @@ const SignupModal = () => {
       .catch((err) => {
         console.log(err.message);
         setErrorMessage(err.message);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (loading) return;
     if (!agreeToTerms) {
       setErrorMessage("Please agree to the terms and conditions");
       return;
@@ -77,19 +82,34 @@ const SignupModal = () => {
   };
 
   return (
-    <div>
-      <div className="modal-style">
-        <button
-          className="login-close-btn"
-          onClick={() => {
-            dispatch(portalActions.setPortalClose());
-          }}
-        >
-          X
-        </button>
-        <img className="login-logo" src={logo} alt="404" />
-        <h2 className="login-welcome">Welcome to Fithub</h2>
-        <form
+    <div className="modal-style">
+      <button
+        className="login-close-btn"
+        onClick={() => {
+          if (!loading) dispatch(portalActions.setPortalClose());
+        }}
+      >
+        X
+      </button>
+      <img className="login-logo" src={logo} alt="404" />
+      <h2 className="login-welcome">Welcome to Fithub</h2>
+      <div className="portal-type">
+        <div className="segmented-control">
+          <div
+            onClick={() => dispatch(portalActions.setPortalTypeLogin())}
+            className="inactive-tab"
+          >
+            <span>LOGIN</span>
+          </div>
+          <div
+            onClick={() => dispatch(portalActions.setPortalTypeSignup())}
+            className="active-tab"
+          >
+            <span>SIGNUP</span>
+          </div>
+        </div>
+      </div>
+      <form
           className="login-form"
           encType="multipart/form-data"
           onSubmit={handleSubmit}
@@ -102,6 +122,8 @@ const SignupModal = () => {
               type="text"
               value={inputs.username}
               placeholder="Username"
+              disabled={loading}
+              required
             />
             <UserOutlined className="login-page-icon" />
           </div>
@@ -115,6 +137,7 @@ const SignupModal = () => {
               value={inputs.email}
               placeholder="Email"
               required
+              disabled={loading}
             />
             <MailOutlined className="login-page-icon" />
           </div>
@@ -127,15 +150,16 @@ const SignupModal = () => {
               type={showPassword ? "text" : "password"}
               placeholder="Password"
               required
+              disabled={loading}
             />
             {showPassword ? (
               <EyeOutlined
-                onClick={() => setShowPassword(false)}
+                onClick={() => !loading && setShowPassword(false)}
                 className="login-page-icon"
               />
             ) : (
               <EyeInvisibleOutlined
-                onClick={() => setShowPassword(true)}
+                onClick={() => !loading && setShowPassword(true)}
                 className="login-page-icon"
               />
             )}
@@ -145,27 +169,38 @@ const SignupModal = () => {
               type="checkbox"
               id="terms-checkbox"
               checked={agreeToTerms}
+              disabled={loading}
               onChange={(e) => setAgreeToTerms(e.target.checked)}
             />
             <label htmlFor="terms-checkbox" style={{ cursor: "pointer", userSelect: "none", color: "inherit" }}>
               &nbsp; I agree to terms & conditions
             </label>
           </div>
-          <button className="login-submit-btn" type="submit">
-            CREATE ACCOUNT
+          <button className="login-submit-btn" type="submit" disabled={loading}>
+            {loading ? (
+              <div className="login-spinner-container">
+                <span className="login-spinner"></span>
+                <span>Creating Account...</span>
+              </div>
+            ) : (
+              "CREATE ACCOUNT"
+            )}
           </button>
           {/* <div className="partition">
             <p>OR</p>
           </div> */}
           <p className="login-create-account-link">
             Already have an account?&nbsp;
-            <span onClick={() => dispatch(portalActions.setPortalTypeLogin())}>
+            <span
+              onClick={() => {
+                if (!loading) dispatch(portalActions.setPortalTypeLogin());
+              }}
+            >
               LOGIN
             </span>
           </p>
         </form>
       </div>
-    </div>
   );
 };
 

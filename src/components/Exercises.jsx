@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 
 import ExerciseCard from "./ExerciseCard";
 import axios from "axios";
@@ -20,16 +20,11 @@ const Exercises = ({ searchByCarousel }) => {
   const [totalPages, setTotalPages] = useState(148);
   const [searchClick, setSearchClick] = useState(false);
   const [dropdownActive, setDropdownActive] = useState(false);
-  const [inputOpen, setInputOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const lastSearchTerm = useRef(null);
   const isFirstRender = useRef(true);
   // const user = useSelector((state) => state.auth.user);
-
-  useEffect(() => {
-    setInputOpen(false);
-  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -61,9 +56,6 @@ const Exercises = ({ searchByCarousel }) => {
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
-      if (searchByCarousel && searchByCarousel.length !== 0) {
-        setInputOpen(true);
-      }
       return;
     }
 
@@ -81,7 +73,6 @@ const Exercises = ({ searchByCarousel }) => {
     };
 
     if (searchByCarousel && searchByCarousel.length !== 0) {
-      setInputOpen(true);
       searchByCarouselClick();
     }
   }, [searchByCarousel]);
@@ -93,7 +84,7 @@ const Exercises = ({ searchByCarousel }) => {
     }
   }, [errorMessage]);
 
-  const handleInputFocus = async () => {
+  const handleInputFocus = useCallback(async () => {
     setDropdownActive(true);
     if (suggestion.length === 0) {
       try {
@@ -103,28 +94,26 @@ const Exercises = ({ searchByCarousel }) => {
         setErrorMessage("Something went wrong. Please try again later.");
       }
     }
-  };
+  }, [REACT_APP_BASE_URL, suggestion]);
 
-  const handleInputChange = (e) => {
-    // console.log("yo");
+  const handleInputChange = useCallback((e) => {
     const value = e.target.value;
     setSearchValue(value);
-    searchByCarousel = "";
-  };
+  }, []);
 
-  const handlePageChange = (e, value) => {
+  const handlePageChange = useCallback((e, value) => {
     setCurrentPage(value);
-  };
+  }, []);
 
-  const handleSearchBtnClick = (e, value) => {
+  const handleSearchBtnClick = useCallback(() => {
     setCurrentPage(1);
-    setSearchClick(!searchClick);
+    setSearchClick((prev) => !prev);
     setDropdownActive(false);
-  };
+  }, []);
 
-  const handleKeyDown = (e) => {
+  const handleKeyDown = useCallback((e) => {
     if (e.key === "Enter") handleSearchBtnClick();
-  };
+  }, [handleSearchBtnClick]);
 
   return (
     <div className="search-exercises-component-container">

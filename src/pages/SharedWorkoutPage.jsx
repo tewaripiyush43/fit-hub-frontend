@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { toast } from "react-toastify";
 import ExerciseCard from "../components/ExerciseCard";
-import { cloneWorkout } from "../api/workoutapi";
+import { cloneWorkout } from "../api/workoutApi";
 import Loader from "../components/Loader";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import FavoriteIcon from "@mui/icons-material/Favorite";

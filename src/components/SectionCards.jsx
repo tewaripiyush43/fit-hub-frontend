@@ -1,6 +1,6 @@
 import React from "react";
 
-import ExerciseImg from "../assets/images/home-img-4.jpg";
+import ExerciseImg from "../assets/images/home-img-4.webp";
 import foodImg from "../assets/images/anime-food.jpeg";
 
 import Card from "../components/Card";
