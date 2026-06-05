@@ -76,7 +76,7 @@ api.interceptors.response.use(
     const url = originalRequest.url || "";
     const isAuthRoute = url.includes("/auth/login") || url.includes("/auth/register") || url.includes("/auth/refreshToken");
 
-    if (error.response?.status === 401 && !originalRequest._retry && !isAuthRoute) {
+    if (error.response?.status === 401 && !originalRequest._retry && !isAuthRoute && localStorage.getItem("isLoggedIn") === "true") {
       originalRequest._retry = true;
       try {
         const token = await refreshAccessToken();
