@@ -62,21 +62,24 @@ const renderFormattedDescription = (text) => {
   });
 };
 
+const WORKOUT_DESCRIPTION_MAX_LENGTH = 2500;
+
 const WorkoutPage = () => {
   const navigate = useNavigate();
   const { username, workoutId } = useParams();
-  const [id, name] = workoutId.split("-");
+  const [id] = workoutId.split("-");
   const dispatch = useDispatch();
   const workoutData = useSelector((state) => state.workout.workoutData);
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const user = useSelector((state) => state.auth.user);
+  const isOwner = isLoggedIn && workoutData?.createdBy === user?._id;
   const [editMode, setEditMode] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const textareaRef = useRef(null);
   const [copied, setCopied] = useState(false);
 
   const handleTogglePrivacy = async () => {
-    if (!workoutData) return;
+    if (!workoutData || !isOwner) return;
     const updatedPrivate = !workoutData.isPrivate;
     
     dispatch(
@@ -252,7 +255,13 @@ const WorkoutPage = () => {
 
   useEffect(() => {
     fetchWorkout(dispatch, id);
-  }, []);
+  }, [dispatch, id]);
+
+  useEffect(() => {
+    if (!isOwner && editMode) {
+      setEditMode(false);
+    }
+  }, [editMode, isOwner]);
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -438,7 +447,7 @@ const WorkoutPage = () => {
           &larr; Back to Workouts
         </span>
         <div className="workout-page-actions">
-          {isLoggedIn && workoutData?.createdBy === user?._id && (
+          {isOwner && (
             <>
               <button
                 className={`privacy-toggle-btn ${workoutData?.isPrivate ? "private" : "public"}`}
@@ -456,7 +465,7 @@ const WorkoutPage = () => {
                 </button>
               )}
               
-              {isLoggedIn && workoutData?.exercises?.length > 0 && (
+              {workoutData?.exercises?.length > 0 && (
                 <button className="start-session-btn" onClick={handleStartSession}>
                   <PlayArrowIcon style={{ fontSize: "1.1rem" }} />
                   <span>Start Workout</span>
@@ -465,35 +474,39 @@ const WorkoutPage = () => {
             </>
           )}
 
-          {editMode ? (
-            <button
-              onClick={async () => {
-                setEditMode(false);
-                await updateWorkout(dispatch, id, workoutData);
-                // Re-fetch so exercises are always populated (prevents broken GIFs)
-                await fetchWorkout(dispatch, id);
-              }}
-              title="Save Changes"
-              className="workout-page-save-info-btn"
-            >
-              Save Changes
-            </button>
-          ) : (
-            <button
-              onClick={() => setEditMode(true)}
-              title="Edit Title/Description"
-              className="workout-page-edit-btn"
-            >
-              <EditIcon style={{ fontSize: "1rem" }} /> Edit
-            </button>
+          {isOwner && (
+            <>
+              {editMode ? (
+                <button
+                  onClick={async () => {
+                    setEditMode(false);
+                    await updateWorkout(dispatch, id, workoutData);
+                    // Re-fetch so exercises are always populated (prevents broken GIFs)
+                    await fetchWorkout(dispatch, id);
+                  }}
+                  title="Save Changes"
+                  className="workout-page-save-info-btn"
+                >
+                  Save Changes
+                </button>
+              ) : (
+                <button
+                  onClick={() => setEditMode(true)}
+                  title="Edit Title/Description"
+                  className="workout-page-edit-btn"
+                >
+                  <EditIcon style={{ fontSize: "1rem" }} /> Edit
+                </button>
+              )}
+              <button
+                onClick={() => setShowConfirmation(true)}
+                title="Delete Workout"
+                className="workout-page-delete-btn"
+              >
+                <DeleteTwoToneIcon style={{ fontSize: "1rem" }} /> Delete
+              </button>
+            </>
           )}
-          <button
-            onClick={() => setShowConfirmation(true)}
-            title="Delete Workout"
-            className="workout-page-delete-btn"
-          >
-            <DeleteTwoToneIcon style={{ fontSize: "1rem" }} /> Delete
-          </button>
         </div>
       </div>
 
@@ -517,15 +530,20 @@ const WorkoutPage = () => {
       <div className="workout-page-description">
         <h3 className="description-heading">Overview & Guidelines</h3>
         {editMode ? (
-          <textarea
-            name="description"
-            ref={textareaRef}
-            maxLength={2500}
-            value={workoutData?.description}
-            onChange={(e) => handleChange(e)}
-            placeholder="Provide a description or guidelines for this workout..."
-            className="workout-page-content-input"
-          />
+          <>
+            <textarea
+              name="description"
+              ref={textareaRef}
+              maxLength={WORKOUT_DESCRIPTION_MAX_LENGTH}
+              value={workoutData?.description}
+              onChange={(e) => handleChange(e)}
+              placeholder="Provide a description or guidelines for this workout..."
+              className="workout-page-content-input"
+            />
+            <div className="workout-description-count">
+              {(workoutData?.description || "").length} / {WORKOUT_DESCRIPTION_MAX_LENGTH}
+            </div>
+          </>
         ) : (
           <div className="workout-page-content">
             {workoutData?.description ? (
@@ -551,12 +569,12 @@ const WorkoutPage = () => {
             {workoutData?.exercises?.map((exercise) => (
               <ExerciseCard
                 key={exercise._id}
-                animation={true}
-                removeBtn={true}
+                animation={isOwner}
+                removeBtn={isOwner}
                 exerciseData={exercise}
               />
             ))}
-            {workoutData?.exercises?.length < 10 && (
+            {isOwner && workoutData?.exercises?.length < 10 && (
               <div
                 className="workout-page-add-exercise-placeholder-card"
                 onClick={() => navigate("/exercises/all")}
@@ -572,9 +590,11 @@ const WorkoutPage = () => {
         ) : (
           <div className="empty-exercises-state">
             <p>No exercises in this workout routine yet.</p>
-            <button className="browse-exercises-btn" onClick={() => navigate("/exercises/all")}>
-              Explore & Add Exercises
-            </button>
+            {isOwner && (
+              <button className="browse-exercises-btn" onClick={() => navigate("/exercises/all")}>
+                Explore & Add Exercises
+              </button>
+            )}
           </div>
         )}
       </div>

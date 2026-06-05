@@ -369,6 +369,14 @@
         color: rgba($text, 0.3);
       }
     }
+
+    .workout-description-count {
+      margin-top: 8px;
+      text-align: right;
+      color: rgba($text, 0.45);
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
   }
 
   // Workout Routine / Grid section

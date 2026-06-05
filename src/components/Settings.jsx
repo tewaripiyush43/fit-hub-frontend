@@ -15,6 +15,8 @@ import SaveIcon from "@mui/icons-material/Save";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import GetAppIcon from "@mui/icons-material/GetApp";
 
+const PROFILE_BIO_MAX_LENGTH = 170;
+
 const Settings = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -246,10 +248,14 @@ const Settings = () => {
               <textarea
                 id="settings-bio"
                 rows={3}
+                maxLength={PROFILE_BIO_MAX_LENGTH}
                 value={profileInfo.bio}
                 onChange={(e) => setProfileInfo({ ...profileInfo, bio: e.target.value })}
                 placeholder="Tell us about yourself..."
               />
+              <div className="settings-character-count">
+                {(profileInfo.bio || "").length} / {PROFILE_BIO_MAX_LENGTH}
+              </div>
             </div>
 
             <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", gap: "15px" }}>

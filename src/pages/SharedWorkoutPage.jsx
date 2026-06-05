@@ -7,7 +7,6 @@ import { cloneWorkout } from "../api/workoutApi";
 import api from "../api/client";
 import Loader from "../components/Loader";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-import FavoriteIcon from "@mui/icons-material/Favorite";
 import LibraryAddIcon from "@mui/icons-material/LibraryAdd";
 
 const renderFormattedDescription = (text) => {
@@ -75,7 +74,7 @@ const SharedWorkoutPage = () => {
         }
       } catch (err) {
         console.error(err);
-        setError(err.response?.data?.message || "Workout not found or is private.");
+        setError(err.response?.data?.error?.message || "Workout not found or is private.");
       } finally {
         setLoading(false);
       }
