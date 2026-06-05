@@ -16,7 +16,7 @@ const UserProfileInfoCard = () => {
     <div className="user-profile-info-card">
       <div className="profile-header">
         <div className="profile-picture-container">
-          <img src={profilePicture} alt="Profile" className="profile-picture" />
+          <img src={profilePicture} alt="Profile" className="profile-picture" loading="lazy" />
         </div>
         <div className="user-info">
           <h1 className="username">@{user?.username}</h1>

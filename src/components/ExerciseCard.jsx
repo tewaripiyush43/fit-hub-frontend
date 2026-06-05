@@ -206,7 +206,7 @@ const ExerciseCard = ({
       }
     >
       <div className="exercise-card-img-wrapper">
-        <img onClick={exercisePage} src={gifUrl} alt="error" />
+        <img onClick={exercisePage} src={gifUrl} alt={name} loading="lazy" />
       </div>
       {isLoggedIn && animation && (
         <div className="exercise-card-icon-container" ref={moreOptionsRef}>

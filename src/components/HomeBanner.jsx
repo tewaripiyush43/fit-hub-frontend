@@ -33,7 +33,7 @@ const HomeBanner = () => {
 
         <div className="banner-right">
           <div className="banner-image-container">
-            <img className="home-img" src={homeImg} alt="FitHub hero character" />
+            <img className="home-img" src={homeImg} alt="FitHub hero character" fetchpriority="high" />
             <div className="image-overlay-gradient"></div>
             
             {/* Floating Glassmorphism Cards */}

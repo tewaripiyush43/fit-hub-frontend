@@ -48,10 +48,7 @@ const formatMessageText = (text) => {
 const AICoachChat = () => {
   const location = useLocation();
 
-  // ==========================================
-  // YOUR PART: React States for API Logic
-  // Replace or connect these states to your backend endpoints
-  // ==========================================
+
   const [isOpen, setIsOpen] = useState(false);
   const [inputMessage, setInputMessage] = useState("");
   const [messages, setMessages] = useState([
@@ -69,10 +66,7 @@ const AICoachChat = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isTyping, isOpen]);
 
-  // ==========================================
-  // YOUR PART: Handle Message Form Submission
-  // Wire this function to send the user input to Gemini API
-  // ==========================================
+
   const handleSendMessage = useCallback(async (e) => {
     e.preventDefault();
     if (!inputMessage.trim()) return;
@@ -104,10 +98,7 @@ const AICoachChat = () => {
     }
   }, [inputMessage, messages]);
 
-  // ==========================================
-  // YOUR PART: Handle Suggestion Chip Click
-  // Send the preset question template directly
-  // ==========================================
+
   const handleSuggestionClick = useCallback(async (suggestionText) => {
     if (isTyping) return;
 

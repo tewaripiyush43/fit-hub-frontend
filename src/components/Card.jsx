@@ -14,7 +14,7 @@ const Card = ({ imgUrl, title, description, buttonText, cardTitle, accentColor, 
   return (
     <div className="modern-card" onClick={handleOnclick}>
       <div className="modern-card-image-wrapper">
-        <img className="modern-card-img" src={imgUrl} alt={cardTitle} />
+        <img className="modern-card-img" src={imgUrl} alt={cardTitle} loading="lazy" />
         <div className="modern-card-image-overlay" />
         {tag && <span className="modern-card-tag">{tag}</span>}
       </div>

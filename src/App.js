@@ -14,7 +14,6 @@ import WorkoutPage from "./pages/WorkoutPage";
 import SharedWorkoutPage from "./pages/SharedWorkoutPage";
 
 import Navbar from "./components/Navbar";
-import Loader from "./components/Loader";
 import UserProfileSideBar from "./components/UserProfileSideBar";
 
 import "react-toastify/dist/ReactToastify.css";
@@ -32,7 +31,7 @@ function App() {
   const location = useLocation();
   const REACT_APP_BASE_URL = process.env.REACT_APP_BASE_URL;
   // console.log(REACT_APP_BASE_URL);
-  const [loading, setLoading] = useState(false);
+
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const isRouteResetPassword =
     window.location.pathname.includes("/reset-password");
@@ -78,11 +77,6 @@ function App() {
   }, [location.pathname]);
 
   useEffect(() => {
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-    }, 2000);
-
     getUser(dispatch, REACT_APP_BASE_URL);
   }, []);
 
