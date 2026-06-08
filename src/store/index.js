@@ -86,4 +86,5 @@ export const store = configureStore({
     portal: portalSlice.reducer,
     workout: workoutSlice.reducer,
   },
+  devTools: process.env.NODE_ENV !== "production",
 });
