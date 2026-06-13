@@ -41,7 +41,7 @@ function App() {
     const parts = path.split("/").filter(Boolean);
 
     if (parts.length === 0) {
-      document.title = "FitHub - Challenge yourself, change yourself | AI Workout Generator & Tracker";
+      document.title = "FitHub - AI Workout Generator, Exercises & Fitness Recipes";
     } else if (parts[0] === "forgot-password") {
       document.title = "FitHub - Forgot Password";
     } else if (parts[0] === "reset-password") {
