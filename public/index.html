@@ -7,10 +7,10 @@
     <meta name="theme-color" content="#1e1e24" />
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <link rel="canonical" href="https://fit-hubb.netlify.app" />
+    <link rel="canonical" href="https://fit-hubb.netlify.app/" />
     <meta
       name="description"
-      content="FitHub is a comprehensive fitness tracker app that designs custom workout routines, tracks training streaks, logs personal records (PRs), and offers an interactive exercise database with GIFs. Design your optimal workout plan today!"
+      content="FitHub is a comprehensive fitness tracker and AI workout generator. Track training streaks, log personal records (PRs), and browse 1,300+ exercises with guides."
     />
     <meta
       name="keywords"
@@ -60,10 +60,29 @@
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root">
-      <div style="display:flex; flex-direction:column; justify-content:center; align-items:center; height:100vh; background-color:#1e1e24; font-family:'Inter', sans-serif;">
+      <div style="display:flex; flex-direction:column; justify-content:center; align-items:center; min-height:100vh; background-color:#1e1e24; font-family:'Inter', sans-serif; padding: 24px; box-sizing: border-box; text-align: center;">
+        
+        <!-- Loading Spinner -->
         <div style="width:48px; height:48px; border:3px solid rgba(0, 240, 255, 0.1); border-top-color:#00f0ff; border-radius:50%; animation:spin 0.8s infinite linear;"></div>
-        <h2 style="margin-top:24px; color:#ffffff; font-weight:800; font-size:1.45rem; letter-spacing:4px; text-transform:uppercase; margin-line: 0;">FitHub</h2>
-        <span style="color:#00f0ff; font-size:0.75rem; font-weight:600; letter-spacing:2px; text-transform:uppercase; margin-top:6px; opacity:0.8;">AI Companion</span>
+        
+        <!-- H1 Heading for SEO -->
+        <h1 style="margin-top:24px; color:#ffffff; font-weight:800; font-size:1.85rem; letter-spacing:4px; text-transform:uppercase; margin-bottom: 8px;">FitHub</h1>
+        
+        <!-- Subtitle -->
+        <span style="color:#00f0ff; font-size:0.75rem; font-weight:600; letter-spacing:2px; text-transform:uppercase; margin-top:0px; opacity:0.8; display: block; margin-bottom: 24px;">AI Companion</span>
+        
+        <!-- Fallback Content for Crawlers and Users (will be replaced by React) -->
+        <div style="max-width: 600px; margin: 0 auto; color: rgba(255, 255, 255, 0.7); font-size: 0.95rem; line-height: 1.6;">
+          <p style="margin-bottom: 20px;">
+            Challenge yourself and change yourself with FitHub. Design custom workout routines, track training streaks, log personal records (PRs), and browse over 1,300 exercises with detailed guides.
+          </p>
+          <nav style="margin-top: 24px;">
+            <a href="/exercises/all" style="color: #00f0ff; text-decoration: none; font-weight: 600; margin: 0 12px; font-size: 0.9rem;">Explore Exercises</a>
+            <span style="color: rgba(255, 255, 255, 0.3);">|</span>
+            <a href="/recipes" style="color: #00f0ff; text-decoration: none; font-weight: 600; margin: 0 12px; font-size: 0.9rem;">Healthy Recipes</a>
+          </nav>
+        </div>
+
         <style>
           @keyframes spin { to { transform: rotate(360deg); } }
         </style>
