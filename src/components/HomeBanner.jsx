@@ -1,5 +1,4 @@
 import React from "react";
-import homeImg from "../assets/images/back.jpg";
 import { Link } from "react-router-dom";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import OfflineBoltIcon from "@mui/icons-material/OfflineBolt";
@@ -33,7 +32,7 @@ const HomeBanner = () => {
 
         <div className="banner-right">
           <div className="banner-image-container">
-            <img className="home-img" src={homeImg} alt="FitHub hero character" fetchpriority="high" />
+            <img className="home-img" src="/back.jpg" alt="FitHub hero character" fetchpriority="high" />
             <div className="image-overlay-gradient"></div>
             
             {/* Floating Glassmorphism Cards */}
