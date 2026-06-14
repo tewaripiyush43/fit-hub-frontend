@@ -61,6 +61,7 @@ const LoginModal = () => {
       <button
         className="login-close-btn"
         onClick={() => dispatch(portalActions.setPortalClose())}
+        aria-label="Close login modal"
       >
         X
       </button>

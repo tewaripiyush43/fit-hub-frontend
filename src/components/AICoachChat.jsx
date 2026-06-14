@@ -170,6 +170,7 @@ const AICoachChat = () => {
         className={`ai-chat-toggle ${isOpen ? "open" : ""}`}
         onClick={() => setIsOpen(!isOpen)}
         title="Chat with AI Fitness Coach"
+        aria-label="Toggle AI Coach Chat"
       >
         {isOpen ? <CloseOutlined /> : <MessageFilled />}
       </button>
@@ -189,7 +190,7 @@ const AICoachChat = () => {
                 <span>AI Assistant • Online</span>
               </div>
             </div>
-            <button className="close-drawer-btn" onClick={() => setIsOpen(false)}>
+            <button className="close-drawer-btn" onClick={() => setIsOpen(false)} aria-label="Close AI Coach Chat">
               <CloseOutlined />
             </button>
           </div>
@@ -249,7 +250,7 @@ const AICoachChat = () => {
               placeholder="Ask AI Coach..."
               className="ai-chat-input"
             />
-            <button type="submit" className="ai-chat-send" disabled={!inputMessage.trim()}>
+            <button type="submit" className="ai-chat-send" disabled={!inputMessage.trim()} aria-label="Send message">
               <SendOutlined />
             </button>
           </form>

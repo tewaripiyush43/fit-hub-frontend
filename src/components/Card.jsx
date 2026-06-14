@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
-const Card = ({ imgUrl, title, description, buttonText, cardTitle, accentColor, tag }) => {
+const Card = ({ imgUrl, title, description, buttonText, cardTitle, accentColor, tag, width = 1024, height = 1024 }) => {
   const navigate = useNavigate();
 
   const handleOnclick = () => {
@@ -14,7 +14,7 @@ const Card = ({ imgUrl, title, description, buttonText, cardTitle, accentColor, 
   return (
     <div className="modern-card" onClick={handleOnclick}>
       <div className="modern-card-image-wrapper">
-        <img className="modern-card-img" src={imgUrl} alt={cardTitle} loading="lazy" />
+        <img className="modern-card-img" src={imgUrl} alt={cardTitle} width={width} height={height} loading="lazy" />
         <div className="modern-card-image-overlay" />
         {tag && <span className="modern-card-tag">{tag}</span>}
       </div>

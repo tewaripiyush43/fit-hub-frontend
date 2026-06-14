@@ -68,6 +68,7 @@ const SignupModal = () => {
         onClick={() => {
           if (!loading) dispatch(portalActions.setPortalClose());
         }}
+        aria-label="Close signup modal"
       >
         X
       </button>

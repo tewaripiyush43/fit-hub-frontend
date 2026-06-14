@@ -5,7 +5,8 @@ const ASSETS_TO_CACHE = [
   "/manifest.json",
   "/favicon.ico",
   "/logo192.png",
-  "/logo512.png"
+  "/logo512.png",
+  "/back.jpg"
 ];
 
 // Install Event - cache core shell files
@@ -62,8 +63,10 @@ self.addEventListener("fetch", (event) => {
         if (
           networkResponse &&
           networkResponse.status === 200 &&
-          networkResponse.type === "basic" &&
+          (networkResponse.type === "basic" || networkResponse.type === "cors") &&
           (event.request.url.includes(".png") ||
+           event.request.url.includes(".jpg") ||
+           event.request.url.includes(".jpeg") ||
            event.request.url.includes(".webp") ||
            event.request.url.includes(".css") ||
            event.request.url.includes(".js") ||

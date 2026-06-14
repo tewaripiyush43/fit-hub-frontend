@@ -115,7 +115,7 @@ function App() {
         }}
       />
       {isLoggedIn && <UserProfileSideBar />}
-      <div className="main-app-content">
+      <main className="main-app-content">
         {!shouldRenderNavbar && <Navbar />}
         <InstallBanner />
         <Suspense fallback={<div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "60vh" }}><div style={{ width: "32px", height: "32px", border: "2px solid rgba(0, 240, 255, 0.1)", borderTopColor: "#00f0ff", borderRadius: "50%", animation: "spin 0.8s infinite linear" }}></div></div>}>
@@ -136,7 +136,7 @@ function App() {
             <Route path="*" element={<PageNotFound />} />
           </Routes>
         </Suspense>
-      </div>
+      </main>
       {showScrollButton && (
         <button
           className="back-to-top-btn"
