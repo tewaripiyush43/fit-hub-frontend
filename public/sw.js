@@ -39,6 +39,30 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
   const requestUrl = new URL(event.request.url);
 
+  // Implement Stale-While-Revalidate caching for public exercise API endpoints
+  if (
+    event.request.method === "GET" &&
+    (event.request.url.includes("/exercise/fetchCarouselDataHome") || 
+     event.request.url.includes("/exercise/exercises") || 
+     event.request.url.includes("/exercise/fetchCount") ||
+     event.request.url.includes("/exercise/findex/"))
+  ) {
+    event.respondWith(
+      caches.open("fithub-api-cache").then((cache) => {
+        return cache.match(event.request).then((cachedResponse) => {
+          const fetchPromise = fetch(event.request).then((networkResponse) => {
+            if (networkResponse && networkResponse.status === 200) {
+              cache.put(event.request, networkResponse.clone());
+            }
+            return networkResponse;
+          }).catch(() => {});
+          return cachedResponse || fetchPromise;
+        });
+      })
+    );
+    return;
+  }
+
   // Exclude API requests and hot-reload WebSockets/dev-server assets
   if (
     event.request.url.includes("/api/") || 

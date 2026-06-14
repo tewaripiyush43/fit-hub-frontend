@@ -265,7 +265,7 @@ const Recipes = () => {
       {selectedRecipe && (
         <div className="recipe-detail-modal-overlay" onClick={() => setSelectedRecipe(null)}>
           <div className="recipe-detail-modal" onClick={(e) => e.stopPropagation()}>
-            <button className="close-modal-btn" onClick={() => setSelectedRecipe(null)}>
+            <button className="close-modal-btn" onClick={() => setSelectedRecipe(null)} aria-label="Close recipe details modal">
               <CloseIcon />
             </button>
 
