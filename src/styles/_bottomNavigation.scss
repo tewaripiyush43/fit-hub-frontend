@@ -78,6 +78,62 @@
   }
 }
 
+.center-action-tab {
+  position: relative;
+  top: -12px;
+
+  .center-action-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #00f0ff 0%, #0072ff 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #050811;
+    box-shadow: 0 4px 16px rgba(0, 240, 255, 0.45);
+    transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+    svg {
+      font-size: 1.4rem;
+      color: #050811;
+    }
+  }
+
+  &.pulse-active {
+    .center-action-btn {
+      background: linear-gradient(135deg, #ff5e62 0%, #ff9966 100%);
+      box-shadow: 0 0 20px rgba(255, 94, 98, 0.7);
+      animation: centerActionPulse 1.8s infinite;
+
+      .active-flame-icon {
+        color: #ffffff;
+      }
+    }
+
+    .tab-label {
+      color: #ff5e62;
+      font-weight: 800;
+    }
+  }
+
+  &:hover .center-action-btn {
+    transform: scale(1.08);
+  }
+}
+
+@keyframes centerActionPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 94, 98, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 12px rgba(255, 94, 98, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 94, 98, 0);
+  }
+}
+
 /* Bottom Sheet Modal Menu Drawer */
 .bottom-sheet-overlay {
   position: fixed;

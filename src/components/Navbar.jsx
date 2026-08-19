@@ -14,15 +14,14 @@ import Avatar from "@mui/material/Avatar";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
-import ListAltIcon from "@mui/icons-material/ListAlt";
-import FavoriteIcon from "@mui/icons-material/Favorite";
+import PersonIcon from "@mui/icons-material/Person";
 import WhatshotIcon from "@mui/icons-material/Whatshot";
-import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
+import MenuIcon from "@mui/icons-material/Menu";
+import MenuOpenIcon from "@mui/icons-material/MenuOpen";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
 const Navbar = () => {
   const [anchorEl, setAnchorEl] = useState(null);
-  const [accountMenuClicked, setAccountMenuClicked] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
   const navigate = useNavigate();
@@ -34,14 +33,10 @@ const Navbar = () => {
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
-    setAccountMenuClicked(true);
-    // console.log("onClick", accountMenuClicked);
     document.body.classList.add("account-menu-custom-style");
   };
   const handleDropDownClose = () => {
     setAnchorEl(null);
-    setAccountMenuClicked(false);
-    // console.log("onClose", accountMenuClicked);
     document.body.classList.remove("account-menu-custom-style");
   };
   const takeToHomePage = () => {
@@ -76,7 +71,7 @@ const Navbar = () => {
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      
+
       if (currentScrollY <= 20) {
         setNavVisible(true);
         document.body.classList.remove("navbar-hidden");
@@ -87,7 +82,7 @@ const Navbar = () => {
         setNavVisible(true);
         document.body.classList.remove("navbar-hidden");
       }
-      
+
       setLastScrollY(currentScrollY);
     };
 
@@ -98,12 +93,45 @@ const Navbar = () => {
     };
   }, [lastScrollY]);
 
+  const [isSidebarOpen, setIsSidebarOpen] = useState(() => {
+    const saved = localStorage.getItem("sidebar-shown");
+    return saved !== null ? saved === "true" : true;
+  });
+
+  useEffect(() => {
+    const handleSidebarChange = (e) => {
+      if (e.detail?.isSidebarShown !== undefined) {
+        setIsSidebarOpen(Boolean(e.detail.isSidebarShown));
+      } else {
+        const saved = localStorage.getItem("sidebar-shown");
+        setIsSidebarOpen(saved !== null ? saved === "true" : true);
+      }
+    };
+    window.addEventListener("sidebar-state-change", handleSidebarChange);
+    return () => window.removeEventListener("sidebar-state-change", handleSidebarChange);
+  }, []);
+
   return (
     <div>
       <nav id="nav" className={!navVisible ? "nav-hidden" : ""}>
-        <h2 onClick={takeToHomePage} id="heading">
-          FitHub
-        </h2>
+        <div className="nav-brand-group">
+          {isLoggedIn && !isMobile && (
+            <button
+              className={`navbar-hamburger-btn ${isSidebarOpen ? "active" : ""}`}
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                window.dispatchEvent(new CustomEvent("toggle-sidebar"));
+              }}
+              title={isSidebarOpen ? "Collapse Sidebar" : "Expand Sidebar"}
+            >
+              {isSidebarOpen ? <MenuOpenIcon /> : <MenuIcon />}
+            </button>
+          )}
+          <h2 onClick={takeToHomePage} id="heading">
+            FitHub
+          </h2>
+        </div>
 
         <div className="links">
           {!isMobile && (
@@ -111,17 +139,15 @@ const Navbar = () => {
               <h3 onClick={takeToExercisesPage} className="link">
                 Exercises
               </h3>
+              <h3
+                onClick={() => navigate(`/workouts?tab=explore`)}
+                className="link"
+              >
+                Explore Workouts
+              </h3>
               <h3 onClick={() => navigate(`/recipes`)} className="link">
                 Recipes
               </h3>
-              {isLoggedIn && (
-                <h3
-                  onClick={() => navigate(`/${user?.username}/myworkouts`)}
-                  className="link"
-                >
-                  My Workouts
-                </h3>
-              )}
             </>
           )}
 
@@ -148,16 +174,22 @@ const Navbar = () => {
                     padding: "4px 10px",
                     borderRadius: "20px",
                     cursor: "pointer",
-                    transition: "all 0.2s ease"
+                    transition: "all 0.2s ease",
                   }}
                 >
                   <WhatshotIcon style={{ color: "#ff5e62", fontSize: "1.1rem" }} />
-                  <span style={{ color: "#ffffff", fontWeight: "800", fontSize: "0.85rem" }}>
+                  <span
+                    style={{
+                      color: "#ffffff",
+                      fontWeight: "800",
+                      fontSize: "0.85rem",
+                    }}
+                  >
                     {user.streak}
                   </span>
                 </div>
               )}
-              <Tooltip title="Account settings">
+              <Tooltip title="Account menu">
                 <div
                   className={`avatar-pill-container ${open ? "active" : ""}`}
                   onClick={handleClick}
@@ -166,12 +198,10 @@ const Navbar = () => {
                   aria-expanded={open ? "true" : undefined}
                 >
                   <Avatar className="profile-avatar">
-                    {user?.username[0]?.toUpperCase()}
+                    {user?.username ? user.username[0].toUpperCase() : "U"}
                   </Avatar>
                   {!isMobile && (
-                    <span className="avatar-username">
-                      {user?.username}
-                    </span>
+                    <span className="avatar-username">{user?.username}</span>
                   )}
                   <KeyboardArrowDownIcon className="avatar-dropdown-arrow" />
                 </div>
@@ -185,58 +215,62 @@ const Navbar = () => {
                 transformOrigin={{ horizontal: "right", vertical: "top" }}
                 anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
               >
+                <div
+                  style={{
+                    padding: "10px 16px 8px",
+                    borderBottom: "1px solid rgba(255, 255, 255, 0.08)",
+                  }}
+                >
+                  <div
+                    style={{
+                      fontSize: "0.95rem",
+                      fontWeight: "700",
+                      color: "#fff",
+                    }}
+                  >
+                    {user?.fullname || user?.username}
+                  </div>
+                  <div style={{ fontSize: "0.78rem", color: "#94a3b8" }}>
+                    @{user?.username}
+                  </div>
+                </div>
+
                 <MenuItem
                   onClick={() => {
                     handleDropDownClose();
                     navigate(`/${user?.username}/myprofile`);
                   }}
+                  style={{ marginTop: "4px" }}
                 >
-                  <Avatar className="account-menu-dropdown-icon" /> Profile
+                  <ListItemIcon>
+                    <PersonIcon className="account-menu-dropdown-icon" fontSize="small" />
+                  </ListItemIcon>
+                  <span>My Profile & Goals</span>
                 </MenuItem>
-                <MenuItem
-                  className="ai-menu-item"
-                  onClick={() => {
-                    handleDropDownClose();
-                    navigate(`/${user?.username}/myworkouts?ai=true`);
-                  }}
-                >
-                  <AutoAwesomeIcon className="account-menu-dropdown-icon" /> AI Generator
-                </MenuItem>
-                <MenuItem
-                  onClick={() => {
-                    handleDropDownClose();
-                    navigate(`/${user?.username}/myfavorite`);
-                  }}
-                >
-                  <FavoriteIcon className="account-menu-dropdown-icon" />{" "}
-                  Favorites
-                </MenuItem>
-                <MenuItem
-                  onClick={() => {
-                    handleDropDownClose();
-                    navigate(`/${user?.username}/myworkouts`);
-                  }}
-                >
-                  <ListAltIcon className="account-menu-dropdown-icon" /> My
-                  workouts
-                </MenuItem>
+
                 <MenuItem
                   onClick={() => {
                     handleDropDownClose();
                     navigate(`/${user?.username}/settings`);
                   }}
                 >
-                  <Settings className="account-menu-dropdown-icon" /> Settings
+                  <ListItemIcon>
+                    <Settings className="account-menu-dropdown-icon" fontSize="small" />
+                  </ListItemIcon>
+                  <span>Settings & Units</span>
                 </MenuItem>
-                <Divider className="line" />
+
+                <Divider className="line" style={{ margin: "6px 0" }} />
+
                 <MenuItem onClick={handleLogout}>
                   <ListItemIcon>
                     <Logout
                       className="account-menu-dropdown-icon"
                       fontSize="small"
+                      style={{ color: "#ff5e62" }}
                     />
                   </ListItemIcon>
-                  <span>Logout</span>
+                  <span style={{ color: "#ff5e62" }}>Logout</span>
                 </MenuItem>
               </Menu>
             </div>

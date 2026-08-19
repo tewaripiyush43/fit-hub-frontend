@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import ExerciseCard from "../components/ExerciseCard";
 import { cloneWorkout } from "../api/workoutApi";
+import { portalActions } from "../store/index";
 import api from "../api/client";
 import Loader from "../components/Loader";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
@@ -84,12 +85,12 @@ const SharedWorkoutPage = () => {
   }, [id]);
 
   const handleClone = async () => {
-    if (!isLoggedIn) {
-      toast.error("Please log in to save this workout!");
-      navigate("/");
+    if (!isLoggedIn || !user) {
+      dispatch(portalActions.setPortalOpen());
+      toast.info("Please log in or sign up to save this routine to your library!");
       return;
     }
-    
+
     try {
       setSaving(true);
       const newId = await cloneWorkout(dispatch, id);
@@ -114,7 +115,7 @@ const SharedWorkoutPage = () => {
   };
 
   if (loading) return <Loader />;
-  
+
   if (error) {
     return (
       <div className="shared-workout-error-container">
@@ -133,23 +134,21 @@ const SharedWorkoutPage = () => {
         <span className="workout-page-back-btn" onClick={() => navigate(-1)}>
           &larr; Back
         </span>
-        
+
         <div className="workout-page-actions">
           <button className="workout-share-btn" onClick={handleCopyLink}>
             <ContentCopyIcon style={{ fontSize: "1.1rem" }} />
             <span>{copied ? "Copied!" : "Copy Link"}</span>
           </button>
-          
-          {isLoggedIn && (
-            <button 
-              className="workout-page-save-info-btn" 
-              onClick={handleClone} 
-              disabled={saving}
-            >
-              <LibraryAddIcon style={{ fontSize: "1.1rem", marginRight: "4px" }} />
-              <span>{saving ? "Saving..." : "Save to My Workouts"}</span>
-            </button>
-          )}
+
+          <button
+            className="workout-page-save-info-btn"
+            onClick={handleClone}
+            disabled={saving}
+          >
+            <LibraryAddIcon style={{ fontSize: "1.1rem", marginRight: "4px" }} />
+            <span>{saving ? "Saving..." : "Save to My Workouts"}</span>
+          </button>
         </div>
       </div>
 

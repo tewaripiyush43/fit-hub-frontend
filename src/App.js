@@ -8,6 +8,8 @@ import Navbar from "./components/Navbar";
 import UserProfileSideBar from "./components/UserProfileSideBar";
 import BottomNavigation from "./components/BottomNavigation";
 import InstallBanner from "./components/InstallBanner";
+import ActiveWorkoutTopBanner from "./components/ActiveWorkoutTopBanner";
+import QuickCommandPalette from "./components/QuickCommandPalette";
 
 import "react-toastify/dist/ReactToastify.css";
 import { getUser } from "./api/authApi";
@@ -64,6 +66,8 @@ function App() {
         }
       } else if (page === "dashboard") {
         document.title = "FitHub - Training Dashboard: Streaks, History & PRs";
+      } else if (page === "history" || page === "workouthistory") {
+        document.title = "FitHub - Workout History & Detailed Exercise Logs";
       } else if (page === "settings") {
         document.title = "FitHub - Account Settings & Profile Customization";
       } else {
@@ -76,13 +80,13 @@ function App() {
 
   useEffect(() => {
     getUser(dispatch);
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     if (isLoggedIn) {
       getUser(dispatch);
     }
-  }, [isLoggedIn]);
+  }, [isLoggedIn, dispatch]);
 
   const [showScrollButton, setShowScrollButton] = useState(false);
 
@@ -110,12 +114,29 @@ function App() {
     <div className={`App ${isLoggedIn ? "has-sidebar" : ""}`}>
       <ToastContainer
         theme="dark"
-        progressStyle={{
-          background: "red",
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        toastStyle={{
+          background: "rgba(22, 22, 30, 0.95)",
+          backdropFilter: "blur(12px)",
+          border: "1px solid rgba(255, 255, 255, 0.08)",
+          borderRadius: "14px",
+          color: "#fff",
+          fontSize: "0.9rem",
+          fontWeight: "600",
+          boxShadow: "0 12px 36px rgba(0, 0, 0, 0.5)",
         }}
       />
       {isLoggedIn && <UserProfileSideBar />}
       <main className="main-app-content">
+        <ActiveWorkoutTopBanner />
         {!shouldRenderNavbar && <Navbar />}
         <InstallBanner />
         <Suspense fallback={<div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "60vh" }}><div style={{ width: "32px", height: "32px", border: "2px solid rgba(0, 240, 255, 0.1)", borderTopColor: "#00f0ff", borderRadius: "50%", animation: "spin 0.8s infinite linear" }}></div></div>}>
@@ -126,12 +147,15 @@ function App() {
             <Route path="/exercises/:search" element={<ExercisesPage />} />
             <Route path="/recipes" element={<Recipes />} />
             <Route path="/exercise/:id" element={<ExercisePage />} />
+            <Route path="/workouts" element={<UserProfile />} />
             <Route path="/:username/:page" element={<UserProfile />} />
 
             <Route
               path="/:username/myworkouts/:workoutId"
               element={<WorkoutPage />}
             />
+            <Route path="/workout/:workoutId" element={<WorkoutPage />} />
+            <Route path="/workout/:workoutId/session" element={<WorkoutPage />} />
             <Route path="/share/workout/:workoutId" element={<SharedWorkoutPage />} />
             <Route path="*" element={<PageNotFound />} />
           </Routes>
@@ -149,6 +173,7 @@ function App() {
       <Suspense fallback={null}>
         <AICoachChat />
       </Suspense>
+      <QuickCommandPalette />
       <BottomNavigation />
     </div>
   );

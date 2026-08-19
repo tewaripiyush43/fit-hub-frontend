@@ -1,62 +1,119 @@
-// Sidebar container fixed at top 0 to match viewport layout when scrolling
+// Sidebar Backdrop on Mobile / Drawer
+.sidebar-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(8, 8, 12, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 999;
+  animation: backdropFadeIn 0.25s ease-out;
+}
 
+// Sidebar container
 .user-profile-side-bar-container {
-  width: 20%;
-  min-width: 240px;
+  width: 240px;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
   position: fixed;
   left: 0;
-  top: 0;                    // Always top 0
-  height: 100vh;              // Always full height
+  top: 0;
+  height: 100vh;
   z-index: 1000;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-
-  @media (max-width: 768px) {
-    top: 0;
-    height: 100vh;
-  }
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 
   &.hide {
-    transform: translateX(-93%);
+    transform: translateX(-100%);
+  }
 
-    @media (max-width: 1024px) {
-      transform: translateX(-92%);
-    }
+  &.open,
+  &.pinned {
+    transform: translateX(0);
+  }
 
-    @media (max-width: 768px) {
-      transform: translateX(-92%);
-    }
-
-    @media (max-width: 426px) {
-      transform: translateX(-92%);
-    }
-
-    @media (max-width: 375px) {
-      transform: translateX(-92%);
-    }
+  @media (max-width: 768px) {
+    width: 260px;
   }
 }
 
 .user-profile-side-bar {
-  background: rgba(18, 18, 22, 0.85) !important; // Matches navbar background exactly
-  backdrop-filter: blur(20px) !important; // Unified glass filter
-  border-right: 1px solid rgba(255, 255, 255, 0.06) !important; // Matches navbar bottom border
+  background: rgba(18, 18, 24, 0.95) !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
   width: 100%;
   height: 100%;
-  padding-top: 90px;         // Start below navbar (75px + 15px spacer)
+  padding-top: 80px;
   color: $text;
-  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.25);
+  box-shadow: 8px 0 32px rgba(0, 0, 0, 0.4);
   overflow-x: hidden;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow-y: auto;
+  position: relative;
 
-  @media (max-width: 768px) {
-    padding-top: 85px;       // Start below mobile navbar (70px + 15px)
+  .sidebar-top-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 0 16px 12px 24px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    margin-bottom: 14px;
+
+    .sidebar-workspace-label {
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      color: rgba(255, 255, 255, 0.4);
+      text-transform: uppercase;
+    }
+
+    .sidebar-close-icon-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: rgba(255, 255, 255, 0.7);
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.15);
+        color: #fff;
+        border-color: rgba(0, 240, 255, 0.4);
+      }
+
+      svg {
+        font-size: 1.1rem;
+      }
+    }
+  }
+
+  .user-profile-side-bar-scrollable {
+    width: 100%;
+    flex: 1;
+    overflow-y: auto;
+    padding-bottom: 20px;
+  }
+
+  .sidebar-nav-group {
+    width: 100%;
+    margin-bottom: 14px;
+
+    .sidebar-group-title {
+      display: block;
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 1.2px;
+      color: rgba(255, 255, 255, 0.35);
+      padding: 0 24px 6px 24px;
+      text-transform: uppercase;
+    }
   }
 
   .user-profile-side-bar-list {
@@ -64,38 +121,40 @@
     list-style: none;
     padding: 0;
     margin: 0;
+    flex: 1;
 
     .user-profile-side-bar-list-item {
-      padding: 16px 24px 16px 32px;
-      letter-spacing: 0.3px;
-      font-size: 1rem;
+      padding: 13px 20px 13px 24px;
+      letter-spacing: 0.2px;
+      font-size: 0.92rem;
       font-weight: 600;
-      color: rgba($text, 0.6);
-      border-left: 4px solid transparent;
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      color: rgba($text, 0.65);
+      border-left: 3px solid transparent;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 12px;
 
       .sidebar-icon-wrapper {
         display: inline-flex;
         align-items: center;
         justify-content: center;
         color: inherit;
-        transition: transform 0.25s ease, color 0.25s ease;
+        transition: transform 0.2s ease, color 0.2s ease;
 
         svg {
-          font-size: 1.25rem;
+          font-size: 1.15rem;
         }
       }
 
       .sidebar-text {
-        transition: transform 0.25s ease;
+        white-space: nowrap;
+        transition: transform 0.2s ease;
       }
 
       &.user-profile-side-bar-list-item-active {
         color: $accent;
-        background: linear-gradient(90deg, rgba($accent, 0.1) 0%, rgba($accent, 0.01) 100%);
+        background: linear-gradient(90deg, rgba($accent, 0.12) 0%, rgba($accent, 0.01) 100%);
         border-left-color: $accent;
         font-weight: 700;
 
@@ -107,12 +166,12 @@
 
       &:hover {
         cursor: pointer;
-        color: $text;
+        color: #fff;
         background: rgba(255, 255, 255, 0.03);
-        padding-left: 36px;
+        padding-left: 28px;
 
         .sidebar-icon-wrapper {
-          transform: scale(1.12);
+          transform: scale(1.1);
           color: $accent;
         }
       }
@@ -120,28 +179,9 @@
   }
 }
 
-.show-sidebar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 52px;
-  border-radius: 0 12px 12px 0;
-  background-color: $accent;
-  color: $text-secondary;
-  box-shadow: 4px 0 15px rgba($accent, 0.3);
-  transition: all 0.3s ease;
-  cursor: pointer;
-
-  &:hover {
-    background-color: $accent-hover;
-    box-shadow: 6px 0 20px rgba($accent, 0.45);
-    width: 38px;
-  }
-
-  svg {
-    font-size: 1.3rem;
-  }
+// Floating Glassmorphic Toggle Trigger Button
+.show-sidebar-toggle-btn {
+  display: none; // Retired in favor of top Navbar & BottomNavigation
 }
 
 .sidebar-pin-btn {
@@ -152,11 +192,11 @@
   color: rgba($text, 0.4);
   cursor: pointer;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  padding: 6px 12px;
-  margin: auto auto 24px auto; // Auto margin-top pushes it to the bottom, margin-bottom 24px pads it from the edge
+  padding: 6px 14px;
+  margin: 16px auto 20px auto;
   border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  background: rgba(255, 255, 255, 0.01);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.02);
   width: fit-content;
   user-select: none;
 
@@ -192,4 +232,9 @@
       color: $accent;
     }
   }
+}
+
+@keyframes backdropFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }

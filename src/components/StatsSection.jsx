@@ -2,8 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import RestaurantIcon from "@mui/icons-material/Restaurant";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
-import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
-
 import NoteAltIcon from "@mui/icons-material/NoteAlt";
 
 const stats = [

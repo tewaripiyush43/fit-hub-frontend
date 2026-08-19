@@ -1,50 +1,62 @@
 .bmi-calculator-premium {
   width: 100%;
-  background: $glass-bg;
+  background: $background-hover;
   backdrop-filter: $glass-blur;
   border: 1px solid $glass-border;
-  border-radius: 24px;
-  padding: 30px;
+  border-radius: 22px;
+  padding: 24px;
   box-shadow: $card-shadow;
-  margin-bottom: 25px;
   text-align: left;
   color: $text;
-  font-family: "Arial", sans-serif;
+  box-sizing: border-box;
   transition: all 0.3s ease;
 
-  &:hover {
-    border-color: rgba($accent, 0.2);
+  @media (max-width: 480px) {
+    padding: 16px 14px;
+    border-radius: 18px;
   }
 
   .bmi-header {
-    margin-bottom: 25px;
-    border-bottom: 1px solid $glass-border;
-    padding-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    padding-bottom: 14px;
 
-    .bmi-title {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: $text;
+    .header-icon-wrap {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: rgba($accent, 0.1);
       display: flex;
       align-items: center;
-      gap: 10px;
-      margin: 0 0 8px 0;
+      justify-content: center;
+      flex-shrink: 0;
 
       .header-icon {
         color: $accent;
-        font-size: 1.8rem;
-        flex-shrink: 0;
+        font-size: 1.6rem !important;
       }
     }
 
-    .bmi-subtitle {
-      font-size: 0.95rem;
-      color: $text-input-field-secondary;
-      margin: 0;
+    .header-texts {
+      .bmi-title {
+        font-size: 1.25rem;
+        font-weight: 800;
+        color: $text;
+        margin: 0 0 2px;
+      }
 
-      .bmi-unit-badge {
-        color: $accent;
-        font-weight: 600;
+      .bmi-subtitle {
+        font-size: 0.82rem;
+        color: $text-input-field-secondary;
+        margin: 0;
+
+        .bmi-unit-badge {
+          color: $accent;
+          font-weight: 700;
+        }
       }
     }
   }
@@ -52,47 +64,47 @@
   .bmi-form-body {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 16px;
   }
 
   .form-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 20px;
+    gap: 14px;
 
     @media (max-width: 480px) {
       grid-template-columns: 1fr;
-      gap: 15px;
+      gap: 10px;
     }
   }
 
   .form-group {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 5px;
 
     label {
-      font-size: 0.85rem;
+      font-size: 0.75rem;
       color: $text-input-field-secondary;
-      font-weight: 600;
+      font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
 
     input[type="number"] {
-      background: $background-input-field;
+      background: rgba(0, 0, 0, 0.35);
       border: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 10px 14px;
+      padding: 9px 12px;
       color: $text;
-      border-radius: 8px;
-      font-size: 1rem;
-      font-weight: 600;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 700;
       outline: none;
       transition: border-color 0.2s ease;
 
       &:focus {
         border-color: $accent;
-        box-shadow: 0 0 5px rgba($accent, 0.2);
+        box-shadow: 0 0 10px rgba($accent, 0.2);
       }
     }
   }
@@ -100,22 +112,22 @@
   // Gender radios
   .gender-options {
     display: flex;
-    gap: 20px;
+    gap: 16px;
     margin-top: 6px;
 
     .radio-container {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       cursor: pointer;
-      font-weight: 600;
-      font-size: 0.95rem;
+      font-weight: 700;
+      font-size: 0.88rem;
 
       input[type="radio"] {
         appearance: none;
-        width: 18px;
-        height: 18px;
-        border: 2px solid $text-input-field-secondary;
+        width: 16px;
+        height: 16px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
         border-radius: 50%;
         outline: none;
         cursor: pointer;
@@ -128,199 +140,191 @@
 
           &::before {
             content: "";
-            width: 10px;
-            height: 10px;
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
             background: $accent;
-            box-shadow: 0 0 6px $accent;
           }
         }
       }
     }
   }
 
-  // Results & Submit
-  .bmi-result-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-top: 1px solid rgba(255, 255, 255, 0.04);
-    padding-top: 20px;
-    gap: 15px;
-
-    @media (max-width: 480px) {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 15px;
-    }
-  }
-
-  .result-display {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-
-    .result-label {
-      font-size: 0.85rem;
-      color: $text-input-field-secondary;
-      text-transform: uppercase;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-    }
-
-    .result-value {
-      font-size: 1.8rem;
-      font-weight: 800;
-      color: $text;
-    }
-
-    .result-status {
-      color: $text-secondary;
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 0.85rem;
-      font-weight: 700;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-    }
-  }
-
   .bmi-submit-btn {
-    background-color: rgba($accent, 0.08);
-    border: 1px solid rgba($accent, 0.3);
-    color: $accent;
-    border-radius: 8px;
-    padding: 10px 20px;
-    font-size: 0.95rem;
-    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    background: $accent;
+    border: none;
+    color: #000;
+    border-radius: 10px;
+    padding: 11px 18px;
+    font-size: 0.9rem;
+    font-weight: 800;
     cursor: pointer;
-    transition: all 0.25s ease;
+    box-shadow: 0 0 14px rgba($accent, 0.25);
+    transition: all 0.2s ease;
 
     &:hover {
-      background-color: $accent;
-      color: $text-secondary;
-      box-shadow: 0 0 12px rgba($accent, 0.4);
-      border-color: transparent;
+      background: $accent-hover;
+      box-shadow: 0 0 20px rgba($accent, 0.45);
+      transform: translateY(-1px);
     }
   }
 
-  // BMI Gauge
-  .bmi-gauge-wrapper {
-    margin-top: 25px;
+  // ── Results Card ───────────────────────────────────────────────────────────
+  .bmi-results-card {
+    margin-top: 18px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 16px 18px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    border-top: 1px solid rgba(255, 255, 255, 0.04);
-    padding-top: 20px;
-  }
+    gap: 16px;
 
-  .bmi-gauge-track {
-    position: relative;
-    height: 10px;
-    border-radius: 5px;
-    display: flex;
-    overflow: visible; // Allow pointer tooltip to show
-    background: rgba(0, 0, 0, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-  }
+    .results-top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
 
-  .bmi-gauge-segment {
-    height: 100%;
-    transition: all 0.3s ease;
+      .score-badge-block {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
 
-    &.underweight {
-      width: 17.5%;
-      background: #ffb300;
-      border-radius: 5px 0 0 5px;
-    }
+        .score-label {
+          font-size: 0.7rem;
+          font-weight: 800;
+          text-transform: uppercase;
+          letter-spacing: 0.6px;
+          color: $text-input-field-secondary;
+        }
 
-    &.normal {
-      width: 32.5%;
-      background: #00e676;
-    }
+        .score-val-wrap {
+          display: flex;
+          align-items: center;
+          gap: 10px;
 
-    &.overweight {
-      width: 25%;
-      background: #ff9100;
-    }
+          .bmi-number {
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: #fff;
+            line-height: 1;
+          }
 
-    &.obese {
-      width: 25%;
-      background: #ff1744;
-      border-radius: 0 5px 5px 0;
-    }
-  }
-
-  .bmi-gauge-pointer {
-    position: absolute;
-    top: 50%;
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    border: 2px solid #ffffff;
-    transform: translate(-50%, -50%);
-    box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
-    transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 10;
-    cursor: pointer;
-
-    .pointer-tooltip {
-      position: absolute;
-      bottom: 24px;
-      left: 50%;
-      transform: translateX(-50%);
-      padding: 4px 8px;
-      border-radius: 6px;
-      color: $text-secondary;
-      font-size: 0.8rem;
-      font-weight: 800;
-      white-space: nowrap;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-      pointer-events: none;
-      animation: bounce 1.5s infinite alternate;
-
-      &::after {
-        content: "";
-        position: absolute;
-        bottom: -6px;
-        left: 50%;
-        transform: translateX(-50%);
-        border-width: 6px 6px 0;
-        border-style: solid;
-        border-color: inherit;
-        border-bottom-color: transparent;
-        border-left-color: transparent;
-        border-right-color: transparent;
-      }
-    }
-  }
-
-  .bmi-gauge-labels {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.72rem;
-    font-weight: 600;
-    color: $text-input-field-secondary;
-
-    span {
-      width: 25%;
-      text-align: center;
-
-      &:first-child {
-        text-align: left;
+          .bmi-status-pill {
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.78rem;
+            font-weight: 800;
+            border: 1px solid;
+          }
+        }
       }
 
-      &:last-child {
-        text-align: right;
+      .synced-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        background: rgba(0, 230, 118, 0.08);
+        border: 1px solid rgba(0, 230, 118, 0.2);
+        padding: 4px 10px;
+        border-radius: 14px;
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: #00e676;
       }
     }
-  }
-}
 
-@keyframes bounce {
-  0% {
-    transform: translateX(-50%) translateY(0);
-  }
-  100% {
-    transform: translateX(-50%) translateY(-3px);
+    // Gauge
+    .bmi-gauge-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+
+      .gauge-track-bar {
+        position: relative;
+        height: 10px;
+        border-radius: 6px;
+        display: flex;
+        overflow: visible;
+        background: rgba(255, 255, 255, 0.05);
+
+        .gauge-seg {
+          height: 100%;
+
+          &.under {
+            width: 17.5%;
+            background: #ffb300;
+            border-radius: 6px 0 0 6px;
+          }
+          &.normal {
+            width: 32.5%;
+            background: #00e676;
+          }
+          &.over {
+            width: 25%;
+            background: #ff9100;
+          }
+          &.obese {
+            width: 25%;
+            background: #ff1744;
+            border-radius: 0 6px 6px 0;
+          }
+        }
+
+        .gauge-indicator-pin {
+          position: absolute;
+          top: 50%;
+          transform: translate(-50%, -50%);
+          transition: left 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+          z-index: 5;
+
+          .pin-head {
+            display: block;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
+          }
+        }
+      }
+
+      .bmi-categories-legend {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 6px;
+
+        @media (max-width: 480px) {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .legend-item {
+          display: flex;
+          align-items: center;
+          gap: 5px;
+          font-size: 0.7rem;
+          font-weight: 700;
+          color: rgba($text, 0.7);
+
+          .dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            flex-shrink: 0;
+          }
+
+          &.under .dot { background: #ffb300; }
+          &.normal .dot { background: #00e676; }
+          &.over .dot { background: #ff9100; }
+          &.obese .dot { background: #ff1744; }
+        }
+      }
+    }
   }
 }

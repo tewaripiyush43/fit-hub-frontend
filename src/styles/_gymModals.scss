@@ -1,0 +1,1480 @@
+@import "variables.scss";
+
+// ── Gym Modals Backdrop & Base Card ──────────────────────────────────────────
+.gym-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  z-index: 999999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  box-sizing: border-box;
+  animation: fadeInBackdrop 0.2s ease;
+  margin: 0;
+
+  @media (max-width: 576px) {
+    padding: 10px;
+  }
+}
+
+@keyframes fadeInBackdrop {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modalScaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.gym-modal-card {
+  background: rgba(18, 18, 24, 0.98);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 24px;
+  width: 100%;
+  max-width: 640px;
+  max-height: calc(100vh - 32px);
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.8), 0 0 40px rgba($accent, 0.15);
+  overflow: hidden;
+  box-sizing: border-box;
+  animation: modalScaleIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  margin: auto;
+
+  @media (max-width: 576px) {
+    max-height: calc(100vh - 20px);
+    border-radius: 20px;
+  }
+
+  &.plate-modal {
+    max-width: 680px;
+  }
+
+  &.legend-modal {
+    max-width: 700px;
+  }
+}
+
+// ── Header ───────────────────────────────────────────────────────────────────
+.gym-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    .header-icon-wrap {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &.warmup {
+        background: rgba(255, 152, 0, 0.12);
+        color: #ff9800;
+        border: 1px solid rgba(255, 152, 0, 0.3);
+      }
+
+      &.cooldown {
+        background: rgba(0, 230, 118, 0.12);
+        color: #00e676;
+        border: 1px solid rgba(0, 230, 118, 0.3);
+      }
+
+      &.plate {
+        background: rgba(0, 240, 255, 0.12);
+        color: #00f0ff;
+        border: 1px solid rgba(0, 240, 255, 0.3);
+      }
+    }
+
+    .gym-modal-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #fff;
+      margin: 0;
+      letter-spacing: -0.3px;
+    }
+
+    .gym-modal-subtitle {
+      font-size: 0.82rem;
+      color: #94a3b8;
+      margin: 2px 0 0;
+    }
+  }
+
+  .gym-modal-close-btn {
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+  }
+}
+
+// ── Tab Switcher ─────────────────────────────────────────────────────────────
+.gym-modal-tabs {
+  display: flex;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+
+  .gym-modal-tab {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    font-size: 0.86rem;
+    font-weight: 700;
+    padding: 10px 16px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      color: #fff;
+    }
+
+    &.active {
+      background: rgba($accent, 0.15);
+      color: $accent;
+      font-weight: 800;
+      box-shadow: 0 0 12px rgba($accent, 0.2);
+    }
+  }
+}
+
+// ── Body Scrollable ──────────────────────────────────────────────────────────
+.gym-modal-body {
+  padding: 24px;
+  overflow-y: auto;
+  max-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-sizing: border-box;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 3px;
+  }
+}
+
+// ── Pre-Workout Stretches List ────────────────────────────────────────────────
+.warmup-stretches-container {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+
+  .warmup-progress-banner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+    color: #e2e8f0;
+    padding: 10px 16px;
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 12px;
+
+    .warmup-pill-muscle {
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: #ff9800;
+      background: rgba(255, 152, 0, 0.12);
+      border: 1px solid rgba(255, 152, 0, 0.3);
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+  }
+
+  .warmup-steps-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .warmup-step-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba($accent, 0.3);
+      transform: translateX(2px);
+    }
+
+    &.done {
+      background: rgba(0, 230, 118, 0.04);
+      border-color: rgba(0, 230, 118, 0.3);
+
+      .step-name {
+        text-decoration: line-through;
+        color: #94a3b8;
+      }
+    }
+
+    .step-main-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      width: 100%;
+    }
+
+    .step-expand-instructions-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #94a3b8;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+
+      &:hover {
+        background: rgba(0, 240, 255, 0.15);
+        color: #00f0ff;
+        border-color: #00f0ff;
+      }
+    }
+
+    .step-expanded-instructions-pane {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      animation: fadeIn 0.2s ease;
+
+      .instructions-list {
+        .instructions-title {
+          font-size: 0.82rem;
+          font-weight: 800;
+          color: #00f0ff;
+          margin: 0 0 6px;
+        }
+
+        ol {
+          margin: 0;
+          padding-left: 18px;
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+
+          li {
+            font-size: 0.8rem;
+            color: #cbd5e1;
+            line-height: 1.4;
+          }
+        }
+      }
+
+      .instructions-pro-tip {
+        display: flex;
+        align-items: flex-start;
+        gap: 6px;
+        background: rgba(255, 152, 0, 0.08);
+        border: 1px solid rgba(255, 152, 0, 0.2);
+        border-radius: 10px;
+        padding: 8px 12px;
+        font-size: 0.78rem;
+        color: #fed7aa;
+        line-height: 1.4;
+      }
+    }
+
+    .step-check-circle {
+      background: transparent;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+    }
+
+    .step-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+
+      .step-top-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .step-name {
+          font-size: 0.95rem;
+          font-weight: 800;
+          color: #fff;
+          margin: 0;
+        }
+
+        .step-badge {
+          font-size: 0.76rem;
+          color: $accent;
+          font-weight: 700;
+          background: rgba($accent, 0.1);
+          padding: 2px 8px;
+          border-radius: 6px;
+        }
+      }
+
+      .step-target {
+        font-size: 0.78rem;
+        color: #94a3b8;
+        margin: 0;
+      }
+    }
+  }
+}
+
+// ── Warm-up Pyramid Box ───────────────────────────────────────────────────────
+.warmup-pyramid-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  .pyramid-input-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 18px;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+
+    label {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #e2e8f0;
+    }
+
+    .pyramid-input-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+
+      input {
+        width: 70px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        color: #00f0ff;
+        font-size: 1.1rem;
+        font-weight: 900;
+        text-align: center;
+        border-radius: 8px;
+        padding: 4px;
+        outline: none;
+      }
+
+      .unit-label {
+        color: #94a3b8;
+        font-size: 0.85rem;
+        font-weight: 700;
+      }
+    }
+  }
+
+  .pyramid-desc {
+    font-size: 0.84rem;
+    color: #94a3b8;
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  .pyramid-steps-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+
+    @media (max-width: 500px) {
+      grid-template-columns: 1fr;
+    }
+
+    .pyramid-step-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+
+      .pyramid-step-num {
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 800;
+        color: $accent;
+      }
+
+      .pyramid-step-main {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+
+        .pyramid-percent {
+          font-size: 0.82rem;
+          color: #94a3b8;
+          font-weight: 700;
+        }
+
+        .pyramid-weight {
+          font-size: 1.3rem;
+          font-weight: 900;
+          color: #fff;
+        }
+
+        .pyramid-reps {
+          font-size: 0.85rem;
+          color: #00e676;
+          font-weight: 800;
+        }
+      }
+
+      .pyramid-cue {
+        font-size: 0.75rem;
+        color: #94a3b8;
+        line-height: 1.4;
+      }
+    }
+  }
+}
+
+// ── Post-Workout Cooldown Stretches ───────────────────────────────────────────
+.cooldown-stretch-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  .stretch-timer-card {
+    background: rgba(12, 12, 18, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 12px;
+
+    .stretch-number-indicator {
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: #00e676;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .active-stretch-name {
+      font-size: 1.35rem;
+      font-weight: 900;
+      color: #fff;
+      margin: 0;
+    }
+
+    .stretch-target-pill {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #cbd5e1;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 3px 12px;
+      border-radius: 20px;
+    }
+
+    .stretch-countdown-circle {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      background: rgba(0, 230, 118, 0.08);
+      border: 3px solid #00e676;
+      box-shadow: 0 0 24px rgba(0, 230, 118, 0.25);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 8px 0;
+
+      .countdown-number {
+        font-size: 2.2rem;
+        font-weight: 900;
+        color: #00e676;
+        line-height: 1;
+      }
+
+      .countdown-label {
+        font-size: 0.62rem;
+        font-weight: 800;
+        letter-spacing: 0.6px;
+        color: rgba(255, 255, 255, 0.6);
+        margin-top: 4px;
+      }
+    }
+
+    .stretch-instructions-box {
+      font-size: 0.82rem;
+      color: #cbd5e1;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 12px 18px;
+      border-radius: 14px;
+      max-width: 520px;
+      width: 100%;
+      text-align: left;
+
+      h5 {
+        font-size: 0.82rem;
+        font-weight: 800;
+        color: #00e676;
+        margin: 0 0 6px;
+      }
+
+      ol {
+        margin: 0;
+        padding-left: 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+
+        li {
+          line-height: 1.4;
+        }
+      }
+    }
+
+    .stretch-cue-box {
+      font-size: 0.82rem;
+      color: #94a3b8;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 10px 16px;
+      border-radius: 12px;
+      max-width: 520px;
+      width: 100%;
+      line-height: 1.5;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-align: left;
+    }
+
+    .stretch-controls-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 4px;
+
+      button {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 18px;
+        border-radius: 12px;
+        font-size: 0.85rem;
+        font-weight: 800;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .stretch-play-btn {
+        background: #00e676;
+        color: #050811;
+        border: none;
+
+        &.running {
+          background: #ffa726;
+        }
+      }
+
+      .stretch-skip-btn {
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        color: #fff;
+
+        &:disabled {
+          opacity: 0.4;
+          cursor: not-allowed;
+        }
+      }
+    }
+
+    .stretch-progress-track {
+      width: 100%;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 2px;
+      overflow: hidden;
+
+      .stretch-progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #00e676, #00f0ff);
+        border-radius: 2px;
+      }
+    }
+  }
+
+  .all-stretches-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    .mini-stretch-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 14px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 0.85rem;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.06);
+      }
+
+      &.current {
+        border-color: #00e676;
+        background: rgba(0, 230, 118, 0.06);
+      }
+
+      &.done {
+        .mini-name {
+          color: #94a3b8;
+          text-decoration: line-through;
+        }
+      }
+
+      .mini-item-left {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #fff;
+        font-weight: 700;
+
+        .mini-num {
+          color: #94a3b8;
+        }
+      }
+
+      .mini-duration {
+        color: $accent;
+        font-weight: 700;
+        font-size: 0.78rem;
+      }
+    }
+  }
+}
+
+// ── Post-Workout Nutrition ───────────────────────────────────────────────────
+.cooldown-nutrition-container {
+  .nutrition-summary-card {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+
+    .nutrition-stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+
+      @media (max-width: 480px) {
+        grid-template-columns: 1fr;
+      }
+
+      .nutrition-stat-box {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        padding: 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+
+        &.protein {
+          border-left: 3px solid #ff9800;
+          .nutri-icon { color: #ff9800; }
+        }
+
+        &.water {
+          border-left: 3px solid #00f0ff;
+          .nutri-icon { color: #00f0ff; }
+        }
+
+        .nutri-val {
+          font-size: 1.4rem;
+          font-weight: 900;
+          color: #fff;
+
+          .nutri-unit {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            font-weight: 700;
+          }
+        }
+
+        .nutri-lbl {
+          font-size: 0.76rem;
+          color: #94a3b8;
+        }
+      }
+    }
+
+    .nutrition-guide-callout {
+      background: rgba(255, 152, 0, 0.06);
+      border: 1px solid rgba(255, 152, 0, 0.2);
+      border-radius: 16px;
+      padding: 16px;
+
+      h4 {
+        color: #ff9800;
+        font-size: 0.95rem;
+        margin: 0 0 6px;
+        font-weight: 800;
+      }
+
+      p {
+        color: #cbd5e1;
+        font-size: 0.85rem;
+        line-height: 1.6;
+        margin: 0;
+
+        strong {
+          color: #fff;
+        }
+      }
+    }
+
+    .explore-recipes-cta-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: linear-gradient(135deg, $accent 0%, #0072ff 100%);
+      color: #050811;
+      font-weight: 900;
+      font-size: 0.95rem;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 14px;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba($accent, 0.35);
+      transition: all 0.2s ease;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 30px rgba($accent, 0.5);
+      }
+    }
+  }
+}
+
+// ── Plate Calculator Visualizer ──────────────────────────────────────────────
+.plate-input-section {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 16px;
+
+  @media (max-width: 540px) {
+    grid-template-columns: 1fr;
+  }
+
+  .plate-field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .weight-stepper-input {
+      display: flex;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      overflow: hidden;
+
+      .step-btn {
+        background: transparent;
+        border: none;
+        color: #fff;
+        font-size: 1.2rem;
+        font-weight: 800;
+        width: 44px;
+        height: 42px;
+        cursor: pointer;
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.08);
+          color: $accent;
+        }
+      }
+
+      input {
+        flex: 1;
+        background: transparent;
+        border: none;
+        color: #00f0ff;
+        font-size: 1.2rem;
+        font-weight: 900;
+        text-align: center;
+        outline: none;
+      }
+    }
+
+    .unit-toggle-group {
+      display: flex;
+      gap: 6px;
+
+      .unit-btn {
+        flex: 1;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        color: #94a3b8;
+        font-size: 0.78rem;
+        font-weight: 700;
+        padding: 10px 8px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        &.active {
+          background: rgba($accent, 0.15);
+          border-color: $accent;
+          color: $accent;
+          font-weight: 800;
+        }
+      }
+    }
+  }
+}
+
+// ── Realistic Centered Olympic Barbell Visualizer ─────────────────────────────
+.barbell-visualizer-container {
+  background: radial-gradient(circle at 50% 50%, rgba(20, 24, 34, 0.95) 0%, rgba(8, 10, 15, 0.98) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 28px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-x: auto;
+  box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.6);
+
+  .barbell-graphic {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 520px;
+    height: 150px;
+    margin: 0 auto;
+
+    // Sleeve Side Container
+    .barbell-sleeve-side {
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+
+      &.left-side {
+        justify-content: flex-end;
+      }
+
+      &.right-side {
+        justify-content: flex-start;
+      }
+
+      .sleeve-outer-cap {
+        width: 8px;
+        height: 30px;
+        background: linear-gradient(180deg, #f1f5f9 0%, #94a3b8 50%, #334155 100%);
+        border-radius: 3px;
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.6);
+        flex-shrink: 0;
+      }
+
+      .sleeve-steel-bar {
+        min-width: 140px;
+        height: 24px;
+        background: linear-gradient(180deg, #cbd5e1 0%, #64748b 45%, #1e293b 100%);
+        display: flex;
+        align-items: center;
+        position: relative;
+        box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.3), inset 0 -2px 4px rgba(0, 0, 0, 0.6);
+
+        .plates-stack {
+          display: flex;
+          align-items: center;
+          gap: 2px;
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);
+
+          &.left {
+            right: 0; // stack flush against left inner collar
+          }
+
+          &.right {
+            left: 0; // stack flush against right inner collar
+          }
+
+          .plate-disc {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.7);
+            font-weight: 900;
+            border: 1px solid rgba(0, 0, 0, 0.4);
+            transition: transform 0.2s ease;
+            position: relative;
+            z-index: 5;
+
+            &:hover {
+              transform: scale(1.04);
+            }
+
+            &.plate-45, &.plate-25 {
+              width: 18px;
+              height: 126px;
+            }
+
+            &.plate-35, &.plate-20 {
+              width: 17px;
+              height: 112px;
+            }
+
+            &.plate-25, &.plate-15 {
+              width: 16px;
+              height: 98px;
+            }
+
+            &.plate-10 {
+              width: 15px;
+              height: 84px;
+            }
+
+            &.plate-5 {
+              width: 14px;
+              height: 68px;
+            }
+
+            &.plate-2_5 {
+              width: 13px;
+              height: 54px;
+            }
+
+            &.plate-1_25 {
+              width: 12px;
+              height: 42px;
+            }
+
+            .plate-text {
+              writing-mode: vertical-rl;
+              text-orientation: mixed;
+              font-size: 0.62rem;
+              font-weight: 900;
+              letter-spacing: -0.3px;
+            }
+          }
+        }
+      }
+
+      .sleeve-inner-collar {
+        width: 14px;
+        height: 56px;
+        background: linear-gradient(180deg, #f8fafc 0%, #94a3b8 40%, #475569 70%, #0f172a 100%);
+        border-radius: 3px;
+        box-shadow: 0 0 12px rgba(0, 0, 0, 0.7);
+        flex-shrink: 0;
+        z-index: 10;
+      }
+    }
+
+    // Center Barbell Shaft
+    .barbell-shaft-center {
+      flex: 1;
+      max-width: 220px;
+      min-width: 150px;
+      height: 18px;
+      background: linear-gradient(180deg, #e2e8f0 0%, #64748b 45%, #1e293b 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.3), inset 0 -2px 4px rgba(0, 0, 0, 0.6);
+
+      .shaft-knurling {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 35px;
+        background: repeating-linear-gradient(
+          45deg,
+          rgba(0, 0, 0, 0.25),
+          rgba(0, 0, 0, 0.25) 2px,
+          rgba(255, 255, 255, 0.1) 2px,
+          rgba(255, 255, 255, 0.1) 4px
+        );
+
+        &.left-knurl {
+          left: 10px;
+        }
+
+        &.right-knurl {
+          right: 10px;
+        }
+      }
+
+      .shaft-label-badge {
+        font-size: 0.7rem;
+        font-weight: 900;
+        color: #0f172a;
+        background: rgba(255, 255, 255, 0.95);
+        padding: 2px 10px;
+        border-radius: 4px;
+        white-space: nowrap;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+        z-index: 2;
+      }
+    }
+  }
+}
+
+.plate-summary-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  .summary-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    h4 {
+      font-size: 1rem;
+      color: #fff;
+      margin: 0;
+
+      strong {
+        color: #00f0ff;
+      }
+    }
+
+    .total-loaded-badge {
+      font-size: 0.8rem;
+      font-weight: 800;
+      color: #00e676;
+      background: rgba(0, 230, 118, 0.1);
+      padding: 3px 10px;
+      border-radius: 6px;
+    }
+  }
+
+  .no-plates-note {
+    font-size: 0.85rem;
+    color: #94a3b8;
+    margin: 0;
+  }
+
+  .plate-chips-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+
+    .plate-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 5px 12px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+
+      .chip-color-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+      }
+
+      .chip-count {
+        font-weight: 900;
+        color: #fff;
+      }
+
+      .chip-weight {
+        color: #94a3b8;
+        font-weight: 700;
+      }
+    }
+  }
+
+  .plate-remainder-warning {
+    font-size: 0.78rem;
+    color: #ffa726;
+    background: rgba(255, 167, 38, 0.08);
+    padding: 6px 12px;
+    border-radius: 8px;
+  }
+}
+
+// ── Alternatives List Grid (Exercise Swap) ──────────────────────────────────
+.alternatives-list-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  .alternative-exercise-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba($accent, 0.3);
+    }
+
+    &.selected {
+      background: rgba($accent, 0.08);
+      border-color: $accent;
+      box-shadow: 0 0 16px rgba($accent, 0.2);
+    }
+
+    .alt-card-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+
+      .alt-thumb-gif {
+        width: 48px;
+        height: 48px;
+        border-radius: 10px;
+        object-fit: cover;
+        background: #000;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .alt-thumb-placeholder {
+        width: 48px;
+        height: 48px;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.05);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #94a3b8;
+      }
+
+      .alt-info {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+
+        .alt-name {
+          font-size: 0.95rem;
+          font-weight: 800;
+          color: #fff;
+          margin: 0;
+        }
+
+        .alt-meta-tags {
+          display: flex;
+          gap: 6px;
+
+          .alt-tag {
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 6px;
+            text-transform: capitalize;
+
+            &.target {
+              background: rgba($accent, 0.1);
+              color: $accent;
+            }
+
+            &.equip {
+              background: rgba(255, 255, 255, 0.05);
+              color: #94a3b8;
+            }
+          }
+        }
+      }
+    }
+
+    .alt-select-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #e2e8f0;
+      font-size: 0.8rem;
+      font-weight: 800;
+      padding: 6px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &.active {
+        background: $accent;
+        color: #050811;
+        border-color: $accent;
+      }
+    }
+  }
+}
+
+// ── Footer ───────────────────────────────────────────────────────────────────
+.gym-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(14, 14, 18, 0.95);
+
+  button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-size: 0.88rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .secondary-modal-btn {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #e2e8f0;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
+  }
+
+  .primary-modal-btn {
+    background: linear-gradient(135deg, $accent 0%, #0072ff 100%);
+    border: none;
+    color: #050811;
+    box-shadow: 0 4px 16px rgba($accent, 0.35);
+
+    &:hover {
+      box-shadow: 0 6px 24px rgba($accent, 0.55);
+      transform: translateY(-1px);
+    }
+  }
+}
+
+// ── Gym Session Guide & Legend Modal ─────────────────────────────────────────
+.legend-modal {
+  max-width: 680px;
+
+  .legend-section {
+    margin-bottom: 24px;
+
+    .legend-section-title {
+      font-size: 1rem;
+      font-weight: 800;
+      color: #fff;
+      margin: 0 0 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+  }
+
+  .set-tags-legend-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+
+    @media (max-width: 576px) {
+      grid-template-columns: 1fr;
+    }
+
+    .set-tag-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+
+      .tag-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        .set-tag-badge {
+          width: 26px;
+          height: 26px;
+          border-radius: 6px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: 900;
+          font-size: 0.78rem;
+
+          &.tag-n {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #94a3b8;
+          }
+
+          &.tag-w {
+            background: rgba(255, 152, 0, 0.15);
+            border: 1px solid rgba(255, 152, 0, 0.4);
+            color: #ff9800;
+          }
+
+          &.tag-d {
+            background: rgba(168, 85, 247, 0.15);
+            border: 1px solid rgba(168, 85, 247, 0.4);
+            color: #a855f7;
+          }
+
+          &.tag-f {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            color: #ef4444;
+          }
+        }
+
+        .tag-name {
+          font-size: 0.9rem;
+          font-weight: 800;
+          color: #fff;
+        }
+      }
+
+      .tag-desc {
+        font-size: 0.78rem;
+        color: #94a3b8;
+        margin: 0;
+        line-height: 1.45;
+      }
+    }
+  }
+
+  .tools-legend-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    .tool-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 12px;
+      padding: 12px 14px;
+
+      @media (max-width: 480px) {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+      }
+
+      .tool-icon-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(0, 240, 255, 0.1);
+        border: 1px solid rgba(0, 240, 255, 0.25);
+        color: #00f0ff;
+        padding: 4px 10px;
+        border-radius: 8px;
+        font-size: 0.76rem;
+        font-weight: 800;
+        white-space: nowrap;
+
+        svg {
+          font-size: 0.95rem;
+        }
+      }
+
+      .tool-text {
+        font-size: 0.8rem;
+        color: #cbd5e1;
+        line-height: 1.4;
+
+        strong {
+          color: #fff;
+        }
+      }
+    }
+  }
+}

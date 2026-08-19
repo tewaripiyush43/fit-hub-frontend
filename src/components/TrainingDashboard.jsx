@@ -9,14 +9,18 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import { clearSessionHistory } from "../api/userApi";
 import UserProfileSmallCard from "./UserProfileSmallCard";
+import MuscleRecoveryHeatmap from "./MuscleRecoveryHeatmap";
+import { useUnitPreference } from "../utils/useUnitPreference";
 
 const TrainingDashboard = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state) => state.auth.user);
+  const { weightUnit } = useUnitPreference();
 
   const [showClearConfirm, setShowClearConfirm] = useState(false);
 
@@ -54,7 +58,8 @@ const TrainingDashboard = () => {
     return "Absolute beast mode. Legendary discipline!";
   };
 
-  const recentSessions = history.slice().reverse().slice(0, 5);
+  const reversedHistory = [...history].reverse();
+  const displayedSessions = reversedHistory.slice(0, 3);
 
   return (
     <div className="db-container">
@@ -66,12 +71,14 @@ const TrainingDashboard = () => {
           </h1>
           <p className="db-subtitle">Track your progress. Crush your goals.</p>
         </div>
-        <button
-          className="db-analytics-btn"
-          onClick={() => navigate(`/${user?.username}/analytics`)}
-        >
-          <BarChartIcon /> Analytics
-        </button>
+        <div style={{ display: "flex", gap: "10px" }}>
+          <button
+            className="db-analytics-btn"
+            onClick={() => navigate(`/${user?.username}/analytics`)}
+          >
+            <BarChartIcon /> Analytics
+          </button>
+        </div>
       </div>
 
       {/* Streak Hero */}
@@ -94,7 +101,7 @@ const TrainingDashboard = () => {
           <FitnessCenterIcon className="db-stat-chip-icon blue" />
           <div className="db-stat-chip-body">
             <span className="db-stat-chip-val">{history.length}</span>
-            <span className="db-stat-chip-lbl">Sessions</span>
+            <span className="db-stat-chip-lbl">Sessions Logged</span>
           </div>
         </div>
         <div className="db-stat-chip">
@@ -105,7 +112,7 @@ const TrainingDashboard = () => {
                 ? `${(totalVolume / 1000).toFixed(1)}k`
                 : totalVolume.toLocaleString()}
             </span>
-            <span className="db-stat-chip-lbl">lbs Lifted</span>
+            <span className="db-stat-chip-lbl">{weightUnit} Lifted</span>
           </div>
         </div>
         <div className="db-stat-chip">
@@ -117,6 +124,77 @@ const TrainingDashboard = () => {
             <span className="db-stat-chip-lbl">Active Time</span>
           </div>
         </div>
+      </div>
+
+      {/* Quick Action Banner */}
+      <div
+        style={{
+          background: "linear-gradient(135deg, rgba(0, 240, 255, 0.08) 0%, rgba(0, 114, 255, 0.05) 100%)",
+          border: "1px solid rgba(0, 240, 255, 0.2)",
+          borderRadius: "18px",
+          padding: "18px 24px",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          flexWrap: "wrap",
+          gap: "14px",
+          marginBottom: "24px",
+        }}
+      >
+        <div>
+          <h3 style={{ margin: "0 0 4px", fontSize: "1.1rem", fontWeight: "800", color: "#fff" }}>
+            Ready to train today?
+          </h3>
+          <p style={{ margin: 0, fontSize: "0.85rem", color: "#94a3b8" }}>
+            Launch an active routine or generate a customized workout plan with AI.
+          </p>
+        </div>
+        <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+          <button
+            onClick={() => navigate(`/${user?.username}/myworkouts?ai=true`)}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "6px",
+              padding: "8px 16px",
+              borderRadius: "10px",
+              background: "rgba(0, 240, 255, 0.12)",
+              border: "1px solid rgba(0, 240, 255, 0.3)",
+              color: "#00f0ff",
+              fontSize: "0.85rem",
+              fontWeight: "700",
+              cursor: "pointer",
+              transition: "all 0.2s ease",
+            }}
+          >
+            <AutoAwesomeIcon style={{ fontSize: "1rem" }} /> AI Generator
+          </button>
+          <button
+            onClick={() => navigate(`/${user?.username}/myworkouts`)}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "6px",
+              padding: "8px 18px",
+              borderRadius: "10px",
+              background: "linear-gradient(135deg, #00f0ff 0%, #0072ff 100%)",
+              border: "none",
+              color: "#050811",
+              fontSize: "0.85rem",
+              fontWeight: "800",
+              cursor: "pointer",
+              boxShadow: "0 4px 14px rgba(0, 240, 255, 0.3)",
+              transition: "all 0.2s ease",
+            }}
+          >
+            <PlayArrowIcon style={{ fontSize: "1.1rem" }} /> View Routines
+          </button>
+        </div>
+      </div>
+
+      {/* Muscle Fatigue & Recovery Heatmap Widget */}
+      <div style={{ marginBottom: "24px" }}>
+        <MuscleRecoveryHeatmap />
       </div>
 
       {/* Two-Column Grid: PRs + History */}
@@ -137,7 +215,7 @@ const TrainingDashboard = () => {
           <div className="db-card-head">
             <div className="db-card-head-left">
               <HistoryIcon className="db-card-head-icon" />
-              <h2>Recent Sessions</h2>
+              <h2>Recent Sessions ({history.length})</h2>
             </div>
             {history.length > 0 && !showClearConfirm && (
               <button
@@ -164,22 +242,27 @@ const TrainingDashboard = () => {
                 </button>
               </div>
             </div>
-          ) : recentSessions.length > 0 ? (
+          ) : displayedSessions.length > 0 ? (
             <div className="db-session-list">
-              {recentSessions.map((log, i) => {
+              {reversedHistory.slice(0, 3).map((log, i) => {
                 const pct =
                   log.totalSets > 0
                     ? Math.round((log.completedSets / log.totalSets) * 100)
                     : 0;
                 return (
-                  <div key={i} className="db-session-item">
+                  <div
+                    key={i}
+                    className="db-session-item interactive"
+                    onClick={() => navigate(`/${user?.username}/history`)}
+                    title="Click to view full workout breakdown"
+                  >
                     <div className="db-session-top">
                       <span className="db-session-name">{log.workoutName}</span>
                       <span className="db-session-date">{log.date}</span>
                     </div>
                     <div className="db-session-stats">
                       <span>⏱ {log.duration}</span>
-                      <span>🏋️ {(log.totalVolume || 0).toLocaleString()} lbs</span>
+                      <span>🏋️ {(log.totalVolume || 0).toLocaleString()} {weightUnit}</span>
                       <span>✅ {log.completedSets}/{log.totalSets}</span>
                     </div>
                     <div className="db-session-bar-wrap">
@@ -194,24 +277,33 @@ const TrainingDashboard = () => {
                   </div>
                 );
               })}
+
+              <button
+                className="db-view-all-btn"
+                onClick={() => navigate(`/${user?.username}/history`)}
+                style={{
+                  marginTop: "8px",
+                  background: "rgba(0, 240, 255, 0.08)",
+                  border: "1px solid rgba(0, 240, 255, 0.25)",
+                  color: "#00f0ff",
+                  fontWeight: "800",
+                  padding: "11px 16px",
+                  borderRadius: "12px",
+                  cursor: "pointer",
+                  width: "100%",
+                }}
+              >
+                View All Workout History & Exercise Logs &rarr;
+              </button>
             </div>
           ) : (
             <div className="db-empty-state">
               <HistoryIcon className="db-empty-icon" />
               <p>No sessions logged yet.</p>
               <span>
-                Hit "Start Active Session" in any routine to begin tracking.
+                Hit "Start Workout" in any routine to begin tracking.
               </span>
             </div>
-          )}
-
-          {history.length > 5 && (
-            <button
-              className="db-view-all-btn"
-              onClick={() => navigate(`/${user?.username}/analytics`)}
-            >
-              View Full Analytics <ArrowForwardIcon fontSize="small" />
-            </button>
           )}
         </div>
       </div>

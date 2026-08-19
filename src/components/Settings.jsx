@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import ConfirmationPopup from "../components/ConfirmationPopUp.jsx";
-import { updateUserInfo } from "../api/userApi";
+import { updateUserInfo, updateUserSettings } from "../api/userApi";
 import { deleteAccount } from "../api/authApi";
 import { usePwa } from "../context/PwaContext";
+import { useUnitPreference } from "../utils/useUnitPreference";
+import { authActions } from "../store/index";
 
 import SettingsIcon from "@mui/icons-material/Settings";
 import PersonIcon from "@mui/icons-material/Person";
@@ -21,22 +23,20 @@ const Settings = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const { isInstallable, installApp, isAppInstalled } = usePwa();
+  const { unitSystem, setUnitSystem } = useUnitPreference();
 
-  // Load preferences from localStorage or defaults
-  const [unitSystem, setUnitSystem] = useState(
-    localStorage.getItem("fithub_unit_preference") || "metric"
-  );
   const [defaultPrivacy, setDefaultPrivacy] = useState(
-    localStorage.getItem("fithub_default_privacy") || "private"
+    () => user?.settings?.defaultWorkoutPrivacy || localStorage.getItem("fithub_default_privacy") || "private"
   );
 
   // Notifications state — track initial values to detect changes
   const [emailReminders, setEmailReminders] = useState(
-    localStorage.getItem("fithub_notif_email") !== "false"
+    () => (user?.settings?.emailReminders !== undefined ? user.settings.emailReminders : localStorage.getItem("fithub_notif_email") !== "false")
   );
   const [monthlyAchievements, setMonthlyAchievements] = useState(
-    localStorage.getItem("fithub_notif_monthly") !== "false"
+    () => (user?.settings?.monthlyAchievements !== undefined ? user.settings.monthlyAchievements : localStorage.getItem("fithub_notif_monthly") !== "false")
   );
   const [notifDirty, setNotifDirty] = useState(false);
   const [notifSaved, setNotifSaved] = useState(false);
@@ -54,16 +54,19 @@ const Settings = () => {
   const [isSavingProfile, setIsSavingProfile] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
 
-  // Persist unit preference and broadcast storage event for other components
   useEffect(() => {
-    localStorage.setItem("fithub_unit_preference", unitSystem);
-    // Dispatch a custom event so other components (BMI calc) can react
-    window.dispatchEvent(new Event("fithub_prefs_changed"));
-  }, [unitSystem]);
-
-  useEffect(() => {
-    localStorage.setItem("fithub_default_privacy", defaultPrivacy);
-  }, [defaultPrivacy]);
+    if (user?.settings) {
+      if (user.settings.defaultWorkoutPrivacy) {
+        setDefaultPrivacy(user.settings.defaultWorkoutPrivacy);
+      }
+      if (user.settings.emailReminders !== undefined) {
+        setEmailReminders(user.settings.emailReminders);
+      }
+      if (user.settings.monthlyAchievements !== undefined) {
+        setMonthlyAchievements(user.settings.monthlyAchievements);
+      }
+    }
+  }, [user?.settings]);
 
   useEffect(() => {
     if (user) {
@@ -77,6 +80,19 @@ const Settings = () => {
     }
   }, [user]);
 
+  const handleDefaultPrivacyChange = async (val) => {
+    setDefaultPrivacy(val);
+    localStorage.setItem("fithub_default_privacy", val);
+    dispatch(authActions.updateSettings({ defaultWorkoutPrivacy: val }));
+    if (isLoggedIn) {
+      try {
+        await updateUserSettings(dispatch, { defaultWorkoutPrivacy: val });
+      } catch (err) {
+        console.error("Failed to save default privacy to DB:", err);
+      }
+    }
+  };
+
   const handleEmailRemindersChange = (val) => {
     setEmailReminders(val);
     setNotifDirty(true);
@@ -89,9 +105,19 @@ const Settings = () => {
     setNotifSaved(false);
   };
 
-  const handleNotifSave = () => {
+  const handleNotifSave = async () => {
     localStorage.setItem("fithub_notif_email", String(emailReminders));
     localStorage.setItem("fithub_notif_monthly", String(monthlyAchievements));
+    dispatch(authActions.updateSettings({ emailReminders, monthlyAchievements }));
+
+    if (isLoggedIn) {
+      try {
+        await updateUserSettings(dispatch, { emailReminders, monthlyAchievements });
+      } catch (err) {
+        console.error("Failed to save notifications to DB:", err);
+      }
+    }
+
     setNotifDirty(false);
     setNotifSaved(true);
     setTimeout(() => setNotifSaved(false), 3000);
@@ -313,13 +339,13 @@ const Settings = () => {
               <div className="toggle-group">
                 <button
                   className={`toggle-btn ${defaultPrivacy === "private" ? "active" : ""}`}
-                  onClick={() => setDefaultPrivacy("private")}
+                  onClick={() => handleDefaultPrivacyChange("private")}
                 >
                   Private
                 </button>
                 <button
                   className={`toggle-btn ${defaultPrivacy === "public" ? "active" : ""}`}
-                  onClick={() => setDefaultPrivacy("public")}
+                  onClick={() => handleDefaultPrivacyChange("public")}
                 >
                   Public
                 </button>

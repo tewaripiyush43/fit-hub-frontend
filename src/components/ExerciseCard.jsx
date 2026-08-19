@@ -108,7 +108,7 @@ const ExerciseCard = ({
       document.removeEventListener("click", handleClickOutside);
       document.removeEventListener("keydown", handleEscape);
     };
-  }, []);
+  }, [_id, user?.favoriteExercises]);
 
   const handleCreateWorkoutClick = async (e) => {
     e.stopPropagation();
@@ -122,21 +122,24 @@ const ExerciseCard = ({
 
     const trimmedName = newWorkoutInput.trim();
     if (!trimmedName) {
-      setErrorMessage("Workout name cannot be empty");
+      toast.error("Workout name cannot be empty");
       return;
     }
 
     setIsCreating(true);
     try {
-      const workoutId = await addWorkout(
+      await addWorkout(
         dispatch,
-        trimmedName
+        trimmedName,
+        _id
       );
 
       setTakingInput(false);
       setNewWorkoutInput("");
+      setShowMore(false);
+      toast.success(`Created "${trimmedName}" and added ${name}!`);
     } catch (error) {
-      setErrorMessage("Something went wrong. Please try again later.");
+      toast.error("Failed to create workout. Please try again.");
     } finally {
       setIsCreating(false);
     }
@@ -155,28 +158,40 @@ const ExerciseCard = ({
       </div>
       {isLoggedIn && animation && (
         <div className="exercise-card-icon-container" ref={moreOptionsRef}>
-          <div>
+          <div className="exercise-card-icon-group">
             {isFavorite ? (
-              <FavoriteIcon
-                title="remove from favorites"
+              <button
+                type="button"
+                className="exercise-card-btn-pill active-favorite"
                 onClick={(e) => removeFromFavorites(e)}
-                className="exercise-card-favorite-icon active-favorite"
-              />
+                title="Remove from favorites"
+              >
+                <FavoriteIcon style={{ fontSize: "1rem" }} />
+              </button>
             ) : (
-              <FavoriteBorderIcon
-                title="add to favorites"
+              <button
+                type="button"
+                className="exercise-card-btn-pill"
                 onClick={(e) => addToFavorites(e)}
-                className="exercise-card-favorite-icon"
-              />
+                title="Add to favorites"
+              >
+                <FavoriteBorderIcon style={{ fontSize: "1rem" }} />
+              </button>
             )}
-            <AddTwoToneIcon
-              title="add to workout"
-              onClick={() => setShowMore(!showMore)}
-              className="exercise-card-more-icon"
-            />
+            {!removeBtn && (
+              <button
+                type="button"
+                className="exercise-card-btn-pill more-btn"
+                onClick={() => setShowMore(!showMore)}
+                title="Add to workout"
+              >
+                <AddTwoToneIcon style={{ fontSize: "1rem" }} />
+              </button>
+            )}
             {removeBtn && (
-              <DeleteTwoToneIcon
-                title="delete exercise"
+              <button
+                type="button"
+                className="exercise-card-btn-pill delete-btn"
                 onClick={() =>
                   removeExerciseFromWorkout(
                     dispatch,
@@ -184,8 +199,10 @@ const ExerciseCard = ({
                     _id
                   )
                 }
-                className="exercise-card-favorite-icon"
-              />
+                title="Remove exercise from routine"
+              >
+                <DeleteTwoToneIcon style={{ fontSize: "1rem" }} />
+              </button>
             )}
           </div>
           {showMore && (
@@ -249,6 +266,13 @@ const ExerciseCard = ({
                           placeholder="Workout Name"
                           value={newWorkoutInput}
                           onChange={(e) => setNewWorkoutInput(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                              e.stopPropagation();
+                              handleCreateWorkoutClick(e);
+                            }
+                          }}
+                          autoFocus
                         />
                         <div className="add-icon">
                           <AddTwoToneIcon

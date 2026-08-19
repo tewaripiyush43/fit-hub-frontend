@@ -38,6 +38,42 @@
     padding: 0 1rem;
   }
 
+  .nav-brand-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    .navbar-hamburger-btn {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: rgba(255, 255, 255, 0.8);
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      padding: 0;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+
+      &:hover {
+        background: rgba(0, 240, 255, 0.12);
+        border-color: rgba(0, 240, 255, 0.35);
+        color: #00f0ff;
+        transform: scale(1.05);
+      }
+
+      &:active {
+        transform: scale(0.95);
+      }
+
+      svg {
+        font-size: 1.25rem;
+      }
+    }
+  }
+
   #heading {
     cursor: pointer;
     font-size: 2.1rem;

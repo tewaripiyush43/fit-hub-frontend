@@ -1,13 +1,23 @@
 // ─── Training Dashboard ─────────────────────────────────────────────────────
 
 @keyframes pulseFire {
-  0%   { box-shadow: 0 0 10px rgba($primary-button, 0.4); }
-  100% { box-shadow: 0 0 25px rgba($primary-button, 0.8), 0 0 45px rgba($primary-button, 0.3); }
+  0% {
+    box-shadow: 0 0 10px rgba($primary-button, 0.4);
+  }
+
+  100% {
+    box-shadow: 0 0 25px rgba($primary-button, 0.8), 0 0 45px rgba($primary-button, 0.3);
+  }
 }
 
 @keyframes rotateSlow {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .db-container {
@@ -41,7 +51,9 @@
       letter-spacing: -0.5px;
       line-height: 1.1;
 
-      span { color: $accent; }
+      span {
+        color: $accent;
+      }
     }
 
     .db-subtitle {
@@ -66,7 +78,9 @@
     white-space: nowrap;
     transition: all 0.2s ease;
 
-    svg { font-size: 1.1rem !important; }
+    svg {
+      font-size: 1.1rem !important;
+    }
 
     &:hover {
       background: $accent;
@@ -82,11 +96,9 @@
   position: relative;
   width: 100%;
   box-sizing: border-box;
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.03) 0%,
-    rgba(255, 255, 255, 0.01) 100%
-  );
+  background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.03) 0%,
+      rgba(255, 255, 255, 0.01) 100%);
   border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 24px;
   padding: 24px 22px;
@@ -111,7 +123,9 @@
   &.active {
     border-color: rgba($primary-button, 0.2);
 
-    &::before { opacity: 1; }
+    &::before {
+      opacity: 1;
+    }
   }
 
   @media (max-width: 480px) {
@@ -216,11 +230,16 @@
   gap: 14px;
   margin-bottom: 24px;
   flex-wrap: wrap;
+
+  @media (max-width: 480px) {
+    gap: 8px;
+    margin-bottom: 18px;
+  }
 }
 
 .db-stat-chip {
   flex: 1;
-  min-width: 90px;
+  min-width: 80px;
   background: $background-hover;
   border: 1px solid $glass-border;
   border-radius: 18px;
@@ -236,18 +255,33 @@
     border-color: rgba($accent, 0.25);
   }
 
-  @media (max-width: 360px) {
+  @media (max-width: 480px) {
     padding: 12px 10px;
     gap: 8px;
+    border-radius: 14px;
+  }
+
+  @media (max-width: 375px) {
+    padding: 10px 6px;
+    gap: 6px;
+    min-width: 70px;
   }
 
   .db-stat-chip-icon {
     font-size: 1.5rem !important;
     flex-shrink: 0;
 
-    &.blue  { color: $accent; }
-    &.orange { color: $primary-button; }
-    &.green  { color: #00ffd1; }
+    &.blue {
+      color: $accent;
+    }
+
+    &.orange {
+      color: $primary-button;
+    }
+
+    &.green {
+      color: #00ffd1;
+    }
 
     @media (max-width: 480px) {
       font-size: 1.25rem !important;
@@ -376,13 +410,10 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
-  overflow-y: auto;
-  max-height: 440px;
-  padding-right: 4px;
-
-  &::-webkit-scrollbar { width: 4px; }
-  &::-webkit-scrollbar-track { background: transparent; }
-  &::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+  max-height: none;
+  overflow: visible;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 .db-session-item {
@@ -445,7 +476,7 @@
     .db-session-bar-track {
       flex: 1;
       height: 4px;
-      background: rgba(0,0,0,0.3);
+      background: rgba(0, 0, 0, 0.3);
       border-radius: 2px;
       overflow: hidden;
 
@@ -535,7 +566,9 @@
       background: $primary-button;
       color: #fff;
 
-      &:hover { background: darken($primary-button, 8%); }
+      &:hover {
+        background: darken($primary-button, 8%);
+      }
     }
 
     .db-confirm-no {
@@ -543,7 +576,9 @@
       border: 1px solid rgba(255, 255, 255, 0.1);
       color: rgba($text, 0.7);
 
-      &:hover { background: rgba(255, 255, 255, 0.1); }
+      &:hover {
+        background: rgba(255, 255, 255, 0.1);
+      }
     }
   }
 }

@@ -113,6 +113,7 @@ const ExercisePage = () => {
 
   useEffect(() => {
     findExercise();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   useEffect(() => {
@@ -157,12 +158,14 @@ const ExercisePage = () => {
     try {
       await addWorkout(
         dispatch,
-        trimmedName
+        trimmedName,
+        id
       );
 
       setTakingInput(false);
       setNewWorkoutInput("");
-      toast.success(`Workout "${trimmedName}" created successfully!`);
+      setShowDropdown(false);
+      toast.success(`Created "${trimmedName}" and added ${exercise?.name || "exercise"}!`);
     } catch (error) {
       toast.error("Something went wrong. Please try again later.");
     } finally {

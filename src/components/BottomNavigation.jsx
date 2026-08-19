@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { portalActions } from "../store";
+import { selectActiveWorkout } from "../store";
 import { logout } from "../api/authApi";
 
 // Material UI Icons
@@ -17,6 +17,9 @@ import CalculateIcon from "@mui/icons-material/Calculate";
 import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
 import WhatshotIcon from "@mui/icons-material/Whatshot";
+import HistoryIcon from "@mui/icons-material/History";
+import BarChartIcon from "@mui/icons-material/BarChart";
+import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 
 const BottomNavigation = () => {
   const navigate = useNavigate();
@@ -25,6 +28,7 @@ const BottomNavigation = () => {
 
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const user = useSelector((state) => state.auth.user);
+  const activeWorkout = useSelector(selectActiveWorkout);
 
   const [activeTab, setActiveTab] = useState("home");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -55,14 +59,15 @@ const BottomNavigation = () => {
       setActiveTab("exercises");
     } else if (path.includes("/recipes")) {
       setActiveTab("recipes");
-    } else if (path.includes("/myworkouts")) {
+    } else if (path.includes("/workouts") || path.includes("/myworkouts")) {
       setActiveTab("workouts");
     } else if (
       path.includes("/myprofile") ||
       path.includes("/settings") ||
       path.includes("/myfavorite") ||
       path.includes("/fitnesstools") ||
-      path.includes("/analytics")
+      path.includes("/analytics") ||
+      path.includes("/history")
     ) {
       setActiveTab("more");
     }
@@ -79,22 +84,24 @@ const BottomNavigation = () => {
     } else if (tab === "exercises") {
       navigate("/exercises/all");
       setIsMenuOpen(false);
-    } else if (tab === "recipes") {
-      navigate("/recipes");
+    } else if (tab === "active") {
+      if (activeWorkout?.isActive && activeWorkout?.workoutId) {
+        navigate(`/workout/${activeWorkout.workoutId}/session`);
+      } else if (isLoggedIn && user?.username) {
+        navigate(`/${user.username}/myworkouts?ai=true`);
+      } else {
+        navigate("/workouts?tab=explore");
+      }
       setIsMenuOpen(false);
     } else if (tab === "workouts") {
       if (isLoggedIn && user?.username) {
         navigate(`/${user.username}/myworkouts`);
       } else {
-        dispatch(portalActions.setPortalOpen());
+        navigate("/workouts?tab=explore");
       }
       setIsMenuOpen(false);
     } else if (tab === "more") {
-      if (isLoggedIn) {
-        setIsMenuOpen((prev) => !prev);
-      } else {
-        dispatch(portalActions.setPortalOpen());
-      }
+      setIsMenuOpen((prev) => !prev);
     }
   };
 
@@ -118,6 +125,31 @@ const BottomNavigation = () => {
         </div>
 
         <div
+          className={`nav-tab ${activeTab === "workouts" ? "active" : ""}`}
+          onClick={() => handleTabClick("workouts")}
+        >
+          <FitnessCenterIcon />
+          <span className="tab-label">Workouts</span>
+        </div>
+
+        {/* Center Glowing Action Button (Active Session / AI Generator) */}
+        <div
+          className={`nav-tab center-action-tab ${activeWorkout?.isActive ? "pulse-active" : ""}`}
+          onClick={() => handleTabClick("active")}
+        >
+          <div className="center-action-btn">
+            {activeWorkout?.isActive ? (
+              <WhatshotIcon className="active-flame-icon" />
+            ) : (
+              <AutoAwesomeIcon />
+            )}
+          </div>
+          <span className="tab-label">
+            {activeWorkout?.isActive ? "Active" : "AI Coach"}
+          </span>
+        </div>
+
+        <div
           className={`nav-tab ${activeTab === "exercises" ? "active" : ""}`}
           onClick={() => handleTabClick("exercises")}
         >
@@ -125,33 +157,13 @@ const BottomNavigation = () => {
           <span className="tab-label">Exercises</span>
         </div>
 
-        {isLoggedIn && (
-          <div
-            className={`nav-tab ${activeTab === "workouts" ? "active" : ""}`}
-            onClick={() => handleTabClick("workouts")}
-          >
-            <FitnessCenterIcon />
-            <span className="tab-label">Workouts</span>
-          </div>
-        )}
-
         <div
-          className={`nav-tab ${activeTab === "recipes" ? "active" : ""}`}
-          onClick={() => handleTabClick("recipes")}
+          className={`nav-tab ${activeTab === "more" ? "active" : ""}`}
+          onClick={() => handleTabClick("more")}
         >
-          <RestaurantIcon />
-          <span className="tab-label">Recipes</span>
+          <MoreHorizIcon />
+          <span className="tab-label">More</span>
         </div>
-
-        {isLoggedIn && (
-          <div
-            className={`nav-tab ${activeTab === "more" ? "active" : ""}`}
-            onClick={() => handleTabClick("more")}
-          >
-            <MoreHorizIcon />
-            <span className="tab-label">More</span>
-          </div>
-        )}
       </div>
 
       {/* Slide-up Bottom Menu Drawer */}
@@ -189,7 +201,16 @@ const BottomNavigation = () => {
                 }}
               >
                 <PersonIcon />
-                <span>My Profile</span>
+                <span>My Profile & Goals</span>
+              </li>
+              <li
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  navigate(`/${user.username}/history`);
+                }}
+              >
+                <HistoryIcon />
+                <span>Workout History</span>
               </li>
               <li
                 onClick={() => {
@@ -197,17 +218,8 @@ const BottomNavigation = () => {
                   navigate(`/${user.username}/analytics`);
                 }}
               >
-                <WhatshotIcon />
-                <span>Achievements</span>
-              </li>
-              <li
-                onClick={() => {
-                  setIsMenuOpen(false);
-                  navigate(`/${user.username}/myfavorite`);
-                }}
-              >
-                <FavoriteIcon />
-                <span>My Favorites</span>
+                <BarChartIcon />
+                <span>Analytics & PRs</span>
               </li>
               <li
                 onClick={() => {
@@ -216,7 +228,25 @@ const BottomNavigation = () => {
                 }}
               >
                 <CalculateIcon />
-                <span>Fitness Tools</span>
+                <span>Fitness Tools & Calculators</span>
+              </li>
+              <li
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  navigate(`/recipes`);
+                }}
+              >
+                <RestaurantIcon />
+                <span>Healthy Recipes</span>
+              </li>
+              <li
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  navigate(`/${user.username}/myfavorite`);
+                }}
+              >
+                <FavoriteIcon />
+                <span>Favorite Exercises</span>
               </li>
               <li
                 onClick={() => {
@@ -225,7 +255,7 @@ const BottomNavigation = () => {
                 }}
               >
                 <SettingsIcon />
-                <span>Settings</span>
+                <span>Settings & Units</span>
               </li>
               <li className="logout-item" onClick={handleLogout}>
                 <LogoutIcon />

@@ -1,8 +1,12 @@
 import api from "./client";
 import { authActions, workoutActions } from "../store/index";
 
-export const addWorkout = async (dispatch, workoutName) => {
-  const response = await api.post("/workout/create", { name: workoutName });
+export const addWorkout = async (dispatch, workoutName, exerciseId = null) => {
+  const payload = { name: workoutName };
+  if (exerciseId) {
+    payload.exerciseId = exerciseId;
+  }
+  const response = await api.post("/workout/create", payload);
   const { data, status } = response;
   if (status === 201) {
     dispatch(authActions.setUser(data.user));
@@ -11,10 +15,17 @@ export const addWorkout = async (dispatch, workoutName) => {
 };
 
 export const fetchWorkout = async (dispatch, workoutId) => {
-  const response = await api.get(`/workout/get/${workoutId}`);
-  const { data, status } = response;
-  if (status === 201) {
-    dispatch(workoutActions.setWorkoutData(data.workout));
+  try {
+    const response = await api.get(`/workout/get/${workoutId}`);
+    const { data, status } = response;
+    if (status === 201 || status === 200) {
+      const workout = data.workout || data;
+      dispatch(workoutActions.setWorkoutData(workout));
+      return workout;
+    }
+  } catch (error) {
+    dispatch(workoutActions.setWorkoutData(null));
+    throw error;
   }
 };
 
@@ -84,8 +95,38 @@ export const generateAIWorkout = async (dispatch, payload) => {
 export const cloneWorkout = async (dispatch, workoutId) => {
   const response = await api.post(`/workout/clone/${workoutId}`, {});
   const { data, status } = response;
-  if (status === 201) {
-    dispatch(authActions.setUser(data.user));
+  if (status === 201 || status === 200) {
+    if (dispatch && data.user) {
+      dispatch(authActions.setUser(data.user));
+    }
     return data.workoutId;
   }
+};
+
+export const fetchExploreWorkouts = async (params = {}) => {
+  const queryParams = new URLSearchParams();
+  if (params.search) queryParams.append("search", params.search);
+  if (params.muscle && params.muscle !== "all") queryParams.append("muscle", params.muscle);
+  if (params.difficulty && params.difficulty !== "all") queryParams.append("difficulty", params.difficulty);
+  if (params.sort) queryParams.append("sort", params.sort);
+  if (params.page) queryParams.append("page", params.page);
+  if (params.limit) queryParams.append("limit", params.limit);
+
+  const response = await api.get(`/workout/explore?${queryParams.toString()}`);
+  return response.data;
+};
+
+export const fetchDailyWOD = async () => {
+  const response = await api.get("/workout/daily-wod");
+  return response.data;
+};
+
+export const fetchOfficialWorkouts = async () => {
+  const response = await api.get("/workout/official");
+  return response.data;
+};
+
+export const fetchAICoachSummary = async (payload) => {
+  const response = await api.post("/workout/ai-coach-summary", payload);
+  return response.data?.summary;
 };

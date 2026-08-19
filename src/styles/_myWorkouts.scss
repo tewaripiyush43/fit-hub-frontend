@@ -4,7 +4,91 @@
   width: 100%;
 
   @media (max-width: 768px) {
-    padding: 90px 16px 40px;
+    padding: 85px 16px 40px;
+  }
+
+  // Top Hub Tab Switcher
+  .workouts-hub-tab-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 0 auto 30px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 5px;
+    border-radius: 50px;
+    max-width: 440px;
+    width: 100%;
+    backdrop-filter: blur(12px);
+    box-sizing: border-box;
+
+    @media (max-width: 480px) {
+      margin: 0 auto 20px;
+      padding: 3px;
+      gap: 3px;
+      border-radius: 14px;
+    }
+
+    .hub-tab-btn {
+      flex: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 9px 16px;
+      border-radius: 50px;
+      border: none;
+      background: transparent;
+      color: rgba($text, 0.7);
+      font-size: 0.84rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      min-width: 0;
+
+      @media (max-width: 480px) {
+        padding: 7px 8px;
+        font-size: 0.76rem;
+        border-radius: 11px;
+        gap: 3px;
+      }
+
+      span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      svg {
+        font-size: 1.05rem;
+        flex-shrink: 0;
+
+        @media (max-width: 480px) {
+          font-size: 0.95rem;
+        }
+      }
+
+      .gold-star-icon {
+        color: #ffd700;
+      }
+
+      &:hover:not(.active) {
+        color: #fff;
+        background: rgba(255, 255, 255, 0.05);
+      }
+
+      &.active {
+        background: $accent;
+        color: #050811;
+        font-weight: 800;
+        box-shadow: 0 0 20px rgba($accent, 0.35);
+
+        .gold-star-icon {
+          color: #050811;
+        }
+      }
+    }
   }
 
   .my-workouts-title {
@@ -42,6 +126,8 @@
   box-shadow: $card-shadow;
   display: flex;
   flex-direction: column;
+  cursor: pointer;
+  outline: none;
   transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
 
   @media (max-width: 768px) {
@@ -49,10 +135,11 @@
     min-width: 0;
   }
 
-  &:hover {
+  &:hover,
+  &:focus-visible {
     transform: translateY(-5px);
     box-shadow: $neon-glow, 0 8px 32px rgba(0, 0, 0, 0.3);
-    border-color: rgba($accent, 0.3);
+    border-color: rgba($accent, 0.4);
   }
 
   .workout-card-title {
@@ -260,8 +347,11 @@
       padding: 14px;
       border-radius: 12px;
     }
+
     justify-content: flex-start;
-    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    transition: transform 0.3s ease,
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
 
     &:hover {
       border-color: rgba($accent, 0.15);
@@ -342,6 +432,7 @@
           font-size: 1.1rem;
         }
       }
+
       .streak-subtitle {
         color: $text-input-field-secondary;
         font-size: 0.9rem;
@@ -404,9 +495,17 @@
         font-size: 1.3rem;
       }
 
-      &.blue .stat-icon { color: $accent; }
-      &.orange .stat-icon { color: $primary-button; }
-      &.green .stat-icon { color: #00ffd1; }
+      &.blue .stat-icon {
+        color: $accent;
+      }
+
+      &.orange .stat-icon {
+        color: $primary-button;
+      }
+
+      &.green .stat-icon {
+        color: #00ffd1;
+      }
     }
 
     .stat-text {
@@ -680,6 +779,7 @@
             color: $accent;
             transform: scale(1.15);
           }
+
           .add-text {
             color: $accent;
           }
@@ -703,7 +803,8 @@
               font-weight: 600;
             }
 
-            input, select {
+            input,
+            select {
               background: rgba(0, 0, 0, 0.35);
               border: 1px solid rgba(255, 255, 255, 0.1);
               padding: 6px 10px;
@@ -904,13 +1005,16 @@
       &::-webkit-scrollbar {
         width: 6px;
       }
+
       &::-webkit-scrollbar-track {
         background: rgba(0, 0, 0, 0.1);
         border-radius: 10px;
       }
+
       &::-webkit-scrollbar-thumb {
         background: rgba(255, 255, 255, 0.1);
         border-radius: 10px;
+
         &:hover {
           background: rgba(255, 255, 255, 0.2);
         }
@@ -1021,7 +1125,8 @@
         display: flex;
         gap: 12px;
 
-        .confirm-btn, .cancel-btn {
+        .confirm-btn,
+        .cancel-btn {
           padding: 8px 20px;
           border-radius: 30px;
           font-size: 0.85rem;
@@ -1060,6 +1165,7 @@
   0% {
     box-shadow: 0 0 10px rgba(255, 94, 98, 0.25);
   }
+
   100% {
     box-shadow: 0 0 20px rgba(255, 94, 98, 0.5);
   }

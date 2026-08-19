@@ -4,11 +4,23 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import ExerciseCard from "./ExerciseCard";
 import Pagination from "@mui/material/Pagination";
 import SearchIcon from "@mui/icons-material/Search";
-// import { useSelector } from "react-redux";
+import CloseIcon from "@mui/icons-material/Close";
+import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
+import RestartAltIcon from "@mui/icons-material/RestartAlt";
+import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import { errorPopUp } from "../helpers/errorPopUp";
 import { fetchExerciseCount, fetchExercises, fetchExerciseNames } from "../api/exerciseApi";
 
-/* Todays workout eg. if monday back bi, tuesday chest tri */
+const POPULAR_CATEGORIES = [
+  "Chest",
+  "Back",
+  "Biceps",
+  "Triceps",
+  "Shoulders",
+  "Quads",
+  "Abs",
+  "Cardio",
+];
 
 const Exercises = ({ searchByCarousel }) => {
   const cleanedSearch = searchByCarousel && searchByCarousel.toLowerCase() !== "all" ? searchByCarousel : "";
@@ -23,7 +35,6 @@ const Exercises = ({ searchByCarousel }) => {
   const [loading, setLoading] = useState(false);
   const lastSearchTerm = useRef(null);
   const isFirstRender = useRef(true);
-  // const user = useSelector((state) => state.auth.user);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -36,7 +47,7 @@ const Exercises = ({ searchByCarousel }) => {
         }
 
         const data = await fetchExercises(searchValue, currentPage);
-        setExercises(data);
+        setExercises(data || []);
       } catch (err) {
         console.log(err.message);
         setErrorMessage("Something went wrong. Please try again later.");
@@ -46,6 +57,7 @@ const Exercises = ({ searchByCarousel }) => {
     };
 
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage, searchClick]);
 
   useEffect(() => {
@@ -102,6 +114,20 @@ const Exercises = ({ searchByCarousel }) => {
   }, []);
 
   const handleSearchBtnClick = useCallback(() => {
+    setCurrentPage(1);
+    setSearchClick((prev) => !prev);
+    setDropdownActive(false);
+  }, []);
+
+  const handleClearSearch = useCallback(() => {
+    setSearchValue("");
+    setCurrentPage(1);
+    setSearchClick((prev) => !prev);
+    setDropdownActive(false);
+  }, []);
+
+  const handleSelectCategory = useCallback((category) => {
+    setSearchValue(category);
     setCurrentPage(1);
     setSearchClick((prev) => !prev);
     setDropdownActive(false);
@@ -169,24 +195,33 @@ const Exercises = ({ searchByCarousel }) => {
                 ?.slice(0, 10)}
             </div>
           </div>
-          <button onClick={handleSearchBtnClick} className="search-button">
+
+          {searchValue && (
+            <button
+              onClick={handleClearSearch}
+              className="clear-exercise-search-btn"
+              title="Clear search"
+              type="button"
+            >
+              <CloseIcon style={{ fontSize: "1.1rem" }} />
+            </button>
+          )}
+
+          <button onClick={handleSearchBtnClick} className="search-button" type="button">
             <SearchIcon className="search-icon" />
           </button>
         </div>
 
         {/* Quick Muscle Filters */}
         <div className="quick-muscle-filters">
-          {["Chest", "Back", "Biceps", "Triceps", "Shoulders", "Quads", "Abs", "Cardio"].map((muscle) => {
+          {POPULAR_CATEGORIES.map((muscle) => {
             const isActive = searchValue.toLowerCase() === muscle.toLowerCase();
             return (
               <button
                 key={muscle}
-                onClick={() => {
-                  setSearchValue(muscle);
-                  setCurrentPage(1);
-                  setSearchClick(!searchClick);
-                }}
+                onClick={() => handleSelectCategory(muscle)}
                 className={`quick-filter-btn ${isActive ? "active" : ""}`}
+                type="button"
               >
                 {muscle}
               </button>
@@ -194,20 +229,19 @@ const Exercises = ({ searchByCarousel }) => {
           })}
           {searchValue && (
             <button
-              onClick={() => {
-                setSearchValue("");
-                setCurrentPage(1);
-                setSearchClick(!searchClick);
-              }}
+              onClick={handleClearSearch}
               className="quick-filter-clear-btn"
+              type="button"
             >
               Reset
             </button>
           )}
         </div>
-        <div className="exercises">
-          {loading ? (
-            Array.from({ length: 9 }).map((_, index) => (
+
+        {/* Exercises Grid or Graceful Empty State */}
+        {loading ? (
+          <div className="exercises">
+            {Array.from({ length: 9 }).map((_, index) => (
               <div key={index} className="exercise-card-skeleton">
                 <div className="skeleton-img"></div>
                 <div className="skeleton-body">
@@ -218,89 +252,77 @@ const Exercises = ({ searchByCarousel }) => {
                   <div className="skeleton-title"></div>
                 </div>
               </div>
-            ))
-          ) : (
-            exercises?.map((exercise) => {
-              return (
+            ))}
+          </div>
+        ) : exercises && exercises.length > 0 ? (
+          <>
+            <div className="exercises">
+              {exercises.map((exercise) => (
                 <ExerciseCard
                   className="exercise-card"
                   key={exercise._id}
                   exerciseData={exercise}
                   animation={true}
                 />
-              );
-            })
-          )}
-        </div>
-        <Pagination
-          page={currentPage}
-          className="pagination"
-          count={totalPages}
-          defaultPage={1}
-          onChange={handlePageChange}
-          size={isSmallScreen ? "small" : "medium"}
-          siblingCount={isSmallScreen ? 0 : 1}
-        />
+              ))}
+            </div>
+
+            {totalPages > 1 && (
+              <Pagination
+                page={currentPage}
+                className="pagination"
+                count={totalPages}
+                defaultPage={1}
+                onChange={handlePageChange}
+                size={isSmallScreen ? "small" : "medium"}
+                siblingCount={isSmallScreen ? 0 : 1}
+              />
+            )}
+          </>
+        ) : (
+          <div className="no-exercises-found-card">
+            <div className="no-ex-icon-wrap">
+              <FitnessCenterIcon className="no-ex-icon" />
+            </div>
+            <h3 className="no-ex-title">
+              No Exercises Found {searchValue ? `for "${searchValue}"` : ""}
+            </h3>
+            <p className="no-ex-desc">
+              We couldn't find any exercises matching your search. Check for typos, or explore popular targeted muscle groups below.
+            </p>
+
+            <div className="no-ex-action-buttons">
+              <button
+                className="no-ex-reset-btn"
+                onClick={handleClearSearch}
+                type="button"
+              >
+                <RestartAltIcon fontSize="small" /> View All Exercises
+              </button>
+            </div>
+
+            <div className="no-ex-suggestions-wrap">
+              <span className="suggestions-label">
+                <AutoAwesomeIcon style={{ fontSize: "0.95rem", color: "#00f0ff" }} /> Popular Targets:
+              </span>
+              <div className="suggestion-pills">
+                {POPULAR_CATEGORIES.map((cat) => (
+                  <button
+                    key={cat}
+                    className="suggestion-pill"
+                    onClick={() => handleSelectCategory(cat)}
+                    type="button"
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
 };
 
 export default Exercises;
-
-// async function findSearchResult(req, res, next) {
-//   try {
-//     let exercise = req.query.exercise;
-//     if (exercise.length === 0 || exercise === "all") {
-//       const page = req.query.page;
-//       const data = await Exercise.find()
-//         .skip(9 * (page - 1))
-//         .limit(9)
-//         .catch((err) => {
-//           // console.log(err);
-//           throw err;
-//         });
-
-//       // console.log(data);
-//       return res.json(data);
-//     } else {
-//       const page = req.query.page;
-//       if (exercise.includes("(")) {
-//         let i = exercise.indexOf("(");
-//         let j = exercise.indexOf(")");
-//         exercise =
-//           exercise.substr(0, i) +
-//           exercise.substr(i + 1, j - i - 1) +
-//           exercise.substr(j + 1);
-//       }
-
-//       // let exerciseArr = exercise.split(" ");
-//       // console.log(exercise);
-//       // exercise = exerciseArr.join(".*");
-
-//       const exercises = await Exercise.find({
-//         $or: [
-//           { name: { $regex: new RegExp(`.*${exercise}.*`, "g") } },
-//           { bodyPart: { $regex: new RegExp(`.*${exercise}.*`, "g") } },
-//           { target: { $regex: new RegExp(`.*${exercise}.*`, "g") } },
-//           { equipment: { $regex: new RegExp(`.*${exercise}.*`, "g") } },
-//           {
-//             secondaryMuscles: {
-//               $elemMatch: {
-//                 $regex: new RegExp(`.*${exercise}.*`, "g"),
-//               },
-//             },
-//           },
-//         ],
-//       })
-//         .skip(9 * (page - 1))
-//         .limit(9);
-
-//       // console.log("exercises   ", exercises);
-//       return res.json(exercises);
-//     }
-//   } catch (err) {
-//     console.log(err);
-//     next(err);
-//   }
-// }

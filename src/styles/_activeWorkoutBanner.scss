@@ -1,0 +1,308 @@
+.active-workout-top-banner {
+  position: fixed;
+  top: 75px;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 1090;
+  height: 52px;
+  background: linear-gradient(
+    90deg,
+    rgba(10, 15, 29, 0.98) 0%,
+    rgba(14, 25, 45, 0.99) 50%,
+    rgba(10, 15, 29, 0.98) 100%
+  );
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(0, 240, 255, 0.35);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 240, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 24px;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: slideDownBanner 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+
+  @media (max-width: 768px) {
+    top: 70px;
+    height: auto;
+    padding: 8px 14px;
+  }
+
+  &:hover {
+    background: linear-gradient(
+      90deg,
+      rgba(12, 20, 38, 0.98) 0%,
+      rgba(18, 32, 58, 0.99) 50%,
+      rgba(12, 20, 38, 0.98) 100%
+    );
+    border-bottom-color: rgba(0, 240, 255, 0.6);
+  }
+
+  .banner-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+
+    .live-pulse-container {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: rgba(255, 94, 98, 0.15);
+      border: 1px solid rgba(255, 94, 98, 0.4);
+      flex-shrink: 0;
+
+      .live-pulse-dot {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: rgba(255, 94, 98, 0.4);
+        animation: bannerPulse 1.8s infinite cubic-bezier(0.25, 0.8, 0.25, 1);
+      }
+
+      .live-flame-icon {
+        color: #ff5e62;
+        font-size: 1.25rem;
+        z-index: 1;
+      }
+    }
+
+    .workout-meta-group {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+
+      .banner-workout-title {
+        color: #ffffff;
+        font-weight: 800;
+        font-size: 0.95rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 260px;
+      }
+
+      .banner-status-tag {
+        color: #00f0ff;
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+    }
+  }
+
+  .banner-center {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+
+    .stopwatch-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+
+      .stopwatch-label {
+        color: #94a3b8;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+      }
+
+      .stopwatch-time {
+        color: #00f0ff;
+        font-family: monospace;
+        font-weight: 900;
+        font-size: 1.05rem;
+        letter-spacing: 0.5px;
+      }
+    }
+
+    .rest-timer-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      background: rgba(255, 152, 0, 0.15);
+      border: 1px solid rgba(255, 152, 0, 0.5);
+      color: #ffb74d;
+      font-weight: 800;
+      font-size: 0.85rem;
+      font-family: monospace;
+      animation: restPillGlow 1.5s infinite alternate ease-in-out;
+
+      .rest-icon {
+        font-size: 1rem;
+        &.spin {
+          animation: spinHalf 2s infinite linear;
+        }
+      }
+    }
+
+    .sets-counter-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #cbd5e1;
+      font-size: 0.82rem;
+      font-weight: 700;
+
+      .check-icon {
+        color: #10b981;
+        font-size: 0.95rem;
+      }
+    }
+  }
+
+  .banner-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+
+    .resume-workout-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 18px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #00f0ff 0%, #0072ff 100%);
+      color: #050811;
+      font-weight: 800;
+      font-size: 0.85rem;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(0, 240, 255, 0.35);
+      transition: all 0.2s ease;
+
+      &:hover {
+        transform: translateY(-1px) scale(1.03);
+        box-shadow: 0 6px 20px rgba(0, 240, 255, 0.5);
+      }
+    }
+
+    .discard-workout-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #94a3b8;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: rgba(239, 68, 68, 0.2);
+        border-color: rgba(239, 68, 68, 0.5);
+        color: #ef4444;
+      }
+    }
+  }
+
+  @media (max-width: 900px) {
+    padding: 8px 14px;
+    flex-wrap: wrap;
+    gap: 8px;
+
+    .banner-center {
+      order: 3;
+      width: 100%;
+      justify-content: flex-start;
+      gap: 6px;
+
+      .stopwatch-pill,
+      .rest-timer-pill,
+      .sets-counter-pill {
+        padding: 4px 10px;
+        font-size: 0.78rem;
+      }
+    }
+
+    .banner-left .workout-meta-group .banner-workout-title {
+      max-width: 180px;
+      font-size: 0.88rem;
+    }
+
+    .banner-right .resume-workout-btn {
+      padding: 6px 12px;
+      font-size: 0.8rem;
+    }
+  }
+}
+
+@keyframes slideDownBanner {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes bannerPulse {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.8;
+  }
+  70% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+
+@keyframes restPillGlow {
+  from {
+    box-shadow: 0 0 6px rgba(255, 152, 0, 0.2);
+  }
+  to {
+    box-shadow: 0 0 16px rgba(255, 152, 0, 0.6);
+  }
+}
+
+@keyframes spinHalf {
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+  100% {
+    transform: rotate(180deg);
+  }
+}
+
+body.has-active-workout-banner {
+  .main-app-content {
+    padding-top: 135px !important;
+
+    @media (max-width: 768px) {
+      padding-top: 145px !important;
+    }
+  }
+}

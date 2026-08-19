@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import { useSelector } from "react-redux";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
@@ -6,12 +6,17 @@ import WhatshotIcon from "@mui/icons-material/Whatshot";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import TimerIcon from "@mui/icons-material/Timer";
 import BarChartIcon from "@mui/icons-material/BarChart";
+import BodyMetricsTracker from "./BodyMetricsTracker";
+import { useUnitPreference } from "../utils/useUnitPreference";
 
 const ProgressAnalytics = () => {
   const user = useSelector((state) => state.auth.user);
-  const history = user?.sessionHistory || [];
+  const { weightUnit } = useUnitPreference();
+  const history = useMemo(() => user?.sessionHistory || [], [user?.sessionHistory]);
   const prs = user?.prs || [];
   const streak = user?.streak || 0;
+
+  const [sessionDisplayLimit, setSessionDisplayLimit] = useState(8);
 
   // Aggregate stats
   const stats = useMemo(() => {
@@ -75,6 +80,9 @@ const ProgressAnalytics = () => {
     );
   }, [history]);
 
+  const reversedHistory = useMemo(() => [...history].reverse(), [history]);
+  const displayedHistory = reversedHistory.slice(0, sessionDisplayLimit);
+
   return (
     <div className="progress-analytics-container">
       <div className="analytics-header">
@@ -106,7 +114,7 @@ const ProgressAnalytics = () => {
           <TrendingUpIcon className="hero-stat-icon" />
           <div className="hero-stat-body">
             <span className="hero-stat-value">{(stats.totalVolume / 1000).toFixed(1)}k</span>
-            <span className="hero-stat-label">lbs Lifted Total</span>
+            <span className="hero-stat-label">{weightUnit} Lifted Total</span>
           </div>
         </div>
         <div className="hero-stat-card">
@@ -165,7 +173,7 @@ const ProgressAnalytics = () => {
               <div className="best-stats-row">
                 <div className="best-stat">
                   <span className="best-stat-label">Volume</span>
-                  <span className="best-stat-value">{(bestWorkout.totalVolume || 0).toLocaleString()} lbs</span>
+                  <span className="best-stat-value">{(bestWorkout.totalVolume || 0).toLocaleString()} {weightUnit}</span>
                 </div>
                 <div className="best-stat">
                   <span className="best-stat-label">Duration</span>
@@ -227,15 +235,15 @@ const ProgressAnalytics = () => {
           )}
         </div>
 
-        {/* Set completion trend */}
+        {/* Set completion trend with pagination */}
         <div className="analytics-card completion-card">
           <div className="analytics-card-header">
             <TrendingUpIcon className="card-icon" />
-            <h3>Recent Sessions</h3>
+            <h3>Session History Log ({history.length})</h3>
           </div>
           {history.length > 0 ? (
             <div className="completion-list">
-              {history.slice().reverse().slice(0, 8).map((log, i) => {
+              {displayedHistory.map((log, i) => {
                 const pct = log.totalSets > 0 ? Math.round((log.completedSets / log.totalSets) * 100) : 0;
                 return (
                   <div className="completion-row" key={i}>
@@ -252,6 +260,15 @@ const ProgressAnalytics = () => {
                   </div>
                 );
               })}
+
+              {reversedHistory.length > sessionDisplayLimit && (
+                <button
+                  className="sessions-show-more-btn"
+                  onClick={() => setSessionDisplayLimit((prev) => prev + 10)}
+                >
+                  Show More Sessions ({reversedHistory.length - sessionDisplayLimit} remaining)
+                </button>
+              )}
             </div>
           ) : (
             <div className="analytics-empty">
@@ -260,6 +277,9 @@ const ProgressAnalytics = () => {
           )}
         </div>
       </div>
+
+      {/* Body Composition & Weight History Timeline */}
+      <BodyMetricsTracker mode="full" />
     </div>
   );
 };
