@@ -23,7 +23,29 @@ const UserProfileMainSection = () => {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const user = useSelector((state) => state.auth.user);
 
-  const resolvedPage = (page || (window.location.pathname.includes("workout") ? "myworkouts" : "dashboard")).toLowerCase();
+  const pathParts = window.location.pathname.split("/").filter(Boolean);
+  let detectedPage = page;
+  if (!detectedPage) {
+    if (pathParts.includes("fitnesstools") || pathParts.includes("tools")) {
+      detectedPage = "fitnesstools";
+    } else if (pathParts.includes("dashboard")) {
+      detectedPage = "dashboard";
+    } else if (pathParts.includes("analytics")) {
+      detectedPage = "analytics";
+    } else if (pathParts.includes("history") || pathParts.includes("workouthistory")) {
+      detectedPage = "history";
+    } else if (pathParts.includes("myprofile") || pathParts.includes("profile")) {
+      detectedPage = "myprofile";
+    } else if (pathParts.includes("settings")) {
+      detectedPage = "settings";
+    } else if (pathParts.includes("workouts") || pathParts.includes("myworkouts")) {
+      detectedPage = "myworkouts";
+    } else {
+      detectedPage = "dashboard";
+    }
+  }
+
+  const resolvedPage = (detectedPage || "dashboard").toLowerCase();
 
   // If logged in and username in URL doesn't match the current authenticated username, redirect cleanly
   useEffect(() => {
@@ -35,17 +57,21 @@ const UserProfileMainSection = () => {
   const components = {
     dashboard: <TrainingDashboard />,
     myprofile: <MyProfile />,
+    profile: <MyProfile />,
     myworkouts: <MyWorkouts />,
+    workouts: <MyWorkouts />,
     myfavorite: <MyFavorite />,
     analytics: <ProgressAnalytics />,
     history: <WorkoutHistory />,
     workouthistory: <WorkoutHistory />,
     fitnesstools: <FitnessTools />,
+    tools: <FitnessTools />,
+    calculator: <FitnessTools />,
     settings: <Settings />,
   };
 
   // Pages that are public (can be viewed without signing in)
-  const isPublicPage = resolvedPage === "fitnesstools" || resolvedPage === "myworkouts";
+  const isPublicPage = resolvedPage === "fitnesstools" || resolvedPage === "tools" || resolvedPage === "calculator" || resolvedPage === "myworkouts" || resolvedPage === "workouts";
 
   // Auth gate for protected pages
   if (!isLoggedIn && !isPublicPage) {

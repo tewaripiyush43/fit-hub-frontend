@@ -58,6 +58,10 @@ const SignupModal = () => {
       setErrorMessage("Please agree to the terms and conditions");
       return;
     }
+    if (!inputs.password || inputs.password.length < 8) {
+      setErrorMessage("Password must be at least 8 characters long");
+      return;
+    }
     sendRegisterRequest();
   };
 

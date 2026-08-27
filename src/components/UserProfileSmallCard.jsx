@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { updatePRs } from "../api/userApi";
-import { toast } from "react-toastify";
+import { toast } from "../helpers/errorPopUp";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
@@ -30,21 +30,7 @@ const UserProfileSmallCard = ({ hideHeader }) => {
   const user = useSelector((state) => state.auth.user);
   const { weightUnit, isMetric } = useUnitPreference();
 
-  const defaultPRs = isMetric
-    ? [
-        { exercise: "Deadlift", maxWeight: 140, goalWeight: 180, unit: "kg" },
-        { exercise: "Bench Press", maxWeight: 100, goalWeight: 140, unit: "kg" },
-        { exercise: "Squat", maxWeight: 140, goalWeight: 180, unit: "kg" },
-        { exercise: "Overhead Press", maxWeight: 60, goalWeight: 80, unit: "kg" },
-      ]
-    : [
-        { exercise: "Deadlift", maxWeight: 300, goalWeight: 400, unit: "lbs" },
-        { exercise: "Bench Press", maxWeight: 225, goalWeight: 300, unit: "lbs" },
-        { exercise: "Squat", maxWeight: 315, goalWeight: 400, unit: "lbs" },
-        { exercise: "Overhead Press", maxWeight: 135, goalWeight: 185, unit: "lbs" },
-      ];
-
-  const prs = user?.prs && user.prs.length > 0 ? user.prs : defaultPRs;
+  const prs = user?.prs && Array.isArray(user.prs) ? user.prs : [];
 
   const [editIndex, setEditIndex] = useState(null);
   const [editMaxWeight, setEditMaxWeight] = useState("");

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -8,7 +8,7 @@ import {
   cloneWorkout,
 } from "../api/workoutApi";
 import { portalActions } from "../store/index";
-import { toast } from "react-toastify";
+import { toast } from "../helpers/errorPopUp";
 
 import SearchIcon from "@mui/icons-material/Search";
 import ClearIcon from "@mui/icons-material/Clear";
@@ -23,6 +23,10 @@ import LayersIcon from "@mui/icons-material/Layers";
 import WhatshotIcon from "@mui/icons-material/Whatshot";
 import PersonIcon from "@mui/icons-material/Person";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
+import ViewCarouselIcon from "@mui/icons-material/ViewCarousel";
+import ViewModuleIcon from "@mui/icons-material/ViewModule";
 import CircularProgress from "@mui/material/CircularProgress";
 
 import "../styles/_globalWorkouts.scss";
@@ -51,6 +55,10 @@ const GlobalWorkouts = () => {
   const user = useSelector((state) => state.auth.user);
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 
+  // Active View Tab on Mobile & Desktop
+  const [activeTab, setActiveTab] = useState("all"); // 'all' | 'official' | 'community' | 'wod'
+  const [signatureViewMode, setSignatureViewMode] = useState("carousel"); // 'carousel' | 'grid'
+
   // States
   const [dailyWOD, setDailyWOD] = useState(null);
   const [officialWorkouts, setOfficialWorkouts] = useState([]);
@@ -65,6 +73,7 @@ const GlobalWorkouts = () => {
   const [selectedDifficulty, setSelectedDifficulty] = useState("all");
   const [sortBy, setSortBy] = useState("popular");
   const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(12);
   const [totalPages, setTotalPages] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
 
@@ -98,7 +107,7 @@ const GlobalWorkouts = () => {
         difficulty: selectedDifficulty,
         sort: sortBy,
         page,
-        limit: 12,
+        limit,
       });
       setExploreWorkouts(data.workouts || []);
       setTotalPages(data.totalPages || 1);
@@ -108,12 +117,12 @@ const GlobalWorkouts = () => {
     } finally {
       setLoadingExplore(false);
     }
-  }, [searchTerm, selectedMuscle, selectedDifficulty, sortBy, page]);
+  }, [searchTerm, selectedMuscle, selectedDifficulty, sortBy, page, limit]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       loadExplore();
-    }, 250);
+    }, 200);
     return () => clearTimeout(timer);
   }, [loadExplore]);
 
@@ -177,6 +186,26 @@ const GlobalWorkouts = () => {
     return days[new Date().getDay()];
   };
 
+  // Filtered official signatures if searching
+  const filteredOfficials = useMemo(() => {
+    if (!searchTerm && selectedMuscle === "all" && selectedDifficulty === "all") {
+      return officialWorkouts;
+    }
+    return officialWorkouts.filter((w) => {
+      const matchSearch =
+        !searchTerm ||
+        w.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        w.description?.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchMuscle =
+        selectedMuscle === "all" ||
+        w.targetMuscleGroup?.toLowerCase() === selectedMuscle.toLowerCase();
+      const matchDiff =
+        selectedDifficulty === "all" ||
+        w.difficulty?.toLowerCase() === selectedDifficulty.toLowerCase();
+      return matchSearch && matchMuscle && matchDiff;
+    });
+  }, [officialWorkouts, searchTerm, selectedMuscle, selectedDifficulty]);
+
   return (
     <div className="global-workouts-container">
       {/* Header Section */}
@@ -187,113 +216,222 @@ const GlobalWorkouts = () => {
         </div>
         <h1 className="global-title">Train Smarter with Master Splits & Daily WOD</h1>
         <p className="global-subtitle">
-          Experience 10 FitHub Master Signature Workouts, crush today's featured Workout of the Day, or discover routines created by the community and AI.
+          Discover FitHub Master Signature Splits, crush today's Workout of the Day, or explore community and AI-generated routines.
         </p>
+
+        {/* Mobile & Tablet Section Switcher Tabs */}
+        <div className="global-section-tabs">
+          <button
+            type="button"
+            className={activeTab === "all" ? "active" : ""}
+            onClick={() => setActiveTab("all")}
+          >
+            ⭐ All Highlights
+          </button>
+          <button
+            type="button"
+            className={activeTab === "official" ? "active" : ""}
+            onClick={() => setActiveTab("official")}
+          >
+            🛡️ Master Splits ({officialWorkouts.length})
+          </button>
+          <button
+            type="button"
+            className={activeTab === "community" ? "active" : ""}
+            onClick={() => setActiveTab("community")}
+          >
+            🌐 Community & AI ({totalCount})
+          </button>
+          {dailyWOD && (
+            <button
+              type="button"
+              className={activeTab === "wod" ? "active" : ""}
+              onClick={() => setActiveTab("wod")}
+            >
+              ⚡ Today's WOD
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* 🔍 TOP STICKY SEARCH & FILTERS BAR (Instant Access Without Scrolling) */}
+      <div className="top-filter-panel">
+        <div className="search-bar-wrap">
+          <SearchIcon className="search-icon" />
+          <input
+            type="text"
+            placeholder="Search all workouts by name, muscle, tags, or equipment..."
+            value={searchTerm}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setPage(1);
+            }}
+          />
+          {searchTerm && (
+            <button
+              className="clear-search-btn"
+              onClick={() => {
+                setSearchTerm("");
+                setPage(1);
+              }}
+            >
+              <ClearIcon style={{ fontSize: "1rem" }} />
+            </button>
+          )}
+        </div>
+
+        <div className="dropdowns-and-sort">
+          <select
+            value={selectedMuscle}
+            onChange={(e) => {
+              setSelectedMuscle(e.target.value);
+              setPage(1);
+            }}
+          >
+            {MUSCLE_FILTER_OPTIONS.map((opt) => (
+              <option key={opt.id} value={opt.id}>
+                {opt.label}
+              </option>
+            ))}
+          </select>
+
+          <select
+            value={selectedDifficulty}
+            onChange={(e) => {
+              setSelectedDifficulty(e.target.value);
+              setPage(1);
+            }}
+          >
+            {DIFFICULTY_OPTIONS.map((opt) => (
+              <option key={opt.id} value={opt.id}>
+                {opt.label}
+              </option>
+            ))}
+          </select>
+
+          <select
+            value={sortBy}
+            onChange={(e) => {
+              setSortBy(e.target.value);
+              setPage(1);
+            }}
+          >
+            <option value="popular">🔥 Most Popular</option>
+            <option value="rating">⭐ Highest Rated</option>
+            <option value="newest">🕒 Newest First</option>
+            <option value="duration_asc">⏱️ Shortest First</option>
+            <option value="duration_desc">⏱️ Longest First</option>
+          </select>
+        </div>
       </div>
 
       {/* ⭐ Hero Section: Pinned Workout of the Day (WOD) */}
-      {loadingWOD ? (
-        <div className="wod-hero-loading">
-          <CircularProgress size={36} style={{ color: "#00f0ff" }} />
-          <span>Curating today's Workout of the Day...</span>
-        </div>
-      ) : dailyWOD ? (
-        <div className="wod-hero-card">
-          <div className="wod-hero-left">
-            <div className="wod-top-meta">
-              <span className="wod-ribbon">
-                <StarIcon style={{ fontSize: "1rem" }} /> WORKOUT OF THE DAY
-              </span>
-              <span className="wod-day-pill">⚡ {getWODDayName()}</span>
+      {(activeTab === "all" || activeTab === "wod") && (
+        <>
+          {loadingWOD ? (
+            <div className="wod-hero-loading">
+              <CircularProgress size={32} style={{ color: "#00f0ff" }} />
+              <span>Curating today's Workout of the Day...</span>
             </div>
-
-            <h2 className="wod-title" onClick={() => handleViewWorkout(dailyWOD._id)}>
-              {dailyWOD.name}
-            </h2>
-            <p className="wod-desc">{dailyWOD.description}</p>
-
-            <div className="wod-stats-row">
-              <div className="stat-item">
-                <AccessTimeIcon className="stat-icon" />
-                <span>{dailyWOD.estimatedDuration || 45} mins</span>
-              </div>
-              <div className="stat-item">
-                <LayersIcon className="stat-icon" />
-                <span>{dailyWOD.exerciseCount || dailyWOD.exercises?.length || 0} Exercises</span>
-              </div>
-              <div className="stat-item capitalize">
-                <WhatshotIcon className="stat-icon" />
-                <span>{dailyWOD.difficulty || "Intermediate"}</span>
-              </div>
-              <div className="stat-item capitalize">
-                <FitnessCenterIcon className="stat-icon" />
-                <span>{dailyWOD.targetMuscleGroup?.replace("_", " ") || "Full Body"}</span>
-              </div>
-            </div>
-
-            {/* Exercise Preview Badges */}
-            <div className="wod-exercises-preview">
-              <span className="preview-label">Includes:</span>
-              <div className="preview-chips-wrap">
-                {(dailyWOD.exercises || []).slice(0, 4).map((ex, idx) => (
-                  <span key={idx} className="preview-chip">
-                    {ex.name || ex}
+          ) : dailyWOD ? (
+            <div className="wod-hero-card">
+              <div className="wod-hero-left">
+                <div className="wod-top-meta">
+                  <span className="wod-ribbon">
+                    <StarIcon style={{ fontSize: "0.95rem" }} /> WORKOUT OF THE DAY
                   </span>
-                ))}
-                {(dailyWOD.exercises || []).length > 4 && (
-                  <span className="preview-chip more">
-                    +{(dailyWOD.exercises || []).length - 4} more
-                  </span>
-                )}
+                  <span className="wod-day-pill">⚡ {getWODDayName()}</span>
+                </div>
+
+                <h2 className="wod-title" onClick={() => handleViewWorkout(dailyWOD._id)}>
+                  {dailyWOD.name}
+                </h2>
+                <p className="wod-desc">{dailyWOD.description}</p>
+
+                <div className="wod-stats-row">
+                  <div className="stat-item">
+                    <AccessTimeIcon className="stat-icon" />
+                    <span>{dailyWOD.estimatedDuration || 45} mins</span>
+                  </div>
+                  <div className="stat-item">
+                    <LayersIcon className="stat-icon" />
+                    <span>{dailyWOD.exerciseCount || dailyWOD.exercises?.length || 0} Exercises</span>
+                  </div>
+                  <div className="stat-item capitalize">
+                    <WhatshotIcon className="stat-icon" />
+                    <span>{dailyWOD.difficulty || "Intermediate"}</span>
+                  </div>
+                  <div className="stat-item capitalize">
+                    <FitnessCenterIcon className="stat-icon" />
+                    <span>{dailyWOD.targetMuscleGroup?.replace("_", " ") || "Full Body"}</span>
+                  </div>
+                </div>
+
+                {/* Exercise Preview Badges */}
+                <div className="wod-exercises-preview">
+                  <span className="preview-label">Includes:</span>
+                  <div className="preview-chips-wrap">
+                    {(dailyWOD.exercises || []).slice(0, 4).map((ex, idx) => (
+                      <span key={idx} className="preview-chip">
+                        {ex.name || ex}
+                      </span>
+                    ))}
+                    {(dailyWOD.exercises || []).length > 4 && (
+                      <span className="preview-chip more">
+                        +{(dailyWOD.exercises || []).length - 4} more
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Hero Action Buttons */}
+                <div className="wod-actions-row">
+                  <button
+                    className="wod-start-btn"
+                    onClick={() => handleStartWorkout(dailyWOD._id)}
+                  >
+                    <PlayArrowIcon /> Start Today's WOD
+                  </button>
+                  <button
+                    className="wod-view-btn"
+                    onClick={() => handleViewWorkout(dailyWOD._id)}
+                    title="View full routine breakdown & exercises"
+                  >
+                    <VisibilityIcon /> View Exercises
+                  </button>
+                  <button
+                    className={`wod-clone-btn ${isWorkoutSaved(dailyWOD) ? "saved" : ""}`}
+                    onClick={(e) => handleCloneWorkout(e, dailyWOD)}
+                    disabled={cloningId === dailyWOD._id}
+                  >
+                    {cloningId === dailyWOD._id ? (
+                      <CircularProgress size={16} color="inherit" />
+                    ) : isWorkoutSaved(dailyWOD) ? (
+                      <BookmarkIcon style={{ color: "#00f0ff" }} />
+                    ) : (
+                      <BookmarkBorderIcon />
+                    )}
+                    <span>{isWorkoutSaved(dailyWOD) ? "Saved" : "Save to My Workouts"}</span>
+                  </button>
+                </div>
+              </div>
+
+              <div className="wod-hero-right">
+                <div className="wod-graphic-badge">
+                  <VerifiedIcon className="graphic-icon" />
+                  <div className="graphic-text">
+                    <strong>FitHub Verified</strong>
+                    <span>Periodized Split</span>
+                  </div>
+                </div>
               </div>
             </div>
+          ) : null}
+        </>
+      )}
 
-            {/* Hero Action Buttons */}
-            <div className="wod-actions-row">
-              <button
-                className="wod-start-btn"
-                onClick={() => handleStartWorkout(dailyWOD._id)}
-              >
-                <PlayArrowIcon /> Start Today's WOD
-              </button>
-              <button
-                className="wod-view-btn"
-                onClick={() => handleViewWorkout(dailyWOD._id)}
-                title="View full routine breakdown & exercises"
-              >
-                <VisibilityIcon /> View Exercises
-              </button>
-              <button
-                className={`wod-clone-btn ${isWorkoutSaved(dailyWOD) ? "saved" : ""}`}
-                onClick={(e) => handleCloneWorkout(e, dailyWOD)}
-                disabled={cloningId === dailyWOD._id}
-              >
-                {cloningId === dailyWOD._id ? (
-                  <CircularProgress size={16} color="inherit" />
-                ) : isWorkoutSaved(dailyWOD) ? (
-                  <BookmarkIcon style={{ color: "#00f0ff" }} />
-                ) : (
-                  <BookmarkBorderIcon />
-                )}
-                <span>{isWorkoutSaved(dailyWOD) ? "Saved in Library" : "Save to My Workouts"}</span>
-              </button>
-            </div>
-          </div>
-
-          <div className="wod-hero-right">
-            <div className="wod-graphic-badge">
-              <VerifiedIcon className="graphic-icon" />
-              <div className="graphic-text">
-                <strong>FitHub Verified</strong>
-                <span>Periodized Split</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      ) : null}
-
-      {/* 🛡️ Section: 10 Official FitHub Master Signatures */}
-      {officialWorkouts && officialWorkouts.length > 0 && (
+      {/* 🛡️ Section: FitHub Master Signatures */}
+      {(activeTab === "all" || activeTab === "official") && officialWorkouts.length > 0 && (
         <div className="official-signatures-section">
           <div className="section-title-row">
             <div className="section-title-left">
@@ -305,10 +443,32 @@ const GlobalWorkouts = () => {
                 </p>
               </div>
             </div>
+
+            <div className="view-mode-toggle">
+              <button
+                type="button"
+                className={signatureViewMode === "carousel" ? "active" : ""}
+                onClick={() => setSignatureViewMode("carousel")}
+                title="Swipeable Carousel View"
+              >
+                <ViewCarouselIcon style={{ fontSize: "1.1rem" }} />
+                <span>Swipe Rail</span>
+              </button>
+              <button
+                type="button"
+                className={signatureViewMode === "grid" ? "active" : ""}
+                onClick={() => setSignatureViewMode("grid")}
+                title="Full Grid View"
+              >
+                <ViewModuleIcon style={{ fontSize: "1.1rem" }} />
+                <span>All Cards</span>
+              </button>
+            </div>
           </div>
 
-          <div className="official-cards-grid">
-            {officialWorkouts.map((workout) => (
+          {/* Swipe Rail or Grid depending on viewMode */}
+          <div className={`official-cards-container ${signatureViewMode === "carousel" ? "swipe-rail" : "cards-grid"}`}>
+            {filteredOfficials.map((workout) => (
               <div
                 key={workout._id}
                 className="official-workout-card"
@@ -316,7 +476,7 @@ const GlobalWorkouts = () => {
               >
                 <div className="card-top-row">
                   <span className="official-badge">
-                    <VerifiedIcon style={{ fontSize: "0.85rem" }} /> Official
+                    <VerifiedIcon style={{ fontSize: "0.82rem" }} /> Official
                   </span>
                   <span className="muscle-pill capitalize">
                     {workout.targetMuscleGroup?.replace("_", " ")}
@@ -328,7 +488,7 @@ const GlobalWorkouts = () => {
 
                 <div className="card-meta-row">
                   <span>⏱️ {workout.estimatedDuration || 45}m</span>
-                  <span>🏋️ {workout.exerciseCount || workout.exercises?.length || 0} Exercises</span>
+                  <span>🏋️ {workout.exerciseCount || workout.exercises?.length || 0} Ex</span>
                   <span className="capitalize">⚡ {workout.difficulty}</span>
                 </div>
 
@@ -340,7 +500,7 @@ const GlobalWorkouts = () => {
                       handleStartWorkout(workout._id);
                     }}
                   >
-                    <PlayArrowIcon style={{ fontSize: "1rem" }} /> Start
+                    <PlayArrowIcon style={{ fontSize: "0.95rem" }} /> Start
                   </button>
                   <button
                     className={`card-clone-btn ${isWorkoutSaved(workout) ? "saved" : ""}`}
@@ -349,11 +509,11 @@ const GlobalWorkouts = () => {
                     title={isWorkoutSaved(workout) ? "Already in your library" : "Save to My Workouts"}
                   >
                     {cloningId === workout._id ? (
-                      <CircularProgress size={14} color="inherit" />
+                      <CircularProgress size={13} color="inherit" />
                     ) : isWorkoutSaved(workout) ? (
-                      <BookmarkIcon style={{ fontSize: "1rem", color: "#00f0ff" }} />
+                      <BookmarkIcon style={{ fontSize: "0.95rem", color: "#00f0ff" }} />
                     ) : (
-                      <BookmarkBorderIcon style={{ fontSize: "1rem" }} />
+                      <BookmarkBorderIcon style={{ fontSize: "0.95rem" }} />
                     )}
                   </button>
                 </div>
@@ -364,244 +524,169 @@ const GlobalWorkouts = () => {
       )}
 
       {/* 🌐 Section: Public & Community Explorer */}
-      <div className="explore-community-section">
-        <div className="section-title-row">
-          <div className="section-title-left">
-            <LayersIcon className="section-badge-icon community" />
-            <div>
-              <h3 className="section-heading">Explore All Public & AI Routines</h3>
-              <p className="section-subheading">
-                {totalCount} public routines shared by coaches, community members, and AI.
-              </p>
+      {(activeTab === "all" || activeTab === "community") && (
+        <div className="explore-community-section">
+          <div className="section-title-row">
+            <div className="section-title-left">
+              <LayersIcon className="section-badge-icon community" />
+              <div>
+                <h3 className="section-heading">Public & AI Community Routines</h3>
+                <p className="section-subheading">
+                  Showing {exploreWorkouts.length} of {totalCount} routines shared by coaches, community, and AI.
+                </p>
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Filter Controls Bar */}
-        <div className="explore-filter-controls">
-          {/* Search Input */}
-          <div className="search-bar-wrap">
-            <SearchIcon className="search-icon" />
-            <input
-              type="text"
-              placeholder="Search routines by name, muscle, or tags (e.g. Dumbbell, Hypertrophy)..."
-              value={searchTerm}
-              onChange={(e) => {
-                setSearchTerm(e.target.value);
-                setPage(1);
-              }}
-            />
-            {searchTerm && (
+          {/* Community Workouts Grid */}
+          {loadingExplore ? (
+            <div className="explore-loading-state">
+              <CircularProgress size={36} style={{ color: "#00f0ff" }} />
+              <span>Fetching global routines...</span>
+            </div>
+          ) : exploreWorkouts.length === 0 ? (
+            <div className="explore-empty-state">
+              <FitnessCenterIcon style={{ fontSize: "3rem", color: "#64748b" }} />
+              <h4>No routines found</h4>
+              <p>Try searching for a different muscle, tag, or clearing filters.</p>
               <button
-                className="clear-search-btn"
+                className="reset-filters-btn"
                 onClick={() => {
                   setSearchTerm("");
+                  setSelectedMuscle("all");
+                  setSelectedDifficulty("all");
                   setPage(1);
                 }}
               >
-                <ClearIcon style={{ fontSize: "1rem" }} />
+                Clear All Filters
               </button>
-            )}
-          </div>
-
-          {/* Sort Dropdown */}
-          <div className="sort-dropdown-wrap">
-            <label>Sort:</label>
-            <select
-              value={sortBy}
-              onChange={(e) => {
-                setSortBy(e.target.value);
-                setPage(1);
-              }}
-            >
-              <option value="popular">Most Popular (Saved)</option>
-              <option value="newest">Newest First</option>
-              <option value="official">Official First</option>
-              <option value="duration">Shortest Duration</option>
-            </select>
-          </div>
-        </div>
-
-        {/* Muscle Filter Chips */}
-        <div className="filter-chips-scroll">
-          {MUSCLE_FILTER_OPTIONS.map((opt) => (
-            <button
-              key={opt.id}
-              className={`filter-chip ${selectedMuscle === opt.id ? "active" : ""}`}
-              onClick={() => {
-                setSelectedMuscle(opt.id);
-                setPage(1);
-              }}
-            >
-              {opt.label}
-            </button>
-          ))}
-        </div>
-
-        {/* Difficulty Filter Chips */}
-        <div className="filter-chips-sub-row">
-          <span className="filter-label">Difficulty:</span>
-          {DIFFICULTY_OPTIONS.map((diff) => (
-            <button
-              key={diff.id}
-              className={`sub-filter-chip ${selectedDifficulty === diff.id ? "active" : ""}`}
-              onClick={() => {
-                setSelectedDifficulty(diff.id);
-                setPage(1);
-              }}
-            >
-              {diff.label}
-            </button>
-          ))}
-        </div>
-
-        {/* Results Grid */}
-        {loadingExplore ? (
-          <div className="explore-loading-grid">
-            <CircularProgress size={32} style={{ color: "#00f0ff" }} />
-            <span>Discovering workouts...</span>
-          </div>
-        ) : (() => {
-          const communityWorkouts = exploreWorkouts.filter((w) => !w.isOfficial);
-          if (communityWorkouts.length === 0) {
-            return (
-              <div className="no-explore-found-card">
-                <FitnessCenterIcon className="no-results-icon" />
-                <h4>No community routines found</h4>
-                <p>Try clearing your search query or generate a custom routine with AI.</p>
-                <button
-                  className="reset-filters-btn"
-                  onClick={() => {
-                    setSearchTerm("");
-                    setSelectedMuscle("all");
-                    setSelectedDifficulty("all");
-                  }}
+            </div>
+          ) : (
+            <div className="explore-cards-grid">
+              {exploreWorkouts.map((workout) => (
+                <div
+                  key={workout._id}
+                  className="explore-workout-card"
+                  onClick={() => handleViewWorkout(workout._id)}
                 >
-                  Reset Filters
-                </button>
-              </div>
-            );
-          }
-
-          return (
-            <div className="explore-workouts-grid">
-              {communityWorkouts.map((workout) => {
-                const isOfficial = workout.isOfficial;
-                return (
-                  <div
-                    key={workout._id}
-                    className={`explore-card ${isOfficial ? "official-border" : ""}`}
-                    onClick={() => handleViewWorkout(workout._id)}
-                  >
-                  <div className="explore-card-top">
-                    {isOfficial ? (
-                      <span className="card-badge official">
-                        <VerifiedIcon style={{ fontSize: "0.8rem" }} /> Official
-                      </span>
-                    ) : workout.createdBy ? (
-                      <div className="card-author">
-                        {workout.createdBy.profilePictureURL ? (
-                          <img
-                            src={workout.createdBy.profilePictureURL}
-                            alt=""
-                            className="author-avatar"
-                          />
-                        ) : (
-                          <PersonIcon className="author-icon" />
-                        )}
-                        <span className="author-name">
-                          {workout.createdBy.username || "FitHub Member"}
-                        </span>
-                      </div>
-                    ) : (
-                      <span className="card-badge ai">⚡ AI Generated</span>
-                    )}
-
-                    <span className="card-muscle-tag capitalize">
-                      {workout.targetMuscleGroup?.replace("_", " ") || "Full Body"}
+                  <div className="card-top-row">
+                    <span className="creator-pill">
+                      <PersonIcon style={{ fontSize: "0.85rem" }} />
+                      <span>{workout.creatorUsername || workout.creator?.username || "Coach"}</span>
                     </span>
+                    <span className="difficulty-pill capitalize">{workout.difficulty || "All"}</span>
                   </div>
 
-                  <h4 className="explore-card-title">{workout.name}</h4>
-                  <p className="explore-card-desc">{workout.description || "Custom training routine."}</p>
+                  <h4 className="card-title">{workout.name}</h4>
+                  <p className="card-desc">{workout.description || "Balanced hypertrophy and strength routine."}</p>
 
-                  {/* Tags */}
-                  {workout.tags && workout.tags.length > 0 && (
-                    <div className="card-tags-list">
-                      {workout.tags.slice(0, 3).map((tag, tIdx) => (
-                        <span key={tIdx} className="mini-tag">
-                          #{tag}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-
-                  <div className="explore-card-stats">
-                    <span>⏱️ {workout.estimatedDuration || 45}m</span>
-                    <span>🏋️ {workout.exerciseCount || workout.exercises?.length || 0} Ex.</span>
-                    <span className="capitalize">⚡ {workout.difficulty || "Intermediate"}</span>
+                  <div className="card-meta-row">
+                    <span>⏱️ {workout.estimatedDuration || 45} mins</span>
+                    <span>🏋️ {workout.exerciseCount || workout.exercises?.length || 0} Exercises</span>
                   </div>
 
-                  <div className="explore-card-footer">
-                    <span className="card-saves-count">
-                      💾 {workout.clonesCount || 0} saves
-                    </span>
-                    <div className="card-action-btns">
-                      <button
-                        className={`quick-clone-btn ${isWorkoutSaved(workout) ? "saved" : ""}`}
-                        onClick={(e) => handleCloneWorkout(e, workout)}
-                        disabled={cloningId === workout._id}
-                        title={isWorkoutSaved(workout) ? "Already in your library" : "Save to My Workouts"}
-                      >
-                        {cloningId === workout._id ? (
-                          <CircularProgress size={14} color="inherit" />
-                        ) : isWorkoutSaved(workout) ? (
-                          <BookmarkIcon fontSize="small" style={{ color: "#00f0ff" }} />
-                        ) : (
-                          <BookmarkBorderIcon fontSize="small" />
-                        )}
-                      </button>
-                      <button
-                        className="quick-start-btn"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleStartWorkout(workout._id);
-                        }}
-                      >
-                        <PlayArrowIcon fontSize="small" /> Start
-                      </button>
-                    </div>
+                  <div className="card-actions-row">
+                    <button
+                      className="card-start-btn"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleStartWorkout(workout._id);
+                      }}
+                    >
+                      <PlayArrowIcon style={{ fontSize: "1rem" }} /> Start
+                    </button>
+                    <button
+                      className={`card-clone-btn ${isWorkoutSaved(workout) ? "saved" : ""}`}
+                      onClick={(e) => handleCloneWorkout(e, workout)}
+                      disabled={cloningId === workout._id}
+                      title={isWorkoutSaved(workout) ? "Saved in your library" : "Save to My Workouts"}
+                    >
+                      {cloningId === workout._id ? (
+                        <CircularProgress size={14} color="inherit" />
+                      ) : isWorkoutSaved(workout) ? (
+                        <BookmarkIcon style={{ fontSize: "1rem", color: "#00f0ff" }} />
+                      ) : (
+                        <BookmarkBorderIcon style={{ fontSize: "1rem" }} />
+                      )}
+                    </button>
                   </div>
                 </div>
-              );
-            })}
-          </div>
-        );
-      })()}
+              ))}
+            </div>
+          )}
 
-        {/* Pagination Controls */}
-        {totalPages > 1 && (
-          <div className="explore-pagination-bar">
-            <button
-              className="page-nav-btn"
-              disabled={page <= 1}
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
-            >
-              ← Previous
-            </button>
-            <span className="page-indicator">
-              Page {page} of {totalPages}
-            </span>
-            <button
-              className="page-nav-btn"
-              disabled={page >= totalPages}
-              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-            >
-              Next →
-            </button>
-          </div>
-        )}
-      </div>
+          {/* 📄 NUMBERED RESPONSIVE PAGINATION BAR */}
+          {totalPages > 1 && (
+            <div className="responsive-pagination-bar">
+              <div className="pagination-info">
+                <span>
+                  Page <strong>{page}</strong> of <strong>{totalPages}</strong> ({totalCount} total)
+                </span>
+              </div>
+
+              <div className="pagination-buttons">
+                <button
+                  type="button"
+                  className="page-nav-btn"
+                  disabled={page <= 1}
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                >
+                  <NavigateBeforeIcon />
+                  <span>Prev</span>
+                </button>
+
+                {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                  let pageNum;
+                  if (totalPages <= 5) {
+                    pageNum = i + 1;
+                  } else if (page <= 3) {
+                    pageNum = i + 1;
+                  } else if (page >= totalPages - 2) {
+                    pageNum = totalPages - 4 + i;
+                  } else {
+                    pageNum = page - 2 + i;
+                  }
+                  return (
+                    <button
+                      key={pageNum}
+                      type="button"
+                      className={`page-num-btn ${page === pageNum ? "active" : ""}`}
+                      onClick={() => setPage(pageNum)}
+                    >
+                      {pageNum}
+                    </button>
+                  );
+                })}
+
+                <button
+                  type="button"
+                  className="page-nav-btn"
+                  disabled={page >= totalPages}
+                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                >
+                  <span>Next</span>
+                  <NavigateNextIcon />
+                </button>
+              </div>
+
+              <div className="page-size-selector">
+                <span>Per page:</span>
+                <select
+                  value={limit}
+                  onChange={(e) => {
+                    setLimit(Number(e.target.value));
+                    setPage(1);
+                  }}
+                >
+                  <option value={12}>12</option>
+                  <option value={24}>24</option>
+                  <option value={48}>48</option>
+                </select>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };

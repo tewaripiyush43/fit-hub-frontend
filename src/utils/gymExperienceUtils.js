@@ -8,30 +8,18 @@
  * - Muscle Fatigue & Recovery Heatmap Calculator
  */
 
-// ── 1. PRE-WORKOUT DYNAMIC WARM-UP ROUTINES ───────────────────────────────────
+// ── 1. PRE-WORKOUT DYNAMIC WARM-UP ROUTINES (COMPREHENSIVE FOR ALL MUSCLES) ───
 export const WARMUP_ROUTINES_BY_MUSCLE = {
   chest: [
     {
-      name: "Arm Circles (Forward & Backward)",
-      duration: "30s",
-      reps: "15 each way",
-      target: "Shoulders, Rotator Cuff & Upper Chest",
-      instructions: [
-        "Extend arms straight out to sides parallel to the ground at shoulder height.",
-        "Begin making small, controlled circles forward, gradually increasing circle diameter.",
-        "Reverse direction after 15 repetitions to open up the glenohumeral joint capsule.",
-      ],
-      cue: "Keep core braced and shoulders depressed — avoid shrugging your traps up to your ears.",
-    },
-    {
-      name: "Band Pull-Aparts / Chest Openers",
+      name: "Band Pull-Aparts & Chest Openers",
       duration: "45s",
       reps: "15-20 reps",
-      target: "Anterior Chest, Scapular Retractors & Rear Delts",
+      target: "Pectoralis Major, Anterior Delts & Scapular Retractors",
       instructions: [
-        "Hold resistance band (or arms outstretched) at shoulder height in front of chest.",
+        "Hold resistance band at shoulder height in front of chest.",
         "Squeeze shoulder blades together as you pull hands apart until arms form a straight line.",
-        "Slowly control the return to start position with tension throughout.",
+        "Control the return with continuous tension.",
       ],
       cue: "Feel chest open up while actively firing rhomboids and middle trapezius.",
     },
@@ -39,461 +27,550 @@ export const WARMUP_ROUTINES_BY_MUSCLE = {
       name: "Push-up to Downward Dog",
       duration: "45s",
       reps: "8-10 reps",
-      target: "Chest, Serratus Anterior, Triceps & Hamstrings",
+      target: "Pectorals, Serratus Anterior & Shoulder Stabilizers",
       instructions: [
-        "Perform a controlled standard push-up lowering chest to 2 inches off the floor.",
-        "Press up explosively through palms, driving hips straight up and back into Downward Dog.",
-        "Press chest gently toward thighs to stretch calves and activate shoulder stabilizers.",
+        "Perform a controlled standard push-up lowering chest to 2 inches off floor.",
+        "Press up explosively through palms, driving hips straight up and back.",
       ],
       cue: "Synchronize deep inhale on the push-up and full exhale into Downward Dog.",
-    },
-    {
-      name: "Scapular Wall Slides",
-      duration: "40s",
-      reps: "12 reps",
-      target: "Serratus Anterior & Scapular Mobility for Bench Press",
-      instructions: [
-        "Stand with lower back, head, elbows, and wrists flush against a smooth wall.",
-        "Slide forearms upward into a 'Y' position while maintaining full wall contact.",
-        "Squeeze shoulder blades downward at the top, then slowly slide back to start.",
-      ],
-      cue: "Don't let your lower back arch off the wall; keep ribs tucked down.",
-    },
-  ],
-  back: [
-    {
-      name: "Cat-Cow Dynamic Mobility",
-      duration: "45s",
-      reps: "10 cycles",
-      target: "Spinal Articulation, Lats & Thoracic Mobility",
-      instructions: [
-        "Start on all fours with wrists under shoulders and knees directly under hips.",
-        "Inhale: drop belly toward floor, lift chest and tailbone upward into Cow.",
-        "Exhale: round spine upward toward ceiling, tucking chin to chest into Cat.",
-      ],
-      cue: "Move vertebrae segment by segment rather than hinging only at the lower back.",
-    },
-    {
-      name: "Scapular Retraction Pulls",
-      duration: "40s",
-      reps: "12-15 reps",
-      target: "Rhomboids, Lower Traps & Lat Activation",
-      instructions: [
-        "Hang from a pull-up bar or light cable row with straight arms.",
-        "Without bending elbows, pull shoulder blades down and together, lifting chest slightly.",
-        "Hold contraction for 1 second, then slowly release to a dead hang.",
-      ],
-      cue: "Isolate movement purely to scapular glide — do not use your biceps.",
-    },
-    {
-      name: "Dead Hang / Lat Stretch",
-      duration: "30s",
-      reps: "2 × 15s holds",
-      target: "Latissimus Dorsi & Intervertebral Decompression",
-      instructions: [
-        "Grip pull-up bar with overhand grip slightly wider than shoulder-width.",
-        "Allow entire body weight to hang relaxed while keeping a slight core engagement.",
-        "Take deep diaphragmatic breaths expanding your ribcage to stretch lat insertions.",
-      ],
-      cue: "Release tension in the lower back and let gravity elongate your spine.",
-    },
-    {
-      name: "Band Dislocates / Pass-Throughs",
-      duration: "40s",
-      reps: "12 reps",
-      target: "Shoulder Girdle & Lat Tie-in",
-      instructions: [
-        "Hold band or PVC pipe with wide grip in front of your thighs.",
-        "Keeping arms straight, lift bar overhead and rotate fully behind your lower back.",
-        "Reverse path smoothly back to the front without bending elbows.",
-      ],
-      cue: "Widen grip if elbows bend; keep movement fluid without forcing joint angles.",
-    },
-  ],
-  legs: [
-    {
-      name: "Leg Swings (Front/Back & Lateral)",
-      duration: "45s",
-      reps: "12 each leg",
-      target: "Hamstrings, Hip Flexors, Adductors & Glutes",
-      instructions: [
-        "Lightly hold wall or rack for balance while standing tall on one leg.",
-        "Swing free leg forward and back in a pendulum motion with increasing range.",
-        "Turn facing the wall and swing leg across body side-to-side to loosen adductors.",
-      ],
-      cue: "Keep torso upright and stable; do not twist lower back to force leg height.",
-    },
-    {
-      name: "Deep Bodyweight Squats with Pause",
-      duration: "45s",
-      reps: "10 reps",
-      target: "Quadriceps, Glutes, Adductors & Ankle Dorsiflexion",
-      instructions: [
-        "Stand feet shoulder-width apart, toes angled out 15–30 degrees.",
-        "Break at hips and knees together, sinking into a full deep squat below parallel.",
-        "Pause in the bottom 'hole' for 2 seconds, gently shifting weight between ankles.",
-      ],
-      cue: "Push knees outward in line with toes and keep chest upright and proud.",
-    },
-    {
-      name: "Walking Lunges with Torso Twist",
-      duration: "45s",
-      reps: "8 per leg",
-      target: "Hip Flexor Dynamic Opening & Thoracic Rotation",
-      instructions: [
-        "Take a long step forward into a lunge until back knee hovers 1 inch off floor.",
-        "Rotate upper torso slowly over your front knee to stretch the back hip flexor.",
-        "Drive through front heel to step forward directly into the next lunge.",
-      ],
-      cue: "Maintain 90-degree bend at front knee; do not let knee collapse inward.",
-    },
-    {
-      name: "Ankle Mobility Wall Drive",
-      duration: "30s",
-      reps: "10 per side",
-      target: "Talocrural Dorsiflexion (Crucial for Squat Depth)",
-      instructions: [
-        "Place toes 3–4 inches away from wall in a half-kneeling or standing split stance.",
-        "Drive knee straight forward toward wall, keeping the heel firmly planted on floor.",
-        "Hold 2-second end-range stretch, then return and repeat.",
-      ],
-      cue: "Ensure heel never lifts off the ground to maximize true calf and ankle mobility.",
     },
   ],
   shoulders: [
     {
       name: "Arm Circles & Cross-Body Swings",
       duration: "30s",
-      reps: "15 reps",
-      target: "Deltoids & Pectoralis Major",
+      reps: "15 each way",
+      target: "Anterior & Lateral Deltoids, Rotator Cuff",
       instructions: [
-        "Swing arms across chest alternately crossing left over right, then right over left.",
-        "Follow with full 360-degree circular shoulder rotations.",
+        "Extend arms parallel to floor; make small controlled circles gradually increasing diameter.",
+        "Follow with full cross-body swings alternating top arm.",
       ],
-      cue: "Keep shoulders relaxed and breathe rhythmically.",
-    },
-    {
-      name: "External Rotations (Band / Face Pull)",
-      duration: "45s",
-      reps: "15 reps",
-      target: "Infraspinatus, Teres Minor & Supraspinatus",
-      instructions: [
-        "Tuck elbows tight against your ribs at 90 degrees.",
-        "Rotate forearms outward away from belly button against light resistance.",
-        "Squeeze rear shoulder blades together for 1 full second.",
-      ],
-      cue: "Never use heavy resistance for rotator cuff warmups — precision over load.",
+      cue: "Keep shoulders depressed away from ears throughout.",
     },
     {
       name: "Prone Y-T-W Raises",
       duration: "45s",
       reps: "8 each",
-      target: "Lower/Mid Traps & Posterior Deltoids",
+      target: "Rotator Cuff, Rear Deltoids & Lower Traps",
       instructions: [
-        "Lie face down on bench or floor with thumbs pointing toward the ceiling.",
-        "Lift arms into a 'Y' shape (lower traps), then 'T' (rhomboids), then 'W' (rotator cuff).",
-        "Hold top contraction for 1 second with chin tucked.",
+        "Lie face down with thumbs to ceiling; lift arms into 'Y', 'T', and 'W' positions.",
+        "Hold 1-second top contraction on each rep.",
       ],
-      cue: "Initiate lift from shoulder blades, not by arching your neck.",
+      cue: "Initiate movement from shoulder blades, not by craning your neck.",
     },
   ],
-  arms: [
+  biceps: [
     {
-      name: "Wrist & Forearm Circles",
+      name: "Forearm Supination & Elbow Flips",
       duration: "30s",
-      reps: "15 each way",
-      target: "Carpal & Forearm Flexor/Extensor Warmup",
+      reps: "15 reps",
+      target: "Biceps Brachii & Antecubital Tendons",
       instructions: [
-        "Interlace fingers and roll wrists in circular patterns in both directions.",
-        "Extend arm and gently pull fingers back with opposite hand to open flexors.",
+        "Extend arms forward with fists clenched, rotate palms upward (supination) then downward.",
+        "Follow with light bodyweight dynamic curls against isometric hand pressure.",
       ],
-      cue: "Essential before heavy curls, triceps pushdowns, and bench press.",
+      cue: "Warm up the distal bicep tendon before loading heavy barbell curls.",
     },
     {
-      name: "Push-ups on Incline",
-      duration: "45s",
-      reps: "12 reps",
-      target: "Triceps, Elbow Joints & Pectoral Prep",
+      name: "Light Incline Push-ups / Band Curls",
+      duration: "40s",
+      reps: "15 reps",
+      target: "Biceps Brachii & Brachialis Activation",
       instructions: [
-        "Place hands on a sturdy bench or rack slightly narrower than shoulder width.",
-        "Keep elbows tucked close to torso at 45 degrees as you lower chest.",
-        "Press through palms to lockout, warming up elbow tendons.",
+        "Step on a light band and perform rhythmic, rapid partial curls focusing on the squeeze.",
       ],
-      cue: "Keep body in one straight line from heels to crown of head.",
+      cue: "Pump blood into the bicep belly without fatiguing the muscle.",
     },
   ],
-  core: [
+  triceps: [
     {
-      name: "Bird-Dogs",
-      duration: "45s",
-      reps: "10 each side",
-      target: "Posterior Chain, Glute & Anti-Rotational Core",
+      name: "Overhead Arm Reach & Tricep Kickback Mobilizer",
+      duration: "40s",
+      reps: "12 each side",
+      target: "Triceps Long Head & Elbow Joint Fluid",
       instructions: [
-        "On all fours, extend right arm straight forward and left leg straight back simultaneously.",
-        "Reach long without letting hips tilt or lower back sag.",
-        "Hold for 2 seconds, return under control, and switch sides.",
+        "Reach one arm overhead, bending elbow behind neck, gently pulse with opposite hand.",
+        "Follow with unweighted full-range tricep kickbacks squeezing at lockout.",
       ],
-      cue: "Imagine balancing a cup of water on your lower back throughout the move.",
+      cue: "Lubricate the olecranon bursa before heavy pressing or skull crushers.",
     },
+    {
+      name: "Bench Dip Pulses",
+      duration: "35s",
+      reps: "12 reps",
+      target: "Lateral and Medial Tricep Heads",
+      instructions: [
+        "Hands on bench behind hips, lower 3 inches and press straight up with smooth rhythm.",
+      ],
+      cue: "Keep elbows pointed straight back — do not flare out.",
+    },
+  ],
+  forearms: [
+    {
+      name: "Wrist Flexor & Extensor Circles",
+      duration: "30s",
+      reps: "20 each way",
+      target: "Brachioradialis, Wrist Flexors & Extensors",
+      instructions: [
+        "Interlace fingers and roll wrists in smooth fluid circles.",
+        "Extend arm forward with palm facing up, gently pull fingers back for 5 seconds.",
+      ],
+      cue: "Critical for preventing golfer's/tennis elbow during heavy gripping.",
+    },
+    {
+      name: "Fist Clenches & Finger Spreads",
+      duration: "30s",
+      reps: "25 reps",
+      target: "Deep Finger Flexors & Grip Endurance",
+      instructions: [
+        "Rapidly clench tight fists then flare fingers wide open to drive blood flow.",
+      ],
+      cue: "Perform rapidly until you feel warmth through the entire forearm.",
+    },
+  ],
+  abs: [
     {
       name: "Deadbugs",
       duration: "45s",
       reps: "10 each side",
-      target: "Deep Transverse Abdominis Activation",
+      target: "Rectus Abdominis & Transverse Abdominis",
       instructions: [
-        "Lie on back with arms pointing to ceiling and knees bent at 90 degrees.",
-        "Press lower back firmly into the floor (no gap).",
-        "Slowly extend opposite arm and leg toward floor while maintaining lower back contact.",
+        "Lie on back, arms to ceiling, knees bent at 90°. Press lower back flat into floor.",
+        "Slowly extend opposite arm and leg toward floor without arching lower back.",
       ],
-      cue: "If your lower back arches off the mat, reduce the leg reach distance.",
+      cue: "Exhale forcefully on extension to lock in deep core brace.",
+    },
+    {
+      name: "Cat-Cow Core Dynamic Stretch",
+      duration: "40s",
+      reps: "8 cycles",
+      target: "Spinal Articulation & Abdominal Wall Stretch",
+      instructions: [
+        "On all fours, arch spine upward tucking pelvis, then drop belly stretching abs.",
+      ],
+      cue: "Move vertebrae segment by segment with deep rhythmic breathing.",
     },
   ],
-  default: [
+  obliques: [
     {
-      name: "Jumping Jacks / Dynamic Cardio",
-      duration: "45s",
-      reps: "30-40 reps",
-      target: "Heart Rate Elevation & Core Body Temperature",
+      name: "Standing Lateral Torso Bends",
+      duration: "40s",
+      reps: "12 each side",
+      target: "Internal & External Obliques, Quadratus Lumborum",
       instructions: [
-        "Jump feet outward while sweeping arms overhead.",
-        "Return immediately on balls of feet with light, springy rhythm.",
+        "Reach right arm overhead, gently lean torso to the left feeling the lateral stretch.",
+        "Engage right oblique to pull torso back to center, then switch sides.",
       ],
-      cue: "Land softly on midfoot to absorb impact smoothly.",
+      cue: "Keep hips square; do not twist your hips as you lean.",
     },
     {
-      name: "World's Greatest Stretch (Lunge + T-Spine)",
-      duration: "60s",
-      reps: "5 per side",
-      target: "Hip Flexors, Thoracic Spine, Hamstrings & Adductors",
+      name: "Cross-Body Mountain Climbers (Slow)",
+      duration: "40s",
+      reps: "10 each side",
+      target: "Rotational Core & Oblique Activation",
       instructions: [
-        "Step into a deep forward lunge with both hands inside front foot.",
-        "Drop inside elbow toward front ankle, then rotate chest and extend arm to ceiling.",
-        "Plant hand, straighten front leg into a hamstring stretch, then switch sides.",
+        "In high plank, drive right knee across toward left elbow, hold 1s, return and switch.",
       ],
-      cue: "Follow your elevated hand with your eyes as you rotate your thoracic spine.",
+      cue: "Keep shoulders locked square and squeeze the twisting oblique.",
+    },
+  ],
+  quads: [
+    {
+      name: "Bodyweight Pause Squats",
+      duration: "45s",
+      reps: "10 reps",
+      target: "Quadriceps (Rectus Femoris, Vastus Medialis) & Knees",
+      instructions: [
+        "Feet shoulder-width apart, sink into deep squat below parallel.",
+        "Pause 2 seconds in the hole, actively pushing knees outward over toes, then stand.",
+      ],
+      cue: "Fire your VMO teardrop muscle as you lock out at the top.",
+    },
+    {
+      name: "Walking Quad Pulls with Forward Reach",
+      duration: "45s",
+      reps: "8 each leg",
+      target: "Rectus Femoris & Hip Flexor Dynamic Mobility",
+      instructions: [
+        "Grab ankle pulling heel to glute while reaching opposite arm forward.",
+        "Hold 2 seconds, step forward and switch legs.",
+      ],
+      cue: "Tuck pelvis slightly to maximize the stretch through the front of the hip.",
+    },
+  ],
+  calves: [
+    {
+      name: "Ankle Wall Drives & Dorsiflexion",
+      duration: "40s",
+      reps: "12 each side",
+      target: "Gastrocnemius, Soleus & Tibialis Anterior",
+      instructions: [
+        "Toes 3 inches from wall, drive knee forward over toes without heel lifting.",
+        "Follow with 15 rapid bodyweight toe lifts (tibialis raises).",
+      ],
+      cue: "Crucial for allowing deep knee flexion on squats and leg press.",
+    },
+    {
+      name: "Downward Dog Calf Pedaling",
+      duration: "45s",
+      reps: "15 reps",
+      target: "Calf Bellies & Achilles Tendon Mobility",
+      instructions: [
+        "In Downward Dog, press one heel firmly into floor while bending opposite knee.",
+        "Alternate feet with a slow 2-second hold per side.",
+      ],
+      cue: "Keep hips high in the air to maximize leverage onto the calf stretch.",
+    },
+  ],
+  traps: [
+    {
+      name: "Shoulder Shrug Rolls (Forward & Reverse)",
+      duration: "35s",
+      reps: "15 reps each",
+      target: "Upper Trapezius & Levator Scapulae",
+      instructions: [
+        "Elevate shoulders straight up to ears, roll backward squeezing scapulae, then depress.",
+      ],
+      cue: "Release tension accumulated from desk posture before heavy pulling.",
+    },
+    {
+      name: "Scapular Wall Slides",
+      duration: "40s",
+      reps: "12 reps",
+      target: "Lower & Middle Traps, Serratus Anterior",
+      instructions: [
+        "Forearms flat against wall, slide upward into 'Y' position while maintaining wall contact.",
+      ],
+      cue: "Feel lower traps engage near the bottom of your shoulder blades.",
+    },
+  ],
+  lats: [
+    {
+      name: "Scapular Retraction Pulls / Dead Hang",
+      duration: "40s",
+      reps: "10 reps",
+      target: "Latissimus Dorsi & Rhomboids",
+      instructions: [
+        "Hang from pull-up bar with straight arms; pull shoulder blades down and together.",
+        "Hold 1 second at top, then smoothly release to dead hang.",
+      ],
+      cue: "Isolate movement purely to scapular depression — do not bend elbows.",
+    },
+    {
+      name: "Kneeling Lat Stretch with Reach",
+      duration: "40s",
+      reps: "5 each side",
+      target: "Latissimus Dorsi Lateral Insertion",
+      instructions: [
+        "Kneel in front of bench, place forearms on bench, drop chest toward floor.",
+      ],
+      cue: "Deep inhale into ribs to expand and lengthen the latissimus dorsi.",
+    },
+  ],
+  rear_delts: [
+    {
+      name: "Band Face Pulls with External Rotation",
+      duration: "45s",
+      reps: "15 reps",
+      target: "Posterior Deltoids & Infraspinatus",
+      instructions: [
+        "Pull band to eye level, leading with elbows and rotating forearms upward.",
+        "Squeeze rear shoulder blades together for 1 full second.",
+      ],
+      cue: "Keep neck relaxed and focus on squeezing the back of the shoulder cap.",
+    },
+  ],
+  triceps_back: [
+    {
+      name: "Band Tricep Pushdown Warmup",
+      duration: "40s",
+      reps: "20 reps",
+      target: "Triceps Long, Lateral & Medial Heads",
+      instructions: [
+        "Elbows pinned to sides, push band down to full lockout with a 1-second pause.",
+      ],
+      cue: "Warm up the elbow joint with lightweight continuous tension.",
+    },
+  ],
+  lower_back: [
+    {
+      name: "Bird-Dogs & Hip Hinges",
+      duration: "45s",
+      reps: "10 each side",
+      target: "Erector Spinae & Glute-Hamstring Tie-in",
+      instructions: [
+        "Extend opposite arm and leg on all fours without tilting hips.",
+        "Follow with 10 bodyweight Romanian Deadlift hip hinges with hands behind head.",
+      ],
+      cue: "Keep lumbar spine completely neutral; hinge purely from the hips.",
+    },
+  ],
+  glutes: [
+    {
+      name: "Glute Bridges with 2-Second Squeeze",
+      duration: "45s",
+      reps: "12 reps",
+      target: "Gluteus Maximus & Hip Extensors",
+      instructions: [
+        "Lie on back with knees bent, feet flat. Drive hips to ceiling through heels.",
+        "Squeeze glutes hard at top lockout for 2 full seconds before lowering.",
+      ],
+      cue: "Do not hyperextend lower back — lock out using glutes and posterior pelvic tilt.",
+    },
+    {
+      name: "Fire Hydrants & Clamshells",
+      duration: "40s",
+      reps: "10 each side",
+      target: "Gluteus Medius & Hip Rotators",
+      instructions: [
+        "On all fours, lift knee out to side at 90° without tilting torso.",
+      ],
+      cue: "Essential for knee stability and hip tracking during squats.",
+    },
+  ],
+  hamstrings: [
+    {
+      name: "Dynamic Leg Swings (Front to Back)",
+      duration: "40s",
+      reps: "12 each leg",
+      target: "Biceps Femoris, Semitendinosus & Hip Flexors",
+      instructions: [
+        "Hold wall for balance, swing leg forward and back with gentle pendulum rhythm.",
+      ],
+      cue: "Keep standing knee soft and maintain an upright torso.",
     },
     {
       name: "Inchworms to Plank",
       duration: "45s",
       reps: "6 reps",
-      target: "Hamstrings, Calves, Shoulders & Anterior Core",
+      target: "Hamstrings, Calves & Posterior Chain",
       instructions: [
-        "Stand tall, hinge forward with straight legs until hands touch floor.",
-        "Walk hands forward one by one into a solid high plank position.",
-        "Hold plank for 1 second, then walk feet forward toward hands.",
+        "Hinge forward with straight legs, walk hands out to plank, then walk feet forward.",
       ],
-      cue: "Keep legs as straight as comfortable to stretch the posterior chain.",
+      cue: "Feel deep stretch in hamstrings as your hands walk away from feet.",
+    },
+  ],
+  default: [
+    {
+      name: "World's Greatest Stretch",
+      duration: "60s",
+      reps: "5 each side",
+      target: "Full Body Mobility, Hips, Spine & Ankles",
+      instructions: [
+        "Step into deep lunge, rotate chest and arm to ceiling, then hinge back.",
+      ],
+      cue: "Take full breaths at end-range positions.",
     },
   ],
 };
 
-// ── 2. POST-WORKOUT STATIC COOLDOWN STRETCHES ──────────────────────────────────
+// ── 2. POST-WORKOUT STATIC COOLDOWN STRETCHES (FOR ALL MUSCLES) ────────────────
 export const COOLDOWN_STRETCHES_BY_MUSCLE = {
   chest: [
     {
       name: "Doorway Pec Stretch",
       duration: 30,
+      hold: "30s per side",
       target: "Pectoralis Major & Sternal Head",
       instructions: [
-        "Stand in doorway, place forearm and elbow flush on the door jamb at 90 degrees.",
-        "Gently step through with one foot until a comfortable stretch is felt across the chest.",
-        "Hold steady, breathe deeply into your ribs, then switch arms.",
+        "Place forearm flush on door jamb at 90°, step forward until deep stretch is felt.",
       ],
-      cue: "Do not twist your spine; keep torso square and shoulders relaxed.",
-    },
-    {
-      name: "Cross-Body Posterior Shoulder Stretch",
-      duration: 30,
-      target: "Rear Deltoids & Infraspinatus",
-      instructions: [
-        "Bring right arm straight across chest at shoulder level.",
-        "Use left forearm to gently hug the right elbow in toward your torso.",
-        "Depress your right shoulder down away from your ear while pulling.",
-      ],
-      cue: "Feel the back of the shoulder cap open up without rotating the ribcage.",
-    },
-    {
-      name: "Overhead Triceps & Lat Stretch",
-      duration: 30,
-      target: "Triceps Long Head & Upper Lats",
-      instructions: [
-        "Reach right hand down the center of your upper back between shoulder blades.",
-        "Gently grasp right elbow with left hand and apply light downward pressure.",
-        "Keep spine neutral without arching lower back.",
-      ],
-      cue: "Breathe into the side of your torso to lengthen the latissimus dorsi.",
-    },
-  ],
-  back: [
-    {
-      name: "Child's Pose Lat Stretch",
-      duration: 35,
-      target: "Latissimus Dorsi, Erector Spinae & Hips",
-      instructions: [
-        "Kneel on floor with big toes touching and knees spread wide.",
-        "Sink hips back onto heels, reach arms far forward, and rest forehead on mat.",
-        "Walk both hands 6 inches to the left to deeply stretch the right lat, then switch sides.",
-      ],
-      cue: "Allow every exhale to sink your chest closer to the floor.",
-    },
-    {
-      name: "Cat-Cow Slow Decompression",
-      duration: 30,
-      target: "Spinal Intervertebral Discs & Lower Back",
-      instructions: [
-        "On all fours, move slowly between arched cow and rounded cat.",
-        "Hold each position for 3–4 full breaths to decompress spinal load from heavy lifting.",
-      ],
-      cue: "Focus on gentle breathing to downregulate your nervous system from lifting mode.",
-    },
-    {
-      name: "Seated Spinal Twist",
-      duration: 30,
-      target: "Thoracic Spine, Rhomboids & Gluteus Medius",
-      instructions: [
-        "Sit tall with legs straight; cross right foot over left knee on the floor.",
-        "Place left elbow outside right knee and right hand behind your hips.",
-        "Gently rotate torso to look over your right shoulder.",
-      ],
-      cue: "Lengthen spine on every inhale, deepen the rotation slightly on every exhale.",
-    },
-  ],
-  legs: [
-    {
-      name: "Standing / Lying Quad Stretch",
-      duration: 30,
-      target: "Rectus Femoris & Hip Flexors",
-      instructions: [
-        "Stand tall (or lie on side), bend one knee bringing heel toward glute.",
-        "Grasp ankle with hand, pull heel snug to glute while keeping knees aligned.",
-        "Gently tuck pelvis under (posterior pelvic tilt) to intensify hip flexor stretch.",
-      ],
-      cue: "Do not let knee flare outward to the side; keep thighs parallel.",
-    },
-    {
-      name: "Seated Single-Leg Hamstring Reach",
-      duration: 30,
-      target: "Hamstrings & Popliteal Fossa",
-      instructions: [
-        "Sit with right leg extended straight and left sole against inner right thigh.",
-        "Hinge at the hips keeping lower back flat, reaching hands toward right toes.",
-        "Hold at first sensation of gentle tension without bouncing.",
-      ],
-      cue: "Lead with your chest rather than rounding your upper back to reach your toes.",
-    },
-    {
-      name: "Pigeon Pose / Glute Stretch",
-      duration: 35,
-      target: "Gluteus Maximus, Piriformis & Deep Hip Rotators",
-      instructions: [
-        "From plank, bring right shin forward across the mat with knee near right wrist.",
-        "Slide left leg straight back, squaring hips toward the floor.",
-        "Walk hands forward and lower chest toward front shin as comfortable.",
-      ],
-      cue: "Keep hips level — place a rolled towel under the right glute if it sits high.",
-    },
-    {
-      name: "Wall Calf & Achilles Stretch",
-      duration: 30,
-      target: "Gastrocnemius & Soleus",
-      instructions: [
-        "Stand facing wall, step left leg back in a long split stance with back heel flat.",
-        "Bend front knee and lean chest into wall until deep stretch is felt in back calf.",
-      ],
-      cue: "Keep back leg completely straight and back toes pointing directly forward.",
+      cue: "Keep torso upright and breathe into the ribcage.",
     },
   ],
   shoulders: [
     {
-      name: "Behind-the-Back Chest & Anterior Shoulder Opener",
+      name: "Cross-Body Shoulder Hug Stretch",
       duration: 30,
-      target: "Anterior Deltoids & Clavicular Head",
+      hold: "30s per side",
+      target: "Posterior Deltoid & Infraspinatus",
       instructions: [
-        "Interlace fingers behind lower back with arms extended.",
-        "Roll shoulder blades back and down, gently lifting hands away from hips.",
-        "Hold chest tall with chin level.",
+        "Bring arm across chest at shoulder level, hug elbow in with opposite forearm.",
       ],
-      cue: "Do not lean forward; maintain an upright standing posture.",
+      cue: "Depress shoulder down away from ear while pulling.",
     },
+  ],
+  biceps: [
     {
-      name: "Thread-the-Needle Stretch",
+      name: "Wall Bicep & Anterior Shoulder Stretch",
+      duration: 30,
+      hold: "30s per side",
+      target: "Biceps Brachii & Distal Tendon",
+      instructions: [
+        "Place palm flat on wall behind you at shoulder height with straight arm.",
+        "Gently rotate chest away from the wall until stretch is felt in bicep.",
+      ],
+      cue: "Keep shoulder depressed and do not force joint angle.",
+    },
+  ],
+  triceps: [
+    {
+      name: "Overhead Triceps Reach Stretch",
+      duration: 30,
+      hold: "30s per side",
+      target: "Triceps Long Head & Latissimus Dorsi",
+      instructions: [
+        "Reach hand down center of spine, gently press elbow downward with opposite hand.",
+      ],
+      cue: "Keep spine neutral without arching your lower back.",
+    },
+  ],
+  forearms: [
+    {
+      name: "Prayer Wrist & Flexor Stretch",
+      duration: 30,
+      hold: "30s hold",
+      target: "Wrist Flexors & Extensors",
+      instructions: [
+        "Press palms together in front of chest, lower wrists downward while keeping palms connected.",
+      ],
+      cue: "Maintain gentle pressure to decompress the carpal tunnel.",
+    },
+  ],
+  abs: [
+    {
+      name: "Cobra / Sphinx Pose",
       duration: 35,
-      target: "Rear Delts, Rhomboids & Upper Traps",
+      hold: "35s hold",
+      target: "Rectus Abdominis & Psoas",
       instructions: [
-        "Start on all fours, slide right arm palm-up underneath chest across to the left.",
-        "Lower right shoulder and right temple gently to rest on the mat.",
+        "Lie face down, press through palms to lift chest off floor with hips relaxed on mat.",
       ],
-      cue: "Sink weight into the grounded shoulder and relax your neck.",
+      cue: "Lengthen spine upward rather than jamming into the lumbar spine.",
     },
   ],
-  arms: [
+  obliques: [
     {
-      name: "Kneeling Wrist & Forearm Flexor Stretch",
+      name: "Seated Side Mermaid Stretch",
       duration: 30,
-      target: "Biceps Tendons & Forearm Flexors",
+      hold: "30s per side",
+      target: "External Obliques & Quadratus Lumborum",
       instructions: [
-        "Kneel and place palms flat on floor with fingers pointing back toward your knees.",
-        "Gently lean hips back toward heels until comfortable forearm stretch is felt.",
+        "Sit tall, reach right arm up and over head to the left while keeping right hip grounded.",
       ],
-      cue: "Keep palms flat on floor; ease off if sharp joint pain occurs.",
-    },
-    {
-      name: "Overhead Triceps Extension Stretch",
-      duration: 30,
-      target: "Triceps Brachii Long Head",
-      instructions: [
-        "Reach arm straight overhead, bend elbow so hand drops behind neck.",
-        "Use other hand to pull elbow gently back and across.",
-      ],
-      cue: "Keep head upright — do not push chin down to chest.",
+      cue: "Breathe deeply into the lateral ribcage.",
     },
   ],
-  core: [
+  quads: [
     {
-      name: "Cobra / Sphinx Abdominal Stretch",
+      name: "Standing / Lying Quad Stretch",
       duration: 30,
-      target: "Rectus Abdominis & Linea Alba",
+      hold: "30s per side",
+      target: "Rectus Femoris & Hip Flexors",
       instructions: [
-        "Lie prone on stomach, place hands under shoulders (or forearms on floor for Sphinx).",
-        "Press gently through palms to lift chest off floor while keeping hips grounded.",
-        "Look forward with relaxed lower back.",
+        "Grasp ankle, pull heel to glute, tuck pelvis under into posterior tilt.",
       ],
-      cue: "Do not jam your lumbar spine; think about pulling your chest forward and up.",
+      cue: "Keep knees aligned together — avoid flaring knee out to the side.",
     },
+  ],
+  calves: [
     {
-      name: "Supine Lying Knee Twist",
+      name: "Wall Calf & Achilles Stretch",
       duration: 30,
-      target: "Internal/External Obliques & Quadratus Lumborum",
+      hold: "30s per side",
+      target: "Gastrocnemius & Soleus",
       instructions: [
-        "Lie on back, hug knees to chest, then let both knees fall gently to the right.",
-        "Extend left arm out to side and turn head to look toward left hand.",
+        "Step back in split stance with rear heel pressed firmly into floor, lean into wall.",
       ],
-      cue: "Keep both shoulder blades pinned flat to the floor throughout the twist.",
+      cue: "Keep rear leg completely straight to target the gastrocnemius.",
+    },
+  ],
+  traps: [
+    {
+      name: "Upper Trap Ear-to-Shoulder Stretch",
+      duration: 30,
+      hold: "30s per side",
+      target: "Upper Trapezius & Levator Scapulae",
+      instructions: [
+        "Gently tilt head toward right shoulder, reach left hand behind back to depress shoulder.",
+      ],
+      cue: "Use only gentle hand weight on top of head — never yank or pull.",
+    },
+  ],
+  lats: [
+    {
+      name: "Child's Pose Lat Reach",
+      duration: 35,
+      hold: "35s per side",
+      target: "Latissimus Dorsi & Thoracolumbar Fascia",
+      instructions: [
+        "In child's pose, walk both hands 10 inches to the left to deeply stretch right lat.",
+      ],
+      cue: "Sink hips back onto heels with every exhale.",
+    },
+  ],
+  rear_delts: [
+    {
+      name: "Cross-Body Posterior Capsule Stretch",
+      duration: 30,
+      hold: "30s per side",
+      target: "Rear Deltoid & Infraspinatus",
+      instructions: [
+        "Bring arm across chest, gently hug elbow with opposite arm while keeping shoulder depressed.",
+      ],
+      cue: "Hold steady and breathe slowly to downregulate nervous system.",
+    },
+  ],
+  lower_back: [
+    {
+      name: "Knees-to-Chest Lumbar Stretch",
+      duration: 35,
+      hold: "35s hold",
+      target: "Erector Spinae & Sacroiliac Decompression",
+      instructions: [
+        "Lie on back, hug both knees gently into chest, rock softly side-to-side.",
+      ],
+      cue: "Allow lower back to flatten completely and release tension.",
+    },
+  ],
+  glutes: [
+    {
+      name: "Pigeon Pose / Figure-4 Glute Stretch",
+      duration: 35,
+      hold: "35s per side",
+      target: "Gluteus Maximus, Piriformis & Deep Hip Rotators",
+      instructions: [
+        "Cross right ankle over left knee, pull left hamstring toward chest.",
+      ],
+      cue: "Keep head relaxed on floor and hips square.",
+    },
+  ],
+  hamstrings: [
+    {
+      name: "Seated Single-Leg Hamstring Stretch",
+      duration: 30,
+      hold: "30s per side",
+      target: "Biceps Femoris & Semitendinosus",
+      instructions: [
+        "Sit with one leg straight, hinge forward at hips with flat back reaching toward toes.",
+      ],
+      cue: "Lead with chest toward toes rather than hunching upper back.",
     },
   ],
   default: [
     {
-      name: "Child's Pose to Cobra Flow",
-      duration: 35,
-      target: "Full Body Decompression & Recovery",
+      name: "Full Body Deep Child's Pose",
+      duration: 40,
+      hold: "40s hold",
+      target: "Spine, Lats, Hips & Nervous System Downregulation",
       instructions: [
-        "Flow smoothly between sinking hips back into Child's Pose and gliding forward into Cobra.",
-        "Sync with slow, calming nasal breaths.",
+        "Sink hips onto heels with arms extended forward, breathing slow and deep.",
       ],
-      cue: "Transition your nervous system into parasympathetic rest-and-digest mode.",
-    },
-    {
-      name: "Downward Dog Calf & Hamstring Stretch",
-      duration: 30,
-      target: "Posterior Chain Decompression",
-      instructions: [
-        "In Downward Dog, alternate gently pressing right heel then left heel into the floor.",
-        "Pedal feet at a relaxed, soothing pace.",
-      ],
-      cue: "Press firmly through fingertips and knuckles to protect wrists.",
+      cue: "Focus on 4-second inhales and 6-second slow exhales.",
     },
   ],
 };
+
+// Aliases for general categories
+WARMUP_ROUTINES_BY_MUSCLE.back = WARMUP_ROUTINES_BY_MUSCLE.lats;
+WARMUP_ROUTINES_BY_MUSCLE.legs = WARMUP_ROUTINES_BY_MUSCLE.quads;
+WARMUP_ROUTINES_BY_MUSCLE.arms = WARMUP_ROUTINES_BY_MUSCLE.biceps;
+WARMUP_ROUTINES_BY_MUSCLE.core = WARMUP_ROUTINES_BY_MUSCLE.abs;
+
+COOLDOWN_STRETCHES_BY_MUSCLE.back = COOLDOWN_STRETCHES_BY_MUSCLE.lats;
+COOLDOWN_STRETCHES_BY_MUSCLE.legs = COOLDOWN_STRETCHES_BY_MUSCLE.quads;
+COOLDOWN_STRETCHES_BY_MUSCLE.arms = COOLDOWN_STRETCHES_BY_MUSCLE.biceps;
+COOLDOWN_STRETCHES_BY_MUSCLE.core = COOLDOWN_STRETCHES_BY_MUSCLE.abs;
 
 // Determines dominant muscle group from routine exercises
 export function getDominantMuscleGroup(exercises = []) {
@@ -656,6 +733,8 @@ export function playRestTimerChime() {
   }
 }
 
+export const playGymTimerChime = playRestTimerChime;
+
 // ── 6. MUSCLE FATIGUE & RECOVERY HEATMAP ───────────────────────────────────────
 export const MUSCLE_GROUPS_LIST = [
   { id: "chest", label: "Chest", emoji: "🛡️" },
@@ -665,6 +744,108 @@ export const MUSCLE_GROUPS_LIST = [
   { id: "arms", label: "Arms", emoji: "💪" },
   { id: "core", label: "Core", emoji: "⚡" },
 ];
+
+export const DETAILED_MUSCLES_LIST = [
+  { id: "chest", label: "Chest", anatomicalName: "Pectoralis Major", searchKey: "chest", view: "front", emoji: "🛡️" },
+  { id: "shoulders", label: "Shoulders", anatomicalName: "Anterior & Lateral Deltoids", searchKey: "shoulders", view: "front", emoji: "🥋" },
+  { id: "biceps", label: "Biceps", anatomicalName: "Biceps Brachii", searchKey: "biceps", view: "front", emoji: "💪" },
+  { id: "forearms", label: "Forearms", anatomicalName: "Brachioradialis & Flexors", searchKey: "forearms", view: "front", emoji: "✊" },
+  { id: "abs", label: "Abs & Core", anatomicalName: "Rectus Abdominis", searchKey: "abs", view: "front", emoji: "⚡" },
+  { id: "obliques", label: "Obliques", anatomicalName: "External Obliques", searchKey: "obliques", view: "front", emoji: "🌀" },
+  { id: "quads", label: "Quads", anatomicalName: "Quadriceps Femoris", searchKey: "quads", view: "front", emoji: "🦵" },
+  { id: "calves", label: "Calves", anatomicalName: "Gastrocnemius & Soleus", searchKey: "calves", view: "both", emoji: "🦿" },
+  { id: "traps", label: "Traps", anatomicalName: "Trapezius", searchKey: "traps", view: "back", emoji: "🏔️" },
+  { id: "lats", label: "Lats & Upper Back", anatomicalName: "Latissimus Dorsi & Rhomboids", searchKey: "back", view: "back", emoji: "🦅" },
+  { id: "rear_delts", label: "Rear Delts", anatomicalName: "Posterior Deltoids", searchKey: "shoulders", view: "back", emoji: "🎯" },
+  { id: "triceps", label: "Triceps", anatomicalName: "Triceps Brachii", searchKey: "triceps", view: "back", emoji: "💥" },
+  { id: "lower_back", label: "Lower Back", anatomicalName: "Erector Spinae", searchKey: "back", view: "back", emoji: "🧱" },
+  { id: "glutes", label: "Glutes", anatomicalName: "Gluteus Maximus", searchKey: "glutes", view: "back", emoji: "🍑" },
+  { id: "hamstrings", label: "Hamstrings", anatomicalName: "Biceps Femoris", searchKey: "hamstrings", view: "back", emoji: "🏃" },
+];
+
+export function calculateGranularMuscleRecovery(sessionHistory = []) {
+  const now = Date.now();
+  const muscleLastTrained = {};
+
+  (sessionHistory || []).forEach((session) => {
+    const sessionTime = session.timestamp ? new Date(session.timestamp).getTime() : new Date(session.date || 0).getTime();
+    if (isNaN(sessionTime)) return;
+
+    const exercises = session.exercises || [];
+    exercises.forEach((ex) => {
+      const target = (ex.targetMuscle || ex.target || ex.bodyPart || ex.exerciseName || "").toLowerCase();
+      
+      const record = (muscleKey) => {
+        if (!muscleLastTrained[muscleKey] || sessionTime > muscleLastTrained[muscleKey]) {
+          muscleLastTrained[muscleKey] = sessionTime;
+        }
+      };
+
+      if (target.includes("chest") || target.includes("pectoral") || target.includes("bench") || target.includes("push up") || target.includes("pushup") || target.includes("fly")) record("chest");
+      if (target.includes("front delt") || target.includes("overhead press") || target.includes("lateral raise") || target.includes("shoulder") || target.includes("military")) {
+        record("shoulders");
+      }
+      if (target.includes("rear delt") || target.includes("face pull") || target.includes("reverse fly")) {
+        record("rear_delts");
+      }
+      if (target.includes("bicep") || target.includes("curl") || target.includes("chin up") || target.includes("chinup")) record("biceps");
+      if (target.includes("tricep") || target.includes("dip") || target.includes("skull crusher") || target.includes("pushdown")) record("triceps");
+      if (target.includes("forearm") || target.includes("wrist") || target.includes("grip")) record("forearms");
+      if (target.includes("ab") || target.includes("crunch") || target.includes("plank") || target.includes("leg raise") || target.includes("core")) record("abs");
+      if (target.includes("oblique") || target.includes("russian twist") || target.includes("woodchopper") || target.includes("side plank")) record("obliques");
+      if (target.includes("trap") || target.includes("shrug") || target.includes("upright row") || target.includes("farmer")) record("traps");
+      if (target.includes("lat") || target.includes("pull down") || target.includes("pulldown") || target.includes("pull up") || target.includes("pullup") || target.includes("row") || (target.includes("back") && !target.includes("lower"))) record("lats");
+      if (target.includes("lower back") || target.includes("erector") || target.includes("hyperextension") || target.includes("good morning")) record("lower_back");
+      if (target.includes("glute") || target.includes("hip thrust") || target.includes("bridge") || target.includes("kickback")) record("glutes");
+      if (target.includes("quad") || target.includes("squat") || target.includes("leg press") || target.includes("lunge") || target.includes("leg extension")) record("quads");
+      if (target.includes("hamstring") || target.includes("deadlift") || target.includes("leg curl") || target.includes("rdl") || target.includes("romanian")) record("hamstrings");
+      if (target.includes("calf") || target.includes("calves") || target.includes("tibialis") || target.includes("toe raise")) record("calves");
+    });
+  });
+
+  return DETAILED_MUSCLES_LIST.map((muscle) => {
+    const lastTime = muscleLastTrained[muscle.id];
+    if (!lastTime) {
+      return {
+        ...muscle,
+        status: "ready",
+        statusText: "Ready to Train",
+        hoursAgo: null,
+        recoveryPercent: 100,
+      };
+    }
+
+    const hoursAgo = Math.max(0, Math.round((now - lastTime) / (1000 * 60 * 60)));
+
+    if (hoursAgo < 24) {
+      const recoveryPercent = Math.min(60, Math.round((hoursAgo / 24) * 60));
+      return {
+        ...muscle,
+        status: "fatigued",
+        statusText: "Fatigued (< 24h)",
+        hoursAgo,
+        recoveryPercent,
+      };
+    } else if (hoursAgo < 48) {
+      const recoveryPercent = 60 + Math.round(((hoursAgo - 24) / 24) * 35);
+      return {
+        ...muscle,
+        status: "recovering",
+        statusText: "Recovering (24–48h)",
+        hoursAgo,
+        recoveryPercent,
+      };
+    } else {
+      return {
+        ...muscle,
+        status: "ready",
+        statusText: "Fully Recovered (48h+)",
+        hoursAgo,
+        recoveryPercent: 100,
+      };
+    }
+  });
+}
 
 export function calculateMuscleRecovery(sessionHistory = []) {
   const now = Date.now();

@@ -47,6 +47,18 @@ const PostWorkoutCooldownModal = ({
   const recommendedProtein = Math.max(25, Math.min(45, Math.round(25 + (totalVolume / 1000) * 2)));
   const recommendedWater = Math.max(500, Math.min(1200, Math.round(500 + (totalVolume / 500) * 50)));
 
+  // Escape key handler
+  useEffect(() => {
+    if (!open) return;
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") {
+        onClose();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [open, onClose]);
+
   useEffect(() => {
     if (stretches[currentStretchIdx]) {
       setTimeLeft(stretches[currentStretchIdx].duration);

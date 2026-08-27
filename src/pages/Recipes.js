@@ -1,10 +1,17 @@
 import React, { useState } from "react";
-import SearchIcon from "@mui/icons-material/Search";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import RestaurantIcon from "@mui/icons-material/Restaurant";
 import LocalFireDepartmentIcon from "@mui/icons-material/LocalFireDepartment";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import CloseIcon from "@mui/icons-material/Close";
+
+// UI Primitives
+import {
+  Badge,
+  Button,
+  SearchInput,
+  EmptyState,
+} from "../components/ui";
 
 const RECIPES_DATA = [
   {
@@ -170,6 +177,18 @@ const Recipes = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedRecipe, setSelectedRecipe] = useState(null);
 
+  // Escape key handler for recipe detail modal
+  React.useEffect(() => {
+    if (!selectedRecipe) return;
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") {
+        setSelectedRecipe(null);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [selectedRecipe]);
+
   const categories = ["All", "High Protein", "Low Carb", "Keto", "Vegan"];
 
   const filteredRecipes = RECIPES_DATA.filter((recipe) => {
@@ -186,6 +205,12 @@ const Recipes = () => {
   return (
     <div className="recipes-dashboard-container">
       <div className="recipes-hero-header">
+        <div style={{ display: "flex", justifyContent: "center", marginBottom: "8px" }}>
+          <Badge variant="accent" size="md">
+            <RestaurantIcon style={{ fontSize: "0.95rem", marginRight: "4px" }} />
+            Nutritional Fuel & Macro Guides
+          </Badge>
+        </div>
         <h1 className="recipes-title">Nutritious <span>Recipes</span></h1>
         <p className="recipes-subtitle">
           Fuel your workouts and support your recovery with simple, wholesome, and macro-friendly meals.
@@ -193,14 +218,14 @@ const Recipes = () => {
       </div>
 
       <div className="recipes-search-filter-section">
-        {/* Search Input */}
-        <div className="recipes-search-bar">
-          <SearchIcon className="search-icon" />
-          <input
-            type="text"
+        {/* Search Input Primitive */}
+        <div style={{ width: "100%", maxWidth: "580px" }}>
+          <SearchInput
             placeholder="Search by meal name or ingredient..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
+            onClear={() => setSearchQuery("")}
+            autoFocus={false}
           />
         </div>
 
@@ -221,7 +246,20 @@ const Recipes = () => {
       {/* Recipes Grid */}
       <div className="recipes-grid">
         {filteredRecipes.map((recipe) => (
-          <div key={recipe.id} className="recipe-card" onClick={() => setSelectedRecipe(recipe)}>
+          <div
+            key={recipe.id}
+            className="recipe-card"
+            onClick={() => setSelectedRecipe(recipe)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                setSelectedRecipe(recipe);
+              }
+            }}
+            tabIndex={0}
+            role="button"
+            aria-label={`View recipe details for ${recipe.name}`}
+          >
             <div className="recipe-card-media">
               <span className="recipe-emoji">{recipe.image}</span>
               <span className="recipe-category-badge">{recipe.category}</span>
@@ -254,16 +292,37 @@ const Recipes = () => {
         ))}
 
         {filteredRecipes.length === 0 && (
-          <div className="no-recipes-found">
-            <RestaurantIcon className="no-recipes-icon" />
-            <p>No recipes match your criteria. Try searching for something else!</p>
+          <div style={{ gridColumn: "1 / -1" }}>
+            <EmptyState
+              icon={<RestaurantIcon />}
+              title="No Recipes Found"
+              description="No recipes match your filter criteria. Try adjusting your search query or selecting a different category."
+              action={
+                <Button
+                  variant="outline"
+                  size="md"
+                  onClick={() => {
+                    setSearchQuery("");
+                    setSelectedCategory("All");
+                  }}
+                >
+                  Reset Search Filters
+                </Button>
+              }
+            />
           </div>
         )}
       </div>
 
       {/* Recipe Detail Modal */}
       {selectedRecipe && (
-        <div className="recipe-detail-modal-overlay" onClick={() => setSelectedRecipe(null)}>
+        <div
+          className="recipe-detail-modal-overlay"
+          onClick={() => setSelectedRecipe(null)}
+          role="dialog"
+          aria-modal="true"
+          aria-label={`Recipe details for ${selectedRecipe.name}`}
+        >
           <div className="recipe-detail-modal" onClick={(e) => e.stopPropagation()}>
             <button className="close-modal-btn" onClick={() => setSelectedRecipe(null)} aria-label="Close recipe details modal">
               <CloseIcon />

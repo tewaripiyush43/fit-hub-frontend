@@ -8,89 +8,101 @@ import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import TrackChangesIcon from "@mui/icons-material/TrackChanges";
 import CalculateIcon from "@mui/icons-material/Calculate";
-import ForumIcon from "@mui/icons-material/Forum";
-import WhatshotIcon from "@mui/icons-material/Whatshot";
+import AccessibilityNewIcon from "@mui/icons-material/AccessibilityNew";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+
+// UI Primitives
+import { Badge } from "./ui";
 
 const features = [
   {
     icon: <AutoAwesomeIcon className="feature-icon" />,
-    tag: "AI-Powered",
+    tag: "AI-POWERED",
     title: "Custom AI Workout Generator",
     description:
-      "Tell our AI your fitness level, goals, and available equipment. Get a personalized workout plan in seconds — no guesswork, just science.",
+      "Generate science-backed, periodized routines tailored to your available equipment, goals, and experience in seconds.",
+    shortBenefit: "Instant personalized routine generator",
     accentColor: "#00e5ff",
-    path: "/myworkouts",
+    path: "/myworkouts?ai=true",
     protected: true,
+    spotlight: true,
   },
   {
-    icon: <RestaurantMenuIcon className="feature-icon" />,
-    tag: "Nutrition",
-    title: "Nutritious Recipes",
+    icon: <FitnessCenterIcon className="feature-icon" />,
+    tag: "BARBELL TECH",
+    title: "Visual Barbell Plate Calculator",
     description:
-      "Fuel your training with hand-picked, high-protein recipes designed to match your fitness goals. Tasty, balanced, and optimized for performance.",
-    accentColor: "#ff9800",
-    path: "/recipes",
+      "Exact color-coded Olympic plate stacking diagrams per side in both KG and LBS — zero math required at the rack.",
+    shortBenefit: "Color-coded plate loading diagrams",
+    accentColor: "#f59e0b",
+    path: "/fitnesstools",
+    protected: false,
+  },
+  {
+    icon: <AccessibilityNewIcon className="feature-icon" />,
+    tag: "BIOMECHANICS",
+    title: "2D Muscle Anatomy Explorer",
+    description:
+      "Anterior & posterior 2D mannequins with dynamic muscle activation, warmups, and cooldown routines.",
+    shortBenefit: "Interactive 2D muscle maps & warmups",
+    accentColor: "#00f0ff",
+    path: "/anatomy",
     protected: false,
   },
   {
     icon: <EmojiEventsIcon className="feature-icon" />,
-    tag: "Progress",
-    title: "Workout Notes & History",
+    tag: "PROGRESS",
+    title: "Smart Workout Logging & PRs",
     description:
-      "Document your workouts with detailed notes and AI-generated descriptions. Keep a running log of what you lifted, how you felt, and what to improve.",
+      "Track sets, weight, RPE, volume, and personal records automatically with detailed session analytics.",
+    shortBenefit: "Automatic PR & volume tracking",
     accentColor: "#ffca28",
     path: "/dashboard",
     protected: true,
   },
   {
     icon: <FitnessCenterIcon className="feature-icon" />,
-    tag: "Library",
-    title: "1300+ Exercise Catalogue",
+    tag: "LIBRARY",
+    title: "1,300+ Exercise Library",
     description:
-      "Explore an extensive library of exercises filtered by muscle group, equipment, and difficulty — each with animated GIF demos.",
+      "Explore comprehensive exercises with animated form demonstrations, muscle maps, and step-by-step instructions.",
+    shortBenefit: "Animated form guides & muscle maps",
     accentColor: "#4caf50",
     path: "/exercises/all",
     protected: false,
   },
   {
-    icon: <TrackChangesIcon className="feature-icon" />,
-    tag: "Goals",
-    title: "Goal Tracking",
+    icon: <RestaurantMenuIcon className="feature-icon" />,
+    tag: "NUTRITION",
+    title: "High-Protein Recipes",
     description:
-      "Set measurable fitness goals and track your progress over time. Visualize how far you've come and what's left to conquer.",
+      "Fuel recovery with hand-picked, macro-balanced recipes designed for peak athletic performance.",
+    shortBenefit: "Macro-balanced healthy recipes",
+    accentColor: "#ff9800",
+    path: "/recipes",
+    protected: false,
+  },
+  {
+    icon: <TrackChangesIcon className="feature-icon" />,
+    tag: "GOALS",
+    title: "Milestone & Goal Tracking",
+    description:
+      "Set measurable strength and weight targets with visual analytics to stay on track.",
+    shortBenefit: "Real-time strength & weight goals",
     accentColor: "#ab47bc",
     path: "/myprofile",
     protected: true,
   },
   {
     icon: <CalculateIcon className="feature-icon" />,
-    tag: "Tools",
+    tag: "TOOLS",
     title: "Fitness Calculators",
     description:
-      "BMI, TDEE, Macro splits, and One-Rep Max calculators — all the numbers you need to train and eat with precision.",
-    accentColor: "#ef5350",
+      "BMI, TDEE, 1RM, and Body Fat calculators to train and eat with mathematical precision.",
+    shortBenefit: "BMI, TDEE, 1RM & Body Fat tools",
+    accentColor: "#00bcd4",
     path: "/fitnesstools",
-    protected: true,
-  },
-  {
-    icon: <ForumIcon className="feature-icon" />,
-    tag: "Coaching",
-    title: "AI Fitness Coach Chatbot",
-    description:
-      "Get real-time feedback, personalized form tips, meal advice, and workout encouragement from your Gemini-powered personal trainer.",
-    accentColor: "#00b3e6",
-    path: "/dashboard",
-    protected: true,
-  },
-  {
-    icon: <WhatshotIcon className="feature-icon" />,
-    tag: "Gamified",
-    title: "Daily Streaks & Badges",
-    description:
-      "Maintain active streaks, record workout volume milestones, and level up through custom ranks from Gym Beast to Hercules Tier.",
-    accentColor: "#ff5e62",
-    path: "/dashboard",
-    protected: true,
+    protected: false,
   },
 ];
 
@@ -113,6 +125,9 @@ const FeaturesSection = () => {
     }
   };
 
+  const spotlightFeature = features[0];
+  const gridFeatures = features.slice(1);
+
   return (
     <section className="features-section">
       <div className="features-inner">
@@ -121,24 +136,70 @@ const FeaturesSection = () => {
           Everything built for <span>serious athletes</span>
         </h2>
         <p className="features-subheading">
-          A complete fitness platform combining AI intelligence, nutrition science, and game-like progression.
+          A complete fitness ecosystem combining AI intelligence, visual barbell plating, and progressive overload tracking.
         </p>
-        <div className="features-grid">
-          {features.map((f, i) => (
+
+        {/* 🌟 Spotlight Hero Feature Card */}
+        <div
+          className="spotlight-feature-card"
+          data-aos="fade-up"
+          onClick={() => handleCardClick(spotlightFeature)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              handleCardClick(spotlightFeature);
+            }
+          }}
+          role="button"
+          tabIndex={0}
+          style={{ "--accent-color": spotlightFeature.accentColor }}
+        >
+          <div className="spotlight-content">
+            <div className="spotlight-header">
+              <div className="feature-card-icon-wrapper spotlight-icon">
+                {spotlightFeature.icon}
+              </div>
+              <Badge variant="accent" size="sm">
+                {spotlightFeature.tag}
+              </Badge>
+            </div>
+            <h3 className="spotlight-title">{spotlightFeature.title}</h3>
+            <p className="spotlight-desc">{spotlightFeature.description}</p>
+            <div className="spotlight-cta">
+              <span>Launch AI Generator</span>
+              <ArrowForwardIcon style={{ fontSize: "1rem" }} />
+            </div>
+          </div>
+        </div>
+
+        {/* ⚡ Bento Grid on Mobile / Desktop */}
+        <div className="features-bento-grid">
+          {gridFeatures.map((f, i) => (
             <div
-              className="feature-card"
+              className="feature-card bento-card"
               key={i}
               data-aos="fade-up"
-              data-aos-delay={`${i * 80}`}
+              data-aos-delay={`${(i + 1) * 50}`}
               style={{ "--accent-color": f.accentColor }}
               onClick={() => handleCardClick(f)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  handleCardClick(f);
+                }
+              }}
+              role="button"
+              tabIndex={0}
             >
               <div className="feature-card-icon-wrapper">
                 {f.icon}
               </div>
-              <span className="feature-tag">{f.tag}</span>
+              <Badge variant="neutral" size="sm" style={{ marginBottom: "8px" }}>
+                {f.tag}
+              </Badge>
               <h3 className="feature-title">{f.title}</h3>
-              <p className="feature-description">{f.description}</p>
+              <p className="feature-description desktop-only">{f.description}</p>
+              <p className="feature-description mobile-only">{f.shortBenefit}</p>
             </div>
           ))}
         </div>

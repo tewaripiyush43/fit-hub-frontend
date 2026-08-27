@@ -1,5 +1,8 @@
 # https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Disallow:
+Allow: /
+Disallow: /reset-password/
+Disallow: /api/
 
+# Sitemaps and LLM Discovery
 Sitemap: https://fit-hubb.netlify.app/sitemap.xml

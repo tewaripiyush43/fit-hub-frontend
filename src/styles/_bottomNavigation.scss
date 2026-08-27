@@ -8,15 +8,16 @@
     left: 0;
     right: 0;
     z-index: 999;
-    background: rgba(30, 30, 36, 0.85);
-    backdrop-filter: $glass-blur;
-    -webkit-backdrop-filter: $glass-blur;
-    border-top: 1px solid $glass-border;
-    box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.5);
+    background: rgba(14, 14, 18, 0.96);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4);
     justify-content: space-around;
     align-items: center;
-    padding-bottom: env(safe-area-inset-bottom, 8px);
-    height: calc(65px + env(safe-area-inset-bottom, 8px));
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    height: calc(58px + env(safe-area-inset-bottom, 0px));
+    box-sizing: border-box;
   }
 }
 
@@ -26,111 +27,103 @@
   align-items: center;
   justify-content: center;
   color: rgba(255, 255, 255, 0.5);
+  background: transparent;
+  border: none;
   cursor: pointer;
-  flex-grow: 1;
+  flex: 1;
   height: 100%;
-  padding-top: 8px;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 4px 0 2px;
+  transition: color 0.2s ease, transform 0.15s ease;
   position: relative;
+  min-width: 0;
+  -webkit-tap-highlight-color: transparent;
 
   svg {
-    font-size: 1.35rem;
-    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.2s ease;
+    font-size: 1.28rem;
+    transition: transform 0.2s ease, color 0.2s ease;
+    flex-shrink: 0;
   }
 
   .tab-label {
-    font-size: 0.7rem;
+    font-size: 0.68rem;
     font-weight: 600;
     letter-spacing: 0.2px;
-    margin-top: 3px;
+    margin-top: 2px;
     transition: color 0.2s ease;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 100%;
   }
 
   &:active {
     svg {
-      transform: scale(0.85);
+      transform: scale(0.9);
     }
   }
 
   &.active {
-    color: $accent;
+    color: var(--accent, #00e5ff);
     
     svg {
-      color: $accent;
-      transform: translateY(-2px);
-      filter: drop-shadow(0 0 5px rgba(0, 229, 255, 0.4));
+      color: var(--accent, #00e5ff);
     }
 
     .tab-label {
-      color: $accent;
+      color: var(--accent, #00e5ff);
+      font-weight: 700;
     }
     
     &::after {
       content: '';
       position: absolute;
       top: 0;
-      width: 20px;
-      height: 3px;
-      background: $accent;
-      border-radius: 0 0 4px 4px;
-      box-shadow: 0 1px 8px $accent;
+      width: 24px;
+      height: 2.5px;
+      background: var(--accent, #00e5ff);
+      border-radius: 0 0 3px 3px;
     }
   }
 }
 
 .center-action-tab {
-  position: relative;
-  top: -12px;
-
   .center-action-btn {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #00f0ff 0%, #0072ff 100%);
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: rgba(0, 229, 255, 0.12);
+    border: 1px solid rgba(0, 229, 255, 0.3);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #050811;
-    box-shadow: 0 4px 16px rgba(0, 240, 255, 0.45);
-    transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    color: var(--accent, #00e5ff);
+    transition: all 0.2s ease;
 
     svg {
-      font-size: 1.4rem;
-      color: #050811;
+      font-size: 1.18rem;
+      color: var(--accent, #00e5ff);
     }
   }
 
   &.pulse-active {
     .center-action-btn {
-      background: linear-gradient(135deg, #ff5e62 0%, #ff9966 100%);
-      box-shadow: 0 0 20px rgba(255, 94, 98, 0.7);
-      animation: centerActionPulse 1.8s infinite;
+      background: rgba(0, 229, 255, 0.2);
+      border-color: var(--accent, #00e5ff);
 
       .active-flame-icon {
-        color: #ffffff;
+        color: var(--accent, #00e5ff);
       }
     }
 
     .tab-label {
-      color: #ff5e62;
-      font-weight: 800;
+      color: var(--accent, #00e5ff);
+      font-weight: 700;
     }
   }
 
-  &:hover .center-action-btn {
-    transform: scale(1.08);
-  }
-}
-
-@keyframes centerActionPulse {
-  0% {
-    box-shadow: 0 0 0 0 rgba(255, 94, 98, 0.7);
-  }
-  70% {
-    box-shadow: 0 0 0 12px rgba(255, 94, 98, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(255, 94, 98, 0);
+  &:hover .center-action-btn,
+  &:active .center-action-btn {
+    background: rgba(0, 229, 255, 0.25);
   }
 }
 
@@ -163,12 +156,31 @@
   color: #fff;
 }
 
+.bottom-sheet-handle-zone {
+  width: 100%;
+  padding: 4px 0 14px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: grab;
+  touch-action: pan-y;
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
 .bottom-sheet-handle {
-  width: 40px;
-  height: 4px;
-  background-color: rgba(255, 255, 255, 0.2);
-  border-radius: 2px;
-  margin: 0 auto 20px auto;
+  width: 44px;
+  height: 5px;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+
+  .bottom-sheet-handle-zone:active & {
+    background-color: var(--accent, #00e5ff);
+    transform: scaleX(1.15);
+  }
 }
 
 .bottom-sheet-header {
@@ -185,14 +197,14 @@
       width: 48px;
       height: 48px;
       border-radius: 50%;
-      background: linear-gradient(135deg, $accent 0%, darken($accent, 20%) 100%);
+      background: linear-gradient(135deg, $accent 0%, var(--accent-hover, $accent) 100%);
       color: #000;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 800;
       font-size: 1.25rem;
-      box-shadow: 0 4px 12px rgba(0, 229, 255, 0.25);
+      box-shadow: 0 4px 12px var(--accent-glow, rgba(0, 229, 255, 0.25));
     }
 
     .user-details {
@@ -352,7 +364,7 @@
     flex-shrink: 0;
 
     .install-btn {
-      background: linear-gradient(135deg, $accent 0%, darken($accent, 15%) 100%);
+      background: linear-gradient(135deg, $accent 0%, var(--accent-hover, $accent) 100%);
       color: #000;
       border: none;
       padding: 8px 14px;

@@ -31,16 +31,17 @@ const Navbar = () => {
   const portalStates = useSelector((state) => state.portal);
 
   const open = Boolean(anchorEl);
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-    document.body.classList.add("account-menu-custom-style");
-  };
   const handleDropDownClose = () => {
     setAnchorEl(null);
     document.body.classList.remove("account-menu-custom-style");
   };
+
   const takeToHomePage = () => {
-    navigate(`/`);
+    if (isLoggedIn && user?.username) {
+      navigate(`/${user.username}/dashboard`);
+    } else {
+      navigate(`/`);
+    }
   };
 
   const takeToExercisesPage = () => {
@@ -51,6 +52,22 @@ const Navbar = () => {
     await logout(dispatch);
     navigate(`/`);
     handleDropDownClose();
+  };
+
+  const handleAvatarClick = (e) => {
+    e.stopPropagation();
+    navigate(`/${user?.username}/myprofile`);
+  };
+
+  const handleDropdownToggle = (event) => {
+    event.stopPropagation();
+    if (anchorEl) {
+      handleDropDownClose();
+    } else {
+      const container = event.currentTarget.closest(".avatar-pill-container") || event.currentTarget;
+      setAnchorEl(container);
+      document.body.classList.add("account-menu-custom-style");
+    }
   };
 
   const [navVisible, setNavVisible] = useState(true);
@@ -160,52 +177,45 @@ const Navbar = () => {
             </button>
           ) : (
             <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-              {user?.streak > 0 && (
+              {isLoggedIn && (
                 <div
-                  className="navbar-streak-badge"
+                  className={`navbar-streak-badge ${user?.streak > 0 ? "lit" : ""}`}
                   onClick={() => navigate(`/${user?.username}/dashboard`)}
-                  title={`${user.streak} Day Workout Streak!`}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "4px",
-                    background: "rgba(255, 94, 98, 0.12)",
-                    border: "1px solid rgba(255, 94, 98, 0.3)",
-                    padding: "4px 10px",
-                    borderRadius: "20px",
-                    cursor: "pointer",
-                    transition: "all 0.2s ease",
-                  }}
+                  title={user?.streak > 0 ? `${user.streak} Day Workout Streak! 🔥` : "Start a streak — workout today!"}
                 >
-                  <WhatshotIcon style={{ color: "#ff5e62", fontSize: "1.1rem" }} />
-                  <span
-                    style={{
-                      color: "#ffffff",
-                      fontWeight: "800",
-                      fontSize: "0.85rem",
-                    }}
-                  >
-                    {user.streak}
+                  <WhatshotIcon style={{ fontSize: "1.15rem" }} />
+                  <span>
+                    {user?.streak || 0}
                   </span>
                 </div>
               )}
-              <Tooltip title="Account menu">
-                <div
-                  className={`avatar-pill-container ${open ? "active" : ""}`}
-                  onClick={handleClick}
-                  aria-controls={open ? "account-menu" : undefined}
-                  aria-haspopup="true"
-                  aria-expanded={open ? "true" : undefined}
-                >
-                  <Avatar className="profile-avatar">
+              <div
+                className={`avatar-pill-container ${open ? "active" : ""}`}
+                onClick={handleDropdownToggle}
+                aria-controls={open ? "account-menu" : undefined}
+                aria-haspopup="true"
+                aria-expanded={open ? "true" : undefined}
+              >
+                <Tooltip title="View Profile">
+                  <Avatar
+                    className="profile-avatar"
+                    onClick={handleAvatarClick}
+                    style={{ cursor: "pointer" }}
+                    title="Go to My Profile"
+                  >
                     {user?.username ? user.username[0].toUpperCase() : "U"}
                   </Avatar>
-                  {!isMobile && (
-                    <span className="avatar-username">{user?.username}</span>
-                  )}
-                  <KeyboardArrowDownIcon className="avatar-dropdown-arrow" />
-                </div>
-              </Tooltip>
+                </Tooltip>
+                {!isMobile && (
+                  <span className="avatar-username" title="Account Menu">
+                    {user?.username}
+                  </span>
+                )}
+                <KeyboardArrowDownIcon
+                  className="avatar-dropdown-arrow"
+                  title="Account Menu"
+                />
+              </div>
               <Menu
                 anchorEl={anchorEl}
                 id="account-menu"

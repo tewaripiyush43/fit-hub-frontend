@@ -123,21 +123,44 @@ $breakpoints: (
 
 html,
 body {
-  // font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-  //   Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-  background-color: $background;
-  // font-family: "Roboto", sans-serif;
-  font-family: "Arial", sans-serif;
-
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
   scroll-behavior: smooth;
-
+  min-height: 100vh;
+  width: 100%;
+  max-width: 100%;
   overflow-x: hidden;
-  user-select: none;
+}
+
+#root,
+.App,
+.main-app-content {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Touch targets optimization */
+button, 
+input, 
+select, 
+textarea, 
+[role="button"] {
+  font-family: inherit;
 }
 
 body.modal-open {
   overflow-y: hidden !important;
-  // position: fixed;
 }
 
 .account-menu-custom-style {
@@ -193,6 +216,10 @@ html.modal-open {
   display: flex;
   flex-direction: column;
   transition: margin-left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+  @media (max-width: 768px) {
+    padding-bottom: calc(var(--bottom-nav-height) + var(--space-md));
+  }
 }
 
 .testing {
@@ -243,6 +270,18 @@ html.modal-open {
 @import "progressAnalytics.scss";
 @import "trainingDashboard.scss";
 
+// ── UI Primitives & Design System Engine ──────────────────────────────────────
+@import "ui/button.scss";
+@import "ui/input.scss";
+@import "ui/card.scss";
+@import "ui/badge.scss";
+@import "ui/avatar.scss";
+@import "ui/modal.scss";
+@import "ui/states.scss";
+@import "ui/skeleton.scss";
+@import "ui/headers.scss";
+@import "ui/layout.scss";
+
 
 // Sidebar Layout Coordinations
 .App.has-sidebar {
@@ -275,25 +314,29 @@ html.modal-open {
 
 .back-to-top-btn {
   position: fixed;
-  bottom: 28px;
-  right: 95px; // Shift left to prevent collision with AI Chat Toggle
-  width: 50px;
-  height: 50px;
+  bottom: 92px;
+  right: 31px;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
-  background: linear-gradient(135deg, $accent 0%, darken($accent, 15%) 100%);
-  color: #000;
-  border: none;
+  background: var(--bg-elevated, #1e1e24);
+  color: var(--text-primary, #fff);
+  border: 1px solid rgba(255, 255, 255, 0.14);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  z-index: 9999;
-  box-shadow: 0 4px 20px rgba($accent, 0.3);
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-  opacity: 0.9;
+  z-index: 1040;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  transition: all 0.25s ease;
+  opacity: 0.85;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
 
   svg {
-    font-size: 1.8rem;
+    font-size: 1.4rem;
     transition: transform 0.3s ease;
   }
 
@@ -319,5 +362,50 @@ html.modal-open {
   }
 }
 
+.Toastify__toast-container {
+  z-index: 9999999 !important;
+  pointer-events: auto !important;
+}
 
+.Toastify__toast-container--top-center {
+  top: 16px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: 92vw !important;
+  max-width: 440px !important;
+  padding: 0 !important;
+  margin: 0 auto !important;
+}
 
+.Toastify__toast {
+  border-radius: 14px !important;
+  font-family: inherit !important;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.7) !important;
+  min-height: 52px !important;
+  padding: 12px 16px !important;
+  cursor: default !important;
+}
+
+.toast-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(0, 229, 255, 0.16);
+  border: 1px solid rgba(0, 229, 255, 0.45);
+  color: #00e5ff;
+  padding: 5px 12px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 750;
+  cursor: pointer;
+  width: fit-content;
+  margin-top: 4px;
+  transition: all 0.2s ease;
+  font-family: inherit;
+
+  &:hover {
+    background: var(--accent, #00e5ff);
+    color: #050811;
+    box-shadow: 0 2px 10px rgba(0, 229, 255, 0.35);
+  }
+}

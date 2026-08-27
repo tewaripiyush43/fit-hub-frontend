@@ -1,22 +1,23 @@
 .exercise-page {
-  background-color: #121212; // deep modern slate/dark
-  padding: 100px 24px 40px 24px; // clear fixed navbar
+  background-color: var(--bg-base, #0a0c14);
+  padding: 100px 24px 60px 24px;
   min-height: 100vh;
-  color: $text;
+  color: #ffffff;
   font-family: 'Outfit', 'Inter', sans-serif;
+  box-sizing: border-box;
 
   // Header quote panel
   .exercise-page-header-container {
     max-width: 1200px;
-    margin: 0 auto 40px auto;
+    margin: 0 auto 36px auto;
     
     .exercise-page-quote-panel {
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid rgba(255, 255, 255, 0.06);
+      background: var(--bg-surface, #121522);
+      border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 20px;
       padding: 24px;
       backdrop-filter: blur(20px);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
       position: relative;
       overflow: hidden;
       
@@ -149,6 +150,9 @@
     max-width: 1200px;
     margin: 0 auto;
     align-items: start;
+    position: relative;
+    z-index: 2;
+    overflow: visible;
     
     @media (max-width: 992px) {
       grid-template-columns: 1fr;
@@ -162,6 +166,7 @@
       border-radius: 24px;
       padding: 24px;
       position: relative;
+      z-index: 1;
       box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
       display: flex;
       flex-direction: column;
@@ -210,6 +215,10 @@
           object-fit: contain;
           filter: invert(1) contrast(1.3) brightness(0.95);
           mix-blend-mode: screen;
+          -webkit-touch-callout: none !important;
+          -webkit-user-select: none !important;
+          user-select: none !important;
+          -webkit-user-drag: none !important;
         }
         
         .gif-placeholder {
@@ -222,11 +231,14 @@
     
     // Right Card (Info)
     .exercise-info-card {
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid rgba(255, 255, 255, 0.05);
+      background: var(--bg-surface, #121522);
+      border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.05));
       border-radius: 24px;
       padding: 36px;
       box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+      position: relative;
+      z-index: 20;
+      overflow: visible !important;
       
       @media (max-width: 576px) {
         padding: 24px;
@@ -239,6 +251,8 @@
         gap: 16px;
         margin-bottom: 24px;
         flex-wrap: wrap;
+        position: relative;
+        z-index: 30;
         
         .exercise-name-title {
           font-size: 2.2rem;
@@ -247,7 +261,7 @@
           text-transform: capitalize;
           margin: 0;
           line-height: 1.15;
-          background: linear-gradient(135deg, #fff 40%, rgba($accent, 0.8));
+          background: linear-gradient(135deg, #fff 40%, var(--accent, #00e5ff) 100%);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           
@@ -259,12 +273,13 @@
         // Add to workout dropdown
         .add-to-workout-container {
           position: relative;
+          z-index: 100;
           
           .add-to-workout-trigger-btn {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            background: $accent;
+            background: var(--accent, #00e5ff);
             color: #000;
             border: none;
             padding: 8px 18px;
@@ -273,25 +288,29 @@
             font-weight: 750;
             cursor: pointer;
             transition: all 0.25s ease;
-            box-shadow: 0 4px 15px rgba($accent, 0.3);
+            box-shadow: 0 4px 15px var(--accent-glow, rgba(0, 229, 255, 0.3));
             
             &:hover {
               transform: translateY(-1px);
-              box-shadow: 0 6px 20px rgba($accent, 0.45);
+              box-shadow: 0 6px 20px var(--accent-glow, rgba(0, 229, 255, 0.45));
             }
           }
           
           .add-to-workout-dropdown-menu {
             position: absolute;
             top: calc(100% + 8px);
-            right: 0;
-            width: 250px;
-            background: #1e1e1e;
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            left: 0;
+            right: auto;
+            width: 270px;
+            max-width: min(320px, calc(100vw - 48px));
+            background: var(--bg-elevated, #181c2e);
+            border: 1px solid var(--border-default, rgba(255, 255, 255, 0.12));
             border-radius: 16px;
             padding: 16px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            z-index: 100;
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            z-index: 9999;
             
             .dropdown-menu-title {
               font-size: 0.78rem;
@@ -644,19 +663,20 @@
       width: 100% !important;
       max-width: 100% !important;
       box-sizing: border-box;
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid rgba(255, 255, 255, 0.04);
+      background: var(--bg-surface, #121522);
+      border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 24px;
-      padding: 48px 40px 60px 40px;
-      margin: 0 auto 40px auto;
+      padding: 36px 32px;
+      margin: 0 auto 36px auto;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 60px;
+      gap: 40px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
       
-      @media (max-width: 768px) {
+      @media (max-width: 900px) {
         flex-direction: column !important;
-        padding: 24px;
+        padding: 24px 18px;
         gap: 24px;
       }
       
@@ -671,93 +691,91 @@
           font-weight: 800;
           text-transform: uppercase;
           letter-spacing: 1.5px;
-          color: rgba($text, 0.4);
+          color: var(--accent, #00e5ff);
           margin-bottom: 6px;
         }
 
         .muscle-detail-title {
-          font-size: 1.8rem;
-          font-weight: 850;
+          font-size: 1.6rem;
+          font-weight: 800;
           letter-spacing: -0.3px;
           margin: 0 0 12px 0;
-          color: #fff;
+          color: #ffffff;
           text-transform: capitalize;
-          background: linear-gradient(135deg, #fff 50%, rgba($accent, 0.7));
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
         }
         
         .muscle-info-ruler {
           display: block;
-          background: $accent;
+          background: var(--accent, #00e5ff);
           height: 3px;
-          width: 50px;
+          width: 45px;
           border: none;
-          margin: 0 0 24px 0;
+          margin: 0 0 20px 0;
+          border-radius: 2px;
         }
         
         .muscle-benefits-grid {
           display: flex;
           flex-direction: column;
-          gap: 16px;
-          margin-bottom: 30px;
+          gap: 12px;
+          margin-bottom: 24px;
 
           .benefit-card {
             display: flex;
             align-items: center;
             gap: 14px;
-            padding: 14px;
+            padding: 12px 14px;
             border-radius: 12px;
-            background: rgba(255, 255, 255, 0.015);
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            transition: all 0.25s ease;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.2s ease;
 
             &:hover {
-              background: rgba(255, 255, 255, 0.03);
-              border-color: rgba(255, 255, 255, 0.06);
-              transform: translateX(4px);
+              background: rgba(255, 255, 255, 0.04);
+              border-color: rgba(255, 255, 255, 0.1);
+              transform: translateX(3px);
             }
 
             .benefit-icon-wrapper {
               display: flex;
               align-items: center;
               justify-content: center;
-              width: 38px;
-              height: 38px;
+              width: 36px;
+              height: 36px;
               border-radius: 10px;
               flex-shrink: 0;
 
               &.target-icon {
-                background: rgba($accent, 0.1);
-                color: $accent;
+                background: rgba(0, 229, 255, 0.12);
+                color: var(--accent, #00e5ff);
               }
 
               &.burn-icon {
-                background: rgba(#ff5722, 0.1);
-                color: #ff5722;
+                background: rgba(239, 68, 68, 0.12);
+                color: #f87171;
               }
 
               &.tips-icon {
-                background: rgba(#ffeb3b, 0.1);
-                color: #ffeb3b;
+                background: rgba(234, 179, 8, 0.12);
+                color: #fde047;
               }
 
               svg {
-                font-size: 1.15rem;
+                font-size: 1.1rem;
               }
             }
 
             .benefit-info {
               h4 {
-                font-size: 0.85rem;
+                font-size: 0.82rem;
                 font-weight: 750;
-                color: rgba($text, 0.9);
+                color: #ffffff;
                 margin: 0 0 2px 0;
               }
 
               p {
-                font-size: 0.82rem;
-                color: rgba($text, 0.55);
+                font-size: 0.8rem;
+                color: rgba(255, 255, 255, 0.65);
                 margin: 0;
                 line-height: 1.4;
 
@@ -773,22 +791,22 @@
           display: inline-flex;
           align-items: center;
           align-self: flex-start;
-          gap: 8px;
-          background: rgba(255, 255, 255, 0.05);
-          border: 1px solid rgba(255, 255, 255, 0.15);
-          color: $text;
-          padding: 10px 22px;
-          border-radius: 30px;
-          font-size: 0.85rem;
-          font-weight: 750;
+          gap: 6px;
+          background: rgba(0, 229, 255, 0.1);
+          border: 1px solid rgba(0, 229, 255, 0.3);
+          color: var(--accent, #00e5ff);
+          padding: 8px 18px;
+          border-radius: 10px;
+          font-size: 0.82rem;
+          font-weight: 800;
           cursor: pointer;
-          transition: all 0.25s ease;
+          transition: all 0.2s ease;
           
           &:hover {
-            background: $accent;
-            color: #000;
+            background: linear-gradient(135deg, var(--accent, #00e5ff) 0%, #00b4d8 100%);
+            color: #050811;
             border-color: transparent;
-            box-shadow: 0 4px 12px rgba($accent, 0.25);
+            box-shadow: 0 4px 14px rgba(0, 229, 255, 0.3);
             transform: translateY(-1px);
 
             svg {
@@ -797,50 +815,68 @@
           }
 
           svg {
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             transition: transform 0.2s ease;
           }
         }
       }
       
-      // Swiper container
-      & > div:last-child {
-        width: 320px;
+      .swiper-slider-wrapper {
+        width: 340px;
+        max-width: 100%;
         flex-shrink: 0;
-        overflow: visible;
-        
-        @media (max-width: 480px) {
-          width: 100%;
-          max-width: 280px;
-        }
-        
-        .mySwiper.swiper {
-          width: 100% !important;
-          max-width: 320px;
-          height: 420px !important;
-          padding: 20px 0;
-          overflow: visible;
+        margin: 0 auto;
 
-          .swiper-pagination {
-            bottom: 4px !important;
+        @media (max-width: 768px) {
+          width: 100%;
+          max-width: 320px;
+        }
+      }
+
+      // Custom prev/next nav bar above swiper
+      .detail-carousel-nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: 10px;
+
+        .detail-carousel-count {
+          font-size: 0.75rem;
+          font-weight: 700;
+          color: rgba(255, 255, 255, 0.45);
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+
+        .detail-carousel-btn {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 34px;
+          height: 34px;
+          border-radius: 10px;
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          color: rgba(255, 255, 255, 0.7);
+          cursor: pointer;
+          transition: all 0.2s ease;
+          flex-shrink: 0;
+
+          svg {
+            font-size: 1.2rem;
           }
 
-          .swiper-slide {
-            background: transparent;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 360px !important;
+          &:hover:not([disabled]) {
+            background: rgba(0, 229, 255, 0.1);
+            border-color: rgba(0, 229, 255, 0.35);
+            color: #00e5ff;
+          }
 
-            .exercise-card {
-              height: 100%;
-              border-radius: 20px;
-
-              img {
-                height: 220px !important;
-                border-radius: 20px 20px 0 0;
-              }
-            }
+          &[disabled],
+          &.swiper-button-disabled {
+            opacity: 0.25;
+            cursor: not-allowed;
           }
         }
       }

@@ -1,0 +1,129 @@
+/* ==========================================================================
+   FitHub UI Primitive — Modal & BottomSheet Styles
+   ========================================================================== */
+
+.fh-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--bg-overlay);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: var(--space-md);
+  animation: fh-fade-in var(--duration-base) var(--ease-standard);
+
+  @media (max-width: 768px) {
+    align-items: flex-end;
+    padding: 0;
+  }
+}
+
+.fh-modal {
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+  max-height: calc(100vh - 48px);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-modal);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: fh-modal-pop var(--duration-base) var(--ease-spring);
+
+  &--lg {
+    max-width: 720px;
+  }
+
+  &--xl {
+    max-width: 960px;
+  }
+
+  /* Bottom sheet behavior on mobile */
+  @media (max-width: 768px) {
+    max-width: 100%;
+    max-height: 90vh;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    padding-bottom: var(--safe-bottom);
+    animation: fh-sheet-slide var(--duration-base) var(--ease-decelerate);
+  }
+
+  .fh-modal__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-lg) var(--space-lg) var(--space-sm);
+    border-bottom: 1px solid var(--border-subtle);
+
+    .fh-modal__title {
+      font-family: var(--font-display);
+      font-size: var(--font-size-h3);
+      font-weight: var(--weight-bold);
+      color: var(--text-primary);
+    }
+  }
+
+  .fh-modal__sheet-handle {
+    display: none;
+    width: 36px;
+    height: 4px;
+    border-radius: var(--radius-full);
+    background: var(--border-default);
+    margin: var(--space-xs) auto 0;
+
+    @media (max-width: 768px) {
+      display: block;
+    }
+  }
+
+  .fh-modal__body {
+    padding: var(--space-lg);
+    overflow-y: auto;
+    flex-grow: 1;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .fh-modal__footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--space-sm);
+    padding: var(--space-md) var(--space-lg);
+    border-top: 1px solid var(--border-subtle);
+    background: var(--bg-elevated);
+  }
+}
+
+@keyframes fh-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fh-modal-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.94) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes fh-sheet-slide {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}

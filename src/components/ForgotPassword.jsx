@@ -1,48 +1,33 @@
-import React, { useState } from "react";
+import React from "react";
 import { portalActions } from "../store/index";
 import { useDispatch } from "react-redux";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
 const ForgotPassword = () => {
   const dispatch = useDispatch();
-  const [emailSent, setEmailSent] = useState(false);
 
   return (
     <div className="modal-style">
-      {emailSent && (
-        <p className="forgot-password-text sent">
-          Please check your email for a link to reset your password and follow
-          the instructions provided.
-        </p>
-      )}
-      <p className="forgot-password-text">
-        Enter your email address or username to reset your password
+      <div style={{ textAlign: "center", marginBottom: "16px" }}>
+        <InfoOutlinedIcon style={{ fontSize: "2.4rem", color: "#00e5ff" }} />
+      </div>
+      <h3 style={{ color: "#fff", marginBottom: "12px", textAlign: "center" }}>
+        Password Recovery
+      </h3>
+      <p className="forgot-password-text" style={{ fontSize: "0.95rem", lineHeight: "1.6", color: "#b0b0c0", textAlign: "center" }}>
+        Self-service email password reset is currently not configured in this environment. If you require password assistance or credential recovery, please reach out to the support team or your administrator.
       </p>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          setEmailSent(true);
-        }}
-        className="forgot-password-form"
-      >
-        <input
-          className="forgot-password-textfield"
-          type="email"
-          placeholder="Email"
-          required
-        />
-        <button type="submit" className="forgot-password-button">
-          Send Reset Email
-        </button>
-      </form>
-      <div className="return-back-container">
-        <p
+      <div className="return-back-container" style={{ marginTop: "24px", textAlign: "center" }}>
+        <button
+          type="button"
+          className="forgot-password-button"
           onClick={() => {
             dispatch(portalActions.setPortalTypeLogin());
           }}
+          style={{ width: "100%", padding: "12px" }}
         >
-          {" "}
-          &larr; back to login
-        </p>
+          &larr; Return to Login
+        </button>
       </div>
     </div>
   );

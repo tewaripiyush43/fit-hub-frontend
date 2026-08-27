@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import CalculateIcon from "@mui/icons-material/Calculate";
 import BookmarkAddedIcon from "@mui/icons-material/BookmarkAdded";
-import { toast } from "react-toastify";
+import { toast } from "../helpers/errorPopUp";
 import { useUnitPreference } from "../utils/useUnitPreference";
 import { addBodyMetric, updateUserInfo } from "../api/userApi";
 import { authActions } from "../store/index";
@@ -14,20 +14,20 @@ const BmiCalculator = () => {
   const { isMetric, weightUnit, heightUnit } = useUnitPreference();
   const isImperial = !isMetric;
 
-  const [age, setAge] = useState(() => user?.age || localStorage.getItem("fithub_bmi_age") || "");
-  const [gender, setGender] = useState(() => user?.gender || localStorage.getItem("fithub_bmi_gender") || "male");
-  const [height, setHeight] = useState(() => user?.height || localStorage.getItem("fithub_bmi_height") || (isMetric ? "178" : "70"));
-  const [weight, setWeight] = useState(() => user?.weight || localStorage.getItem("fithub_bmi_weight") || (isMetric ? "75" : "165"));
+  const [age, setAge] = useState(() => (user?.age !== undefined && user?.age !== null ? String(user.age) : ""));
+  const [gender, setGender] = useState(() => user?.gender || "male");
+  const [height, setHeight] = useState(() => (user?.height !== undefined && user?.height !== null ? String(user.height) : ""));
+  const [weight, setWeight] = useState(() => (user?.weight !== undefined && user?.weight !== null ? String(user.weight) : ""));
   const [bmi, setBmi] = useState(null);
   const [bmiStatus, setBmiStatus] = useState("");
   const [statusColor, setStatusColor] = useState("");
 
   useEffect(() => {
     if (user) {
-      if (user.age && !age) setAge(user.age);
+      if (user.age && !age) setAge(String(user.age));
       if (user.gender && !gender) setGender(user.gender);
-      if (user.height && !height) setHeight(user.height);
-      if (user.weight && !weight) setWeight(user.weight);
+      if (user.height && !height) setHeight(String(user.height));
+      if (user.weight && !weight) setWeight(String(user.weight));
     }
   }, [user]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -44,7 +44,7 @@ const BmiCalculator = () => {
       unit: isMetric ? "metric" : "imperial",
     };
 
-    if (isLoggedIn) {
+    if (isLoggedIn && user?._id) {
       try {
         await addBodyMetric(dispatch, {
           date: today,
@@ -71,12 +71,12 @@ const BmiCalculator = () => {
     }
 
     try {
-      const STORAGE_KEY = "fithub_body_metrics_history";
-      const existing = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+      const storageKey = user?._id ? `fithub_body_metrics_${user._id}` : "fithub_body_metrics_guest";
+      const existing = JSON.parse(localStorage.getItem(storageKey) || "[]");
       const updated = [...existing, newEntry].sort(
         (a, b) => (a.timestamp || new Date(a.date).getTime()) - (b.timestamp || new Date(b.date).getTime())
       );
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+      localStorage.setItem(storageKey, JSON.stringify(updated));
       window.dispatchEvent(new Event("fithub_metrics_changed"));
     } catch (err) {
       console.error("Failed to sync body metrics to local storage:", err);

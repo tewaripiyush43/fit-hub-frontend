@@ -1,11 +1,9 @@
-import { useState, useEffect } from "react";
-
+import React, { useState, useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import Exercises from "../components/Exercises";
 import Carousel from "../components/Carousel";
 import HomeBanner from "../components/HomeBanner";
-import SectionCards from "../components/SectionCards";
 import StatsSection from "../components/StatsSection";
 import FeaturesSection from "../components/FeaturesSection";
 import { errorPopUp } from "../helpers/errorPopUp";
@@ -47,7 +45,6 @@ export default function Home() {
       <HomeBanner />
       <StatsSection />
       <FeaturesSection />
-      <SectionCards />
       <Carousel
         id="exercise-carousel"
         setSearchByCarousel={setSearchByCarousel}
@@ -61,4 +58,3 @@ export default function Home() {
     </div>
   );
 }
-

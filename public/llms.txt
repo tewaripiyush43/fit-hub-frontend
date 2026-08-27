@@ -1,0 +1,23 @@
+# FitHub
+> AI-powered fitness tracking, intelligent routine generation, and exercise biomechanics platform.
+
+FitHub provides fitness tracking, science-backed workout routine generation via Google Gemini, a 1,300+ animated exercise database with GIF demonstrations, an interactive 2D muscle anatomy map, and healthy macro-balanced nutrition recipes.
+
+## Key Features & Public Endpoints
+
+- **Home & Feature Hub**: `https://fit-hubb.netlify.app/`
+  - Overview of AI workout generator, feature highlights, and body part filters.
+- **Exercise Library (1,300+ Exercises)**: `https://fit-hubb.netlify.app/exercises`
+  - Searchable exercise repository filterable by target muscle, body part, and gym equipment with step-by-step form execution.
+- **2D Muscle Anatomy Map & Biomechanics Explorer**: `https://fit-hubb.netlify.app/anatomy`
+  - Interactive anatomical front/back muscle map showing prime mover exercises, optimal set/rep schemes, and dynamic warmup protocols.
+- **Nutritious Recipes Feed**: `https://fit-hubb.netlify.app/recipes`
+  - High-protein, Low-carb, Keto, and Vegan meal guides with exact calorie and macronutrient breakdowns.
+- **Fitness Calculators & Tools**: `https://fit-hubb.netlify.app/fitnesstools`
+  - Olympic barbell plate calculator, One-Rep Max (1RM) estimator, and Body Mass Index (BMI) calculator.
+
+## Technical Overview
+
+- **Frontend**: React SPA, Redux Toolkit, Vanilla SCSS design system, Service Worker offline caching.
+- **Backend**: Node.js, Express, MongoDB with weighted compound text indexes, JWT with HttpOnly cookies.
+- **AI Integrations**: Google Gemini structured JSON output schema for personalized workout generation and biomechanical motor unit analysis.

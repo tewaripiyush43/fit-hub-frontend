@@ -1,7 +1,9 @@
 .exercises-for-muscle-container {
   backdrop-filter: blur(40px);
   border-radius: 20px;
-  width: 96vw;
+  width: 100%;
+  max-width: 1200px;
+  box-sizing: border-box;
   margin: 20px auto 0 auto;
   min-height: 40vh;
   column-gap: 3rem;
@@ -140,93 +142,92 @@
     }
   }
 
-  .swiper {
-    margin-block: 1.5rem;
-    width: 400px;
-    height: 500px;
-    text-align: center;
-    border-radius: 10%;
-
-    @media (max-width: 1024px) {
-      width: 330px;
-      height: 480px;
-      // margin-right: 30px;
-    }
+  .swiper-slider-wrapper {
+    width: 380px;
+    max-width: 100%;
+    margin: 1.5rem 0;
 
     @media (max-width: 768px) {
-      width: 330px;
-      height: 450px;
-      // margin-right: 30px;
+      width: 100%;
+      max-width: 360px;
     }
 
     @media (max-width: 480px) {
-      width: 330px;
-      height: 420px;
-      // margin-right: 30px;
+      width: 100%;
+      max-width: 320px;
     }
+  }
 
-    @media (max-width: 320px) {
-      width: 280px;
-      height: 400px;
-      // margin-right: 30px;
-    }
+  .swiper {
+    width: 100%;
+    height: auto;
+    padding-bottom: 38px;
+    text-align: center;
+    border-radius: 18px;
 
     .swiper-slide {
-      border-radius: 10%;
-      height: 445px;
+      border-radius: 18px;
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      background: transparent;
+      box-sizing: border-box;
 
-      @media (max-width: 1024px) {
-        height: 400px;
+      .detail-carousel-card-wrap {
+        width: 100%;
+        max-width: 340px;
+        margin: 0 auto;
+
+        .exercise-card {
+          width: 100%;
+          border-radius: 18px;
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          background: #0a0c14;
+          overflow: hidden;
+          box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+
+          .exercise-card-img-wrapper {
+            height: 220px;
+            background: #000000;
+            border-radius: 18px 18px 0 0;
+
+            img {
+              width: 100%;
+              height: 100%;
+              object-fit: contain;
+            }
+          }
+
+          .exercise-card-body {
+            padding: 14px 16px;
+            background: rgba(14, 17, 28, 0.95);
+          }
+        }
       }
-
-      @media (max-width: 768px) {
-        height: 380px;
-      }
-
-      @media (max-width: 480px) {
-        height: 380px;
-      }
-
-      @media (max-width: 320px) {
-        height: 350px;
-      }
-    }
-
-    .exercise-card {
-      border: none;
-      border-radius: 10%;
-
-      img {
-        border-radius: 10%;
-      }
-
-      .card-info {
-        .exercise-button {}
-
-        .exercise-button:nth-child(2) {}
-      }
-
-      .exercise-name {}
-    }
-
-    .exercise-card:hover,
-    .bodyPart-card:hover {
-      transform: scale(1, 1);
     }
 
     .swiper-pagination-bullet {
-      background-color: $accent !important;
+      background-color: rgba(255, 255, 255, 0.3) !important;
+      opacity: 0.6;
+      transition: all 0.2s ease;
+
+      &-active {
+        background-color: var(--accent, #00e5ff) !important;
+        opacity: 1;
+        width: 20px;
+        border-radius: 10px;
+      }
     }
   }
 }
 
 .row {
-  background-color: $background;
+  background-color: var(--bg-surface, #121522);
 }
 
 .row-reverse {
   flex-direction: row-reverse;
-  background-color: $background;
+  background-color: var(--bg-surface, #121522);
 
   @media (max-width: 768px) {
     flex-direction: column-reverse;

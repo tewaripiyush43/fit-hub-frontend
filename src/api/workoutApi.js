@@ -8,7 +8,7 @@ export const addWorkout = async (dispatch, workoutName, exerciseId = null) => {
   }
   const response = await api.post("/workout/create", payload);
   const { data, status } = response;
-  if (status === 201) {
+  if (status === 201 || status === 200) {
     dispatch(authActions.setUser(data.user));
     return data.workoutId;
   }
@@ -32,7 +32,7 @@ export const fetchWorkout = async (dispatch, workoutId) => {
 export const deleteWorkout = async (dispatch, workoutId) => {
   const response = await api.delete(`/workout/remove/${workoutId}`);
   const { data, status } = response;
-  if (status === 201) {
+  if (status === 201 || status === 200) {
     dispatch(authActions.setUser(data.user));
     dispatch(workoutActions.setWorkoutData(null));
   }
@@ -47,7 +47,7 @@ export const updateWorkout = async (dispatch, workoutId, updatedData) => {
     },
   });
   const { data, status } = response;
-  if (status === 201) {
+  if (status === 201 || status === 200) {
     const workoutResult = { ...data.workout };
     const hasPopulatedExercises =
       workoutResult.exercises &&
@@ -66,9 +66,13 @@ export const updateWorkout = async (dispatch, workoutId, updatedData) => {
 export const addExerciseToWorkout = async (dispatch, workoutId, exerciseId) => {
   const response = await api.put(`/workout/addExercise/${workoutId}`, { exerciseId });
   const { data, status } = response;
-  if (status === 201) {
-    dispatch(workoutActions.setWorkoutData(data.workout));
-    dispatch(authActions.setUser(data.user));
+  if (status === 201 || status === 200) {
+    if (data.workout) {
+      dispatch(workoutActions.setWorkoutData(data.workout));
+    }
+    if (data.user) {
+      dispatch(authActions.setUser(data.user));
+    }
     return true;
   }
   return false;
@@ -77,10 +81,16 @@ export const addExerciseToWorkout = async (dispatch, workoutId, exerciseId) => {
 export const removeExerciseFromWorkout = async (dispatch, workoutId, exerciseId) => {
   const response = await api.put(`/workout/removeExercise/${workoutId}`, { exerciseId });
   const { data, status } = response;
-  if (status === 201) {
-    dispatch(workoutActions.setWorkoutData(data.workout));
-    dispatch(authActions.setUser(data.user));
+  if (status === 201 || status === 200) {
+    if (data.workout) {
+      dispatch(workoutActions.setWorkoutData(data.workout));
+    }
+    if (data.user) {
+      dispatch(authActions.setUser(data.user));
+    }
+    return true;
   }
+  return false;
 };
 
 export const generateAIWorkout = async (dispatch, payload) => {
@@ -129,4 +139,9 @@ export const fetchOfficialWorkouts = async () => {
 export const fetchAICoachSummary = async (payload) => {
   const response = await api.post("/workout/ai-coach-summary", payload);
   return response.data?.summary;
+};
+
+export const fetchAIMuscleCoachAnalysis = async (payload) => {
+  const response = await api.post("/workout/ai-muscle-coach", payload);
+  return response.data;
 };

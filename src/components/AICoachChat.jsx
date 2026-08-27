@@ -3,6 +3,9 @@ import { SendOutlined, CloseOutlined, MessageFilled } from "@ant-design/icons";
 import { useLocation } from "react-router-dom";
 import { sendMessage } from "../api/chatBotApi";
 
+// UI Primitives
+import { Badge } from "./ui";
+
 const formatMessageText = (text) => {
   if (!text) return "";
   const lines = text.split("\n");
@@ -60,6 +63,13 @@ const AICoachChat = () => {
   const [isTyping, setIsTyping] = useState(false);
 
   const messagesEndRef = useRef(null);
+
+  // Listen to global open-ai-coach event from bottom nav or header
+  useEffect(() => {
+    const handleOpen = () => setIsOpen(true);
+    window.addEventListener("open-ai-coach", handleOpen);
+    return () => window.removeEventListener("open-ai-coach", handleOpen);
+  }, []);
 
   // Auto-scroll to the latest message
   useEffect(() => {
@@ -186,8 +196,11 @@ const AICoachChat = () => {
                 <span className="online-dot"></span>
               </div>
               <div className="coach-info">
-                <h3>Fithub Coach</h3>
-                <span>AI Assistant • Online</span>
+                <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                  <h3 style={{ margin: 0 }}>FitHub AI Coach</h3>
+                  <Badge variant="accent" size="sm">GEMINI</Badge>
+                </div>
+                <span>Real-Time Biomechanics & Nutrition</span>
               </div>
             </div>
             <button className="close-drawer-btn" onClick={() => setIsOpen(false)} aria-label="Close AI Coach Chat">

@@ -1,0 +1,122 @@
+/* ==========================================================================
+   FitHub UI Primitive — Input & SearchInput Styles
+   ========================================================================== */
+
+.fh-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  width: 100%;
+
+  .fh-input__label {
+    font-size: var(--font-size-xs);
+    font-weight: var(--weight-medium);
+    color: var(--text-secondary);
+    letter-spacing: 0.5px;
+  }
+
+  .fh-input__wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+
+  .fh-input__icon-start,
+  .fh-input__icon-end {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    pointer-events: none;
+  }
+
+  .fh-input__icon-start {
+    left: var(--space-md);
+  }
+
+  .fh-input__icon-end {
+    right: var(--space-md);
+  }
+
+  .fh-input__clear-btn {
+    position: absolute;
+    right: var(--space-xs);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    min-width: 32px;
+    min-height: 32px;
+    border-radius: var(--radius-full);
+    transition: color var(--duration-fast);
+
+    &:hover {
+      color: var(--text-primary);
+    }
+  }
+
+  .fh-input {
+    width: 100%;
+    min-height: var(--touch-target-min);
+    padding: 0 var(--space-md);
+    background: var(--bg-input);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    font-size: var(--font-size-sm);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-subtle);
+    outline: none;
+    transition: all var(--duration-fast) var(--ease-standard);
+
+    &::placeholder {
+      color: var(--text-muted);
+    }
+
+    &:hover:not(:disabled) {
+      border-color: var(--border-default);
+      background: var(--bg-input-focus);
+    }
+
+    &:focus {
+      border-color: var(--accent);
+      background: var(--bg-input-focus);
+      box-shadow: 0 0 0 3px var(--accent-subtle);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      background: var(--bg-elevated);
+    }
+
+    &--has-icon-start {
+      padding-left: calc(var(--space-md) + 24px);
+    }
+
+    &--has-icon-end {
+      padding-right: calc(var(--space-md) + 24px);
+    }
+
+    &--error {
+      border-color: var(--danger) !important;
+      box-shadow: 0 0 0 3px var(--danger-subtle) !important;
+    }
+  }
+
+  .fh-input__error-msg {
+    font-size: var(--font-size-xs);
+    color: var(--danger);
+    font-weight: var(--weight-medium);
+  }
+
+  .fh-input__helper {
+    font-size: var(--font-size-xs);
+    color: var(--text-muted);
+  }
+}

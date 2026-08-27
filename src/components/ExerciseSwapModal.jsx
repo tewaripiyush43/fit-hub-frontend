@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import CloseIcon from "@mui/icons-material/Close";
 import SwapHorizIcon from "@mui/icons-material/SwapHoriz";
-import CheckIcon from "@mui/icons-material/Check";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
-import { findExercisesByBodyPart, findExercisesByMuscle, fetchExercises } from "../api/exerciseApi";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CircularProgress from "@mui/material/CircularProgress";
+import { fetchSubstitutions } from "../api/exerciseApi";
+import { toast } from "../helpers/errorPopUp";
 import "../styles/_gymModals.scss";
 
 const ExerciseSwapModal = ({
@@ -12,84 +14,84 @@ const ExerciseSwapModal = ({
   onClose,
   currentExercise,
   onSwapConfirm,
+  onSelectSubstitute,
 }) => {
-  const [alternatives, setAlternatives] = useState([]);
+  const [substitutes, setSubstitutes] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [selectedAlternative, setSelectedAlternative] = useState(null);
+  const [selectedExercise, setSelectedExercise] = useState(null);
 
+  // Load alternatives when modal opens
   useEffect(() => {
     if (!open || !currentExercise) return;
 
-    const loadAlternatives = async () => {
+    const loadSubstitutes = async () => {
       setLoading(true);
       try {
-        let results = [];
-        const target = currentExercise.target || currentExercise.targetMuscle;
-        const bodyPart = currentExercise.bodyPart;
-
-        if (target) {
-          try {
-            results = await findExercisesByMuscle(target);
-          } catch (e) {
-            results = [];
-          }
-        }
-
-        if ((!results || results.length < 3) && bodyPart) {
-          try {
-            const byBp = await findExercisesByBodyPart(bodyPart);
-            results = [...(results || []), ...(byBp || [])];
-          } catch (e) {
-            // ignore
-          }
-        }
-
-        if (!results || results.length === 0) {
-          const fallback = await fetchExercises(currentExercise.name?.split(" ")[0] || "press", 1);
-          results = fallback || [];
-        }
-
-        // Filter out current exercise and duplicates
-        const unique = [];
-        const seenIds = new Set([currentExercise._id]);
-
-        (results || []).forEach((item) => {
-          if (item && item._id && !seenIds.has(item._id)) {
-            seenIds.add(item._id);
-            unique.push(item);
-          }
-        });
-
-        setAlternatives(unique.slice(0, 8));
+        const target = currentExercise.target || currentExercise.bodyPart || "";
+        const data = await fetchSubstitutions(currentExercise._id || currentExercise.id, target);
+        setSubstitutes(data || []);
       } catch (err) {
-        console.error("Failed to load alternatives:", err);
+        console.error("Failed to load substitutions:", err);
+        toast.error("Could not load exercise alternatives.");
       } finally {
         setLoading(false);
       }
     };
 
-    loadAlternatives();
+    loadSubstitutes();
   }, [open, currentExercise]);
 
-  if (!open || !currentExercise) return null;
+  // Escape key handler
+  useEffect(() => {
+    if (!open) return;
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") {
+        onClose();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [open, onClose]);
+
+  if (!open) return null;
+
+  const handleConfirmSwap = () => {
+    if (!selectedExercise) {
+      toast.info("Please select an alternative exercise first.");
+      return;
+    }
+    const oldId = currentExercise?._id || currentExercise?.id;
+    if (onSwapConfirm) {
+      onSwapConfirm(oldId, selectedExercise);
+    } else if (onSelectSubstitute) {
+      onSelectSubstitute(selectedExercise);
+    }
+    onClose();
+  };
 
   return createPortal(
-    <div className="gym-modal-backdrop" onClick={onClose}>
-      <div className="gym-modal-card" onClick={(e) => e.stopPropagation()}>
+    <div
+      className="gym-modal-backdrop"
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="exercise-swap-title"
+    >
+      <div className="gym-modal-card swap-modal" onClick={(e) => e.stopPropagation()}>
         {/* Header */}
         <div className="gym-modal-header">
           <div className="header-left">
-            <div className="header-icon-wrap warmup">
+            <div className="header-icon-wrap swap">
               <SwapHorizIcon />
             </div>
             <div>
-              <h2 className="gym-modal-title">Swap / Substitute Exercise</h2>
+              <h2 id="exercise-swap-title" className="gym-modal-title">Swap Exercise</h2>
               <p className="gym-modal-subtitle">
-                Equipment busy? Pick an alternative for <strong>{currentExercise.name}</strong>
+                Substitute <strong>{currentExercise?.name}</strong> with a biomechanically equivalent exercise
               </p>
             </div>
           </div>
-          <button className="gym-modal-close-btn" onClick={onClose} title="Close">
+          <button className="gym-modal-close-btn" onClick={onClose} title="Close" aria-label="Close modal">
             <CloseIcon />
           </button>
         </div>
@@ -97,45 +99,57 @@ const ExerciseSwapModal = ({
         {/* Modal Body */}
         <div className="gym-modal-body">
           {loading ? (
-            <div style={{ textAlign: "center", padding: "40px", color: "#94a3b8" }}>
-              Finding best matching alternatives...
+            <div className="swap-loading-state">
+              <CircularProgress size={32} style={{ color: "#00f0ff" }} />
+              <p>Finding biomechanically matched exercises...</p>
             </div>
-          ) : alternatives.length === 0 ? (
-            <div style={{ textAlign: "center", padding: "40px", color: "#94a3b8" }}>
-              No instant alternatives found. You can add another exercise from My Workouts.
+          ) : substitutes.length === 0 ? (
+            <div className="swap-empty-state">
+              <FitnessCenterIcon style={{ fontSize: "2.5rem", color: "rgba(255, 255, 255, 0.2)" }} />
+              <p>No direct alternatives found for this target muscle group.</p>
             </div>
           ) : (
-            <div className="alternatives-list-grid">
-              {alternatives.map((alt) => {
-                const isSelected = selectedAlternative?._id === alt._id;
+            <div className="swap-options-list">
+              {substitutes.map((ex) => {
+                const isSelected = selectedExercise?._id === ex._id || selectedExercise?.id === ex.id;
                 return (
                   <div
-                    key={alt._id}
-                    className={`alternative-exercise-card ${isSelected ? "selected" : ""}`}
-                    onClick={() => setSelectedAlternative(alt)}
+                    key={ex._id || ex.id}
+                    className={`swap-option-card ${isSelected ? "selected" : ""}`}
+                    onClick={() => setSelectedExercise(ex)}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        setSelectedExercise(ex);
+                      }
+                    }}
                   >
-                    <div className="alt-card-left">
-                      {alt.gifUrl ? (
-                        <img src={alt.gifUrl} alt={alt.name} className="alt-thumb-gif" />
+                    <div className="swap-card-left">
+                      {ex.gifUrl ? (
+                        <img
+                          src={ex.gifUrl}
+                          alt={ex.name}
+                          className="swap-gif"
+                          loading="lazy"
+                        />
                       ) : (
-                        <div className="alt-thumb-placeholder">
+                        <div className="swap-placeholder-icon">
                           <FitnessCenterIcon />
                         </div>
                       )}
-                      <div className="alt-info">
-                        <h4 className="alt-name">{alt.name}</h4>
-                        <div className="alt-meta-tags">
-                          <span className="alt-tag target">{alt.target || alt.bodyPart}</span>
-                          {alt.equipment && (
-                            <span className="alt-tag equip">{alt.equipment}</span>
-                          )}
-                        </div>
+                    </div>
+                    <div className="swap-card-info">
+                      <div className="swap-name-row">
+                        <span className="swap-name">{ex.name}</span>
+                        {isSelected && <CheckCircleIcon className="selected-check" />}
+                      </div>
+                      <div className="swap-tags">
+                        <span className="sub-tag target-tag">{ex.target}</span>
+                        <span className="sub-tag equip-tag">{ex.equipment}</span>
                       </div>
                     </div>
-
-                    <button className={`alt-select-btn ${isSelected ? "active" : ""}`} type="button">
-                      {isSelected ? <CheckIcon fontSize="small" /> : "Select"}
-                    </button>
                   </div>
                 );
               })}
@@ -143,22 +157,19 @@ const ExerciseSwapModal = ({
           )}
         </div>
 
-        {/* Footer */}
-        <div className="gym-modal-footer">
-          <button className="secondary-modal-btn" onClick={onClose}>
+        {/* Footer Action */}
+        <div className="gym-modal-footer swap-footer">
+          <button type="button" className="btn-secondary-action" onClick={onClose}>
             Cancel
           </button>
           <button
-            className="primary-modal-btn"
-            disabled={!selectedAlternative}
-            onClick={() => {
-              if (selectedAlternative && onSwapConfirm) {
-                onSwapConfirm(currentExercise._id, selectedAlternative);
-                onClose();
-              }
-            }}
+            type="button"
+            className="btn-primary-action"
+            onClick={handleConfirmSwap}
+            disabled={!selectedExercise}
           >
-            <SwapHorizIcon /> Confirm Swap
+            <SwapHorizIcon style={{ fontSize: "1.1rem" }} />
+            <span>Confirm Swap</span>
           </button>
         </div>
       </div>

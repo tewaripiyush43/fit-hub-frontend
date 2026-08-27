@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import CloseIcon from "@mui/icons-material/Close";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
@@ -18,6 +18,18 @@ const PlateCalculatorModal = ({
   const [targetWeight, setTargetWeight] = useState(initialWeight || 60);
   const [currentUnit, setCurrentUnit] = useState(unit || "kg");
   const [barWeight, setBarWeight] = useState(currentUnit === "lbs" ? 45 : 20);
+
+  // Escape key handler
+  useEffect(() => {
+    if (!open) return;
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") {
+        onClose();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [open, onClose]);
 
   if (!open) return null;
 

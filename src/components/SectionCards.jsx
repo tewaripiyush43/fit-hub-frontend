@@ -27,7 +27,7 @@ const SectionCards = () => {
           description="Fuel your fitness journey with our curated selection of high-protein, nutritious recipes designed to match your goals and taste."
           buttonText="Browse Recipes"
           cardTitle="Recipes"
-          tag="500+ Recipes"
+          tag="Curated Recipes"
         />
       </div>
     </div>

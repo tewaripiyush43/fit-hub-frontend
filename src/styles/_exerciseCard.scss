@@ -38,6 +38,11 @@
       background: transparent;
       display: block;
       transition: transform 0.35s ease, filter 0.3s ease;
+      -webkit-touch-callout: none !important;
+      -webkit-user-select: none !important;
+      user-select: none !important;
+      -webkit-user-drag: none !important;
+      pointer-events: none;
     }
 
     &::after {
@@ -76,7 +81,7 @@
       left: 0;
       width: 0;
       height: 3px;
-      background: linear-gradient(90deg, $accent, darken($accent, 15%));
+      background: linear-gradient(90deg, $accent, var(--accent-hover, $accent));
       border-radius: 20px 20px 0 0;
       transition: width 0.4s ease 0.05s;
       z-index: 2;
@@ -134,11 +139,11 @@
     }
 
     &:hover {
-      background: rgba($accent, 0.15);
-      border-color: rgba($accent, 0.5);
-      color: $accent;
+      background: var(--accent-subtle, rgba(0, 240, 255, 0.15));
+      border-color: var(--border-accent, rgba(0, 240, 255, 0.5));
+      color: var(--accent, #00e5ff);
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 240, 255, 0.2);
+      box-shadow: 0 4px 12px var(--accent-glow, rgba(0, 240, 255, 0.2));
 
       svg {
         transform: scale(1.1);
@@ -169,11 +174,11 @@
 
   // "Add to Workout" dropdown panel
   .exercise-card-more-options {
-    background: rgba(18, 18, 26, 0.97);
+    background: var(--bg-elevated, #181c2e);
     color: $text;
     border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba($accent, 0.08);
+    border: 1px solid var(--border-default, rgba(255, 255, 255, 0.1));
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.7), 0 0 0 1px var(--border-subtle, rgba(255, 255, 255, 0.08));
     overflow: hidden;
     position: absolute;
     right: 0;
@@ -194,7 +199,7 @@
         font-size: 0.7rem;
         text-transform: uppercase;
         letter-spacing: 1.5px;
-        color: $accent;
+        color: var(--accent, #00e5ff);
         font-weight: 800;
         border-bottom: 1px solid rgba(255, 255, 255, 0.06);
         display: flex;
@@ -224,18 +229,18 @@
           width: 6px;
           height: 6px;
           border-radius: 50%;
-          background: rgba($accent, 0.35);
+          background: var(--border-accent, rgba(0, 229, 255, 0.35));
           flex-shrink: 0;
           transition: background 0.15s ease;
         }
 
         &:hover {
-          background: rgba($accent, 0.1);
-          color: $accent;
+          background: var(--accent-subtle, rgba(0, 229, 255, 0.1));
+          color: var(--accent, #00e5ff);
           padding-left: 20px;
 
           &::before {
-            background: $accent;
+            background: var(--accent, #00e5ff);
           }
         }
 
@@ -269,8 +274,8 @@
           }
 
           &:hover {
-            color: $accent;
-            background: rgba($accent, 0.08);
+            color: var(--accent, #00e5ff);
+            background: var(--accent-subtle, rgba(0, 229, 255, 0.08));
             padding-left: 16px;
           }
 
@@ -342,14 +347,65 @@
 
 // Responsive widths handled by the grid
 @media screen and (max-width: 1024px) {
-  .exercise-card img {
-    height: 260px;
+  .exercise-card {
+    .exercise-card-img-wrapper {
+      height: 240px;
+    }
   }
 }
 
 @media screen and (max-width: 768px) {
-  .exercise-card img {
-    height: 240px;
+  .exercise-card {
+    border-radius: 16px;
+
+    .exercise-card-img-wrapper {
+      height: 160px;
+    }
+
+    .exercise-card-body {
+      padding: 8px 10px 12px;
+      gap: 5px;
+
+      .exercise-info {
+        gap: 4px;
+
+        .exercise-type-btn {
+          font-size: 0.65rem;
+          padding: 2px 7px;
+          border-radius: 4px;
+        }
+      }
+
+      .exercise-name {
+        font-size: 0.85rem;
+        line-height: 1.25;
+      }
+    }
+
+    .exercise-card-icon-container {
+      top: 8px;
+      right: 8px;
+
+      .exercise-card-btn-pill,
+      .exercise-card-favorite-icon,
+      .exercise-card-more-icon {
+        width: 26px;
+        height: 26px;
+        border-radius: 7px;
+
+        svg {
+          font-size: 0.85rem !important;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 420px) {
+  .exercise-card {
+    .exercise-card-img-wrapper {
+      height: 135px;
+    }
   }
 }
 

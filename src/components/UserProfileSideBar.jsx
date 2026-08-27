@@ -4,18 +4,9 @@ import { useSelector, useDispatch } from "react-redux";
 import PushPinIcon from "@mui/icons-material/PushPin";
 import PushPinOutlinedIcon from "@mui/icons-material/PushPinOutlined";
 
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import BarChartIcon from "@mui/icons-material/BarChart";
-import PersonIcon from "@mui/icons-material/Person";
-import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import CalculateIcon from "@mui/icons-material/Calculate";
-import SettingsIcon from "@mui/icons-material/Settings";
-import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
-import HistoryIcon from "@mui/icons-material/History";
-
 import { authActions } from "../store/index";
 import { updateUserSettings } from "../api/userApi";
+import { getSidebarNavGroups } from "../constants/navigationConfig";
 
 const UserProfileSideBar = () => {
   const navigate = useNavigate();
@@ -24,7 +15,6 @@ const UserProfileSideBar = () => {
   const sidebarRef = useRef(null);
   const user = useSelector((state) => state.auth.user);
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
-  const username = user?.username;
   const [isSidebarShown, setIsSidebarShown] = useState(() => {
     const saved = localStorage.getItem("sidebar-shown");
     return saved !== null ? saved === "true" : false;
@@ -76,7 +66,6 @@ const UserProfileSideBar = () => {
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (activePinned) return;
-      // Prevent race condition when clicking the hamburger toggle or edge trigger
       if (
         event.target.closest(".navbar-hamburger-btn") ||
         event.target.closest(".show-sidebar")
@@ -94,54 +83,35 @@ const UserProfileSideBar = () => {
     };
   }, [sidebarRef, activePinned]);
 
-  const sidebarGroups = [
-    {
-      groupTitle: "TRAINING",
-      items: [
-        { id: "8", name: "Dashboard", icon: <DashboardIcon />, path: `/${username}/dashboard` },
-        { id: "3", name: "My Routines", icon: <FitnessCenterIcon />, path: `/${username}/myworkouts` },
-        { id: "10", name: "AI Generator", icon: <AutoAwesomeIcon />, path: `/${username}/myworkouts?ai=true` },
-      ],
-    },
-    {
-      groupTitle: "PROGRESS & DATA",
-      items: [
-        { id: "11", name: "Workout History", icon: <HistoryIcon />, path: `/${username}/history` },
-        { id: "9", name: "Analytics & PRs", icon: <BarChartIcon />, path: `/${username}/analytics` },
-      ],
-    },
-    {
-      groupTitle: "LIBRARY & TOOLS",
-      items: [
-        { id: "4", name: "Favorite Exercises", icon: <FavoriteIcon />, path: `/${username}/myfavorite` },
-        { id: "6", name: "Fitness Tools", icon: <CalculateIcon />, path: `/${username}/fitnesstools` },
-        { id: "2", name: "My Profile", icon: <PersonIcon />, path: `/${username}/myprofile` },
-        { id: "7", name: "Settings", icon: <SettingsIcon />, path: `/${username}/settings` },
-      ],
-    },
-  ];
+  const sidebarGroups = getSidebarNavGroups(user);
 
-  const [activeItem, setActiveItem] = useState("8");
+  const [activeItem, setActiveItem] = useState("dashboard");
 
   useEffect(() => {
     const pathname = location.pathname;
-    let activeId = "8";
+    let activeId = "dashboard";
     if (pathname.includes("/dashboard")) {
-      activeId = "8";
+      activeId = "dashboard";
     } else if (pathname.includes("/analytics")) {
-      activeId = "9";
+      activeId = "analytics";
     } else if (pathname.includes("/history")) {
-      activeId = "11";
+      activeId = "history";
+    } else if (pathname.includes("/anatomy") || pathname.includes("/muscle-map")) {
+      activeId = "anatomy";
+    } else if (pathname.includes("/recipes")) {
+      activeId = "recipes";
+    } else if (pathname.includes("/exercises")) {
+      activeId = "exercises";
     } else if (pathname.includes("/myprofile")) {
-      activeId = "2";
+      activeId = "profile";
     } else if (pathname.includes("/myworkouts")) {
-      activeId = location.search.includes("ai=true") ? "10" : "3";
+      activeId = location.search.includes("ai=true") ? "ai-generator" : "workouts";
     } else if (pathname.includes("/myfavorite")) {
-      activeId = "4";
+      activeId = "favorites";
     } else if (pathname.includes("/fitnesstools")) {
-      activeId = "6";
+      activeId = "tools";
     } else if (pathname.includes("/settings")) {
-      activeId = "7";
+      activeId = "settings";
     }
     setActiveItem(activeId);
   }, [location.pathname, location.search]);

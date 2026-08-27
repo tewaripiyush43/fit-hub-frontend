@@ -3,28 +3,36 @@ import { clearAccessToken } from "../utils/tokenService";
 
 const persistUserToStorage = (user) => {
   try {
-    if (user && Object.keys(user).length > 0) {
+    if (user && user._id) {
       localStorage.setItem("user", JSON.stringify(user));
       localStorage.setItem("isLoggedIn", "true");
     } else {
       localStorage.removeItem("user");
+      localStorage.removeItem("isLoggedIn");
     }
   } catch (e) {
     console.error("Failed to persist user to localStorage:", e);
   }
 };
 
+const getInitialUser = () => {
+  try {
+    const raw = localStorage.getItem("user");
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === "object" && parsed._id ? parsed : null;
+  } catch (e) {
+    return null;
+  }
+};
+
+const initialUser = getInitialUser();
+
 const authSlice = createSlice({
   name: "auth",
   initialState: {
-    isLoggedIn: localStorage.getItem("isLoggedIn") === "true",
-    user: (() => {
-      try {
-        return JSON.parse(localStorage.getItem("user") || "{}");
-      } catch (e) {
-        return {};
-      }
-    })(),
+    isLoggedIn: Boolean(localStorage.getItem("isLoggedIn") === "true" && initialUser),
+    user: initialUser,
   },
   reducers: {
     login(state) {
@@ -33,15 +41,26 @@ const authSlice = createSlice({
     },
     logout(state) {
       state.isLoggedIn = false;
-      state.user = {};
+      state.user = null;
       localStorage.removeItem("isLoggedIn");
       localStorage.removeItem("user");
       localStorage.removeItem("accessToken");
       localStorage.removeItem("sidebar-pinned");
+      localStorage.removeItem("fithub_active_session");
+      localStorage.removeItem("fithub_body_metrics_history");
+      localStorage.removeItem("fithub_bmi_height");
+      localStorage.removeItem("fithub_bmi_weight");
+      localStorage.removeItem("fithub_bmi_age");
+      localStorage.removeItem("fithub_bmi_gender");
       clearAccessToken();
     },
     setUser(state, action) {
-      state.user = action.payload || {};
+      const u = action.payload;
+      if (u === undefined) return;
+      state.user = u && typeof u === "object" && u._id ? u : null;
+      if (state.user) {
+        state.isLoggedIn = true;
+      }
       persistUserToStorage(state.user);
     },
     updateSettings(state, action) {

@@ -1,142 +1,49 @@
-:root {
-  --swiper-navigation-size: 30px;
-}
+@import "tokens.scss";
 
-//dark
-// Text Colors
-// $text: #ffffff;
-// $text-secondary: #000000;
-
-// // Background Colors
-// $background: #1d1d1d;
-// $background-hover: darken($background, 10%);
-// $background-transparent: rgba($background, 0.75);
-
-// // Button Colors
-// $primary-button: #ff6347;
-// $primary-button-hover: darken($primary-button, 10%);
-// $secondary-button: #6c757d;
-// $secondary-button-hover: darken($secondary-button, 10%);
-
-// // Accent Colors
-// $accent: #008080;
-// $accent-hover: darken($accent, 10%);
-
-// // Specific Element Colors
-// $exercise-card-background: darken($background, 20%);
-// $background-input-field: lighten($background, 5%);
-// $text-input-field: lighten($text, 20%);
-// $text-input-field-secondary: lighten($text, 15%);
-
-// //neon
-// Text Colors
-// $text: #f0f0f0;
-// $text-secondary: #000000;
-
-// // Background Colors
-// $background: #2e2e2e;
-// $background-hover: darken($background, 10%);
-// $background-transparent: rgba($background, 0.75);
-
-// // Button Colors
-// $primary-button: #ff6eff;
-// $primary-button-hover: darken($primary-button, 10%);
-// $secondary-button: #00ffd1;
-// $secondary-button-hover: darken($secondary-button, 10%);
-
-// // Accent Colors
-// $accent: #ffca1c;
-// $accent-hover: darken($accent, 10%);
-
-// // Specific Element Colors
-// $exercise-card-background: darken($background, 20%);
-// $background-input-field: lighten($background, 5%);
-// $text-input-field: lighten($text, 20%);
-// $text-input-field-secondary: lighten($text, 15%);
-
-// //grainy
-// Text Colors
-// $text: #ffffff;
-// $text-secondary: #000000;
-
-// // Background Colors
-// $background: #404040;
-// $background-hover: darken($background, 10%);
-// $background-transparent: rgba($background, 0.75);
-
-// // Button Colors
-// $primary-button: #ff6347;
-// $primary-button-hover: darken($primary-button, 10%);
-// $secondary-button: #808080;
-// $secondary-button-hover: darken($secondary-button, 10%);
-
-// // Accent Colors
-// $accent: #00aeef;
-// $accent-hover: darken($accent, 10%);
-
-// // Specific Element Colors
-// $exercise-card-background: darken($background, 20%);
-// $background-input-field: lighten($background, 5%);
-// $text-input-field: lighten($text, 20%);
-// $text-input-field-secondary: lighten($text, 15%);
-
-// //something else
-// Text Colors
-// $text: #ffffff;
-// $text-secondary: #000000;
-
-// // Background Colors
-// $background: #222222;
-// $background-hover: darken($background, 10%);
-// $background-transparent: rgba($background, 0.75);
-
-// // Button Colors
-// $primary-button: #ff4081;
-// $primary-button-hover: darken($primary-button, 10%);
-// $secondary-button: #757575;
-// $secondary-button-hover: darken($secondary-button, 10%);
-
-// // Accent Colors
-// $accent: #00bcd4;
-// $accent-hover: darken($accent, 10%);
-
-// // Specific Element Colors
-// $exercise-card-background: darken($background, 20%);
-// $background-input-field: lighten($background, 5%);
-// $text-input-field: lighten($text, 20%);
-// $text-input-field-secondary: lighten($text, 15%);
-
-//something
+// ── SCSS Variables (Compile-Time Compatible with Sass functions & CSS Tokens) ──
 // Text Colors
 $text: #ffffff;
-$text-secondary: #000000;
+$text-secondary: #b0b0c2;
+$text-muted: #73738c;
+$text-inverse: #0d0d11;
 
 // Background Colors
-$background: #1e1e24;
-$background-hover: #2a2a35;
-$background-transparent: rgba(30, 30, 36, 0.73);
+$background: #121522;
+$background-dark: #0a0c14;
+$background-hover: #181c2e;
+$background-transparent: rgba(18, 21, 34, 0.75);
 
 // Button Colors
-$primary-button: #ff5e62;
-$primary-button-hover: #ff474b;
-$secondary-button: #4b4b5a;
-$secondary-button-hover: #5d5d70;
+$primary-button: var(--primary, #00e5ff);
+$primary-button-hover: var(--primary-hover, #00c7de);
+$secondary-button: var(--bg-elevated, #181c2e);
+$secondary-button-hover: var(--bg-elevated-hover, #22273f);
 
 // Accent Colors
-$accent: #00e5ff;
-$accent-hover: #00b8cc;
+$accent: var(--accent, #00e5ff);
+$accent-hover: var(--accent-hover, #00c7de);
 $accent-invert: #ff4c19;
 
-// Specific Element Colors
-$exercise-card-background: #121216;
-$background-input-field: #2d2d3a;
-$text-input-field: #e2e2e9;
-$text-input-field-secondary: #b3b3c3;
+// Element Specific Colors
+$exercise-card-background: #0a0c14;
+$background-input-field: #151827;
+$text-input-field: #ffffff;
+$text-input-field-secondary: #b0b0c2;
 
 // Glassmorphism & Shadow variables
-$glass-bg: rgba(30, 30, 36, 0.65);
+$glass-bg: rgba(30, 30, 36, 0.72);
 $glass-border: rgba(255, 255, 255, 0.08);
 $glass-blur: blur(12px);
-$neon-glow: 0 0 15px rgba(0, 229, 255, 0.35);
-$card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
-$danger-glow: 0 0 15px rgba(255, 94, 98, 0.35);
+$neon-glow: var(--accent-glow, 0 0 18px rgba(0, 229, 255, 0.35));
+$card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+$danger-glow: 0 0 16px rgba(255, 94, 98, 0.35);
+
+// Responsive Breakpoint Map
+$breakpoints: (
+  "xs": 360px,
+  "sm": 480px,
+  "md": 768px,
+  "lg": 1024px,
+  "xl": 1280px,
+  "2xl": 1440px,
+);

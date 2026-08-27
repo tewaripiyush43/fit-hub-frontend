@@ -1,7 +1,9 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
+import { Badge } from "./ui";
 
 const getShortDescription = (description) => {
   if (!description) return "Tap to view exercises, track sets, and start your workout session.";
@@ -13,8 +15,8 @@ const getShortDescription = (description) => {
   if (intro.length < 10) {
     intro = description;
   }
-  if (intro.length > 180) {
-    return intro.substring(0, 177) + "...";
+  if (intro.length > 160) {
+    return intro.substring(0, 157) + "...";
   }
   return intro;
 };
@@ -27,7 +29,7 @@ const WorkoutCard = ({ workout }) => {
   const exerciseCount = typeof workout === "string" ? 0 : (workout?.exercises?.length || 0);
 
   const handleCardClick = () => {
-    navigate(`${workoutId}-${workoutName}`);
+    navigate(`${workoutId}-${workoutName.replace(/\s+/g, "-")}`);
   };
 
   const handleKeyDown = (e) => {
@@ -56,12 +58,15 @@ const WorkoutCard = ({ workout }) => {
         </p>
 
         <div className="workout-card-btn-container">
-          <div className="workout-card-exercises">
+          <div className="workout-card-exercises" style={{ display: "flex", alignItems: "center", gap: "6px" }}>
             <FitnessCenterIcon className="ex-icon" style={{ fontSize: "1rem" }} />
-            <span>{exerciseCount}</span> {exerciseCount === 1 ? "Exercise" : "Exercises"}
+            <Badge variant="accent" size="sm">
+              {exerciseCount} {exerciseCount === 1 ? "Exercise" : "Exercises"}
+            </Badge>
           </div>
 
           <button
+            type="button"
             onClick={(e) => {
               e.stopPropagation();
               handleCardClick();
@@ -75,6 +80,10 @@ const WorkoutCard = ({ workout }) => {
       </div>
     </div>
   );
+};
+
+WorkoutCard.propTypes = {
+  workout: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
 };
 
 export default WorkoutCard;

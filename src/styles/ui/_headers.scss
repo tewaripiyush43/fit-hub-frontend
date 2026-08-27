@@ -1,0 +1,130 @@
+/* ==========================================================================
+   FitHub UI Primitive — SectionHeader & StatCard Styles
+   ========================================================================== */
+
+.fh-section-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+  flex-wrap: wrap;
+
+  .fh-section-header__text-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+  }
+
+  .fh-section-header__tag {
+    font-size: var(--font-size-xs);
+    font-weight: var(--weight-bold);
+    color: var(--accent);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  .fh-section-header__title {
+    font-family: var(--font-display);
+    font-size: var(--font-size-h2);
+    font-weight: var(--weight-bold);
+    color: var(--text-primary);
+    line-height: var(--leading-tight);
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+  }
+
+  .fh-section-header__subtitle {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    line-height: var(--leading-normal);
+    max-width: 680px;
+  }
+
+  .fh-section-header__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    margin-left: auto;
+
+    @media (max-width: 480px) {
+      width: 100%;
+      justify-content: flex-start;
+      margin-top: var(--space-xs);
+    }
+  }
+}
+
+/* Stat Card */
+.fh-stat-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-md);
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--duration-fast) var(--ease-standard);
+
+  &:hover {
+    border-color: var(--border-default);
+    background: var(--bg-elevated);
+  }
+
+  .fh-stat-card__icon-box {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-elevated);
+    color: var(--accent);
+    flex-shrink: 0;
+
+    svg {
+      font-size: 1.5rem;
+    }
+  }
+
+  .fh-stat-card__content {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex-grow: 1;
+    overflow: hidden;
+  }
+
+  .fh-stat-card__label {
+    font-size: var(--font-size-xs);
+    font-weight: var(--weight-medium);
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .fh-stat-card__value-row {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+  }
+
+  .fh-stat-card__value {
+    font-family: var(--font-display);
+    font-size: var(--font-size-h2);
+    font-weight: var(--weight-extrabold);
+    color: var(--text-primary);
+    line-height: 1;
+  }
+
+  .fh-stat-card__unit {
+    font-size: var(--font-size-xs);
+    color: var(--text-muted);
+    font-weight: var(--weight-medium);
+  }
+}

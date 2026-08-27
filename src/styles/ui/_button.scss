@@ -1,0 +1,228 @@
+/* ==========================================================================
+   FitHub UI Primitive — Button & IconButton Styles
+   ========================================================================== */
+
+.fh-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  font-family: var(--font-sans);
+  font-weight: var(--weight-semibold);
+  font-size: var(--font-size-sm);
+  line-height: 1;
+  text-decoration: none;
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+  transition: all var(--duration-fast) var(--ease-standard);
+  position: relative;
+  overflow: hidden;
+
+  /* Size Variants (Enforces minimum 44px touch target on mobile/standard) */
+  &--sm {
+    min-height: 36px;
+    padding: 0 var(--space-sm);
+    font-size: var(--font-size-xs);
+    border-radius: var(--radius-sm);
+  }
+
+  &--md {
+    min-height: var(--touch-target-min);
+    padding: 0 var(--space-md);
+    font-size: var(--font-size-sm);
+  }
+
+  &--lg {
+    min-height: 48px;
+    padding: 0 var(--space-lg);
+    font-size: var(--font-size-base);
+    border-radius: var(--radius-lg);
+  }
+
+  &--full {
+    width: 100%;
+  }
+
+  /* Color / Theme Variants */
+  &--primary {
+    background: linear-gradient(135deg, var(--accent, #00e5ff) 0%, #00b4d8 100%);
+    color: #050811;
+    font-weight: var(--weight-bold);
+    border-color: rgba(0, 229, 255, 0.4);
+    box-shadow: 0 4px 14px rgba(0, 229, 255, 0.25);
+
+    &:hover:not(:disabled) {
+      background: linear-gradient(135deg, #00f0ff 0%, #00c4ea 100%);
+      box-shadow: 0 6px 18px rgba(0, 229, 255, 0.35);
+      transform: translateY(-1px);
+      color: #050811;
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(0);
+      box-shadow: 0 2px 8px rgba(0, 229, 255, 0.25);
+    }
+  }
+
+  &--accent {
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
+    color: var(--text-inverse);
+    border-color: rgba(0, 229, 255, 0.3);
+    box-shadow: 0 4px 14px rgba(0, 229, 255, 0.25);
+
+    &:hover:not(:disabled) {
+      background: linear-gradient(135deg, var(--accent-hover) 0%, var(--accent-active) 100%);
+      box-shadow: 0 6px 20px rgba(0, 229, 255, 0.4);
+      transform: translateY(-1px);
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(0);
+      box-shadow: 0 2px 8px rgba(0, 229, 255, 0.3);
+    }
+  }
+
+  &--secondary {
+    background: var(--bg-elevated);
+    color: var(--text-primary);
+    border-color: var(--border-subtle);
+
+    &:hover:not(:disabled) {
+      background: var(--bg-elevated-hover);
+      border-color: var(--border-default);
+      transform: translateY(-1px);
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(0);
+    }
+  }
+
+  &--outline {
+    background: transparent;
+    color: var(--text-primary);
+    border-color: var(--border-default);
+
+    &:hover:not(:disabled) {
+      background: var(--bg-elevated);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    &:active:not(:disabled) {
+      background: var(--accent-subtle);
+    }
+  }
+
+  &--ghost {
+    background: transparent;
+    color: var(--text-secondary);
+    border-color: transparent;
+
+    &:hover:not(:disabled) {
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text-primary);
+    }
+
+    &:active:not(:disabled) {
+      background: rgba(255, 255, 255, 0.1);
+    }
+  }
+
+  &--danger {
+    background: var(--danger-subtle);
+    color: var(--danger);
+    border-color: rgba(255, 82, 82, 0.25);
+
+    &:hover:not(:disabled) {
+      background: var(--danger);
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(255, 82, 82, 0.35);
+      transform: translateY(-1px);
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(0);
+    }
+  }
+
+  /* Disabled State */
+  &:disabled,
+  &--disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+    box-shadow: none;
+  }
+
+  /* Loading State */
+  &--loading {
+    cursor: wait;
+    opacity: 0.8;
+
+    .fh-btn__spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255, 255, 255, 0.25);
+      border-top-color: currentColor;
+      border-radius: 50%;
+      animation: fh-spin 0.7s infinite linear;
+    }
+  }
+
+  .fh-btn__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.15em;
+  }
+}
+
+/* Icon-Only Button */
+.fh-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--touch-target-min);
+  min-height: var(--touch-target-min);
+  padding: var(--space-xs);
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-standard);
+
+  &--circle {
+    border-radius: var(--radius-full);
+  }
+
+  &--subtle {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: var(--border-subtle);
+  }
+
+  &:hover:not(:disabled) {
+    color: var(--text-primary);
+    background: var(--bg-elevated);
+    border-color: var(--border-default);
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.95);
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+}
+
+@keyframes fh-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

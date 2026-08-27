@@ -5,13 +5,23 @@ import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import StarIcon from "@mui/icons-material/Star";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import { toast } from "react-toastify";
+import AddIcon from "@mui/icons-material/Add";
+import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import { toast } from "../helpers/errorPopUp";
 
 import { addWorkout, generateAIWorkout } from "../api/workoutApi";
 import { portalActions } from "../store/index";
 import WorkoutCard from "./WorkoutCard";
 import GlobalWorkouts from "./GlobalWorkouts";
 import { useUnitPreference } from "../utils/useUnitPreference";
+
+// UI Primitives
+import {
+  Button,
+  Badge,
+  EmptyState,
+} from "./ui";
 
 const MyWorkouts = () => {
   const REACT_APP_BASE_URL = process.env.REACT_APP_BASE_URL;
@@ -20,16 +30,17 @@ const MyWorkouts = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
-  const { weightUnit, heightUnit, isMetric } = useUnitPreference();
+  const { weightUnit, heightUnit } = useUnitPreference();
 
   const [activeView, setActiveView] = useState("my_workouts");
   const [showAIModal, setShowAIModal] = useState(false);
   const [aiPrompt, setAiPrompt] = useState("");
   const [aiGoal, setAiGoal] = useState("General");
-  const [aiWeight, setAiWeight] = useState("");
-  const [aiHeight, setAiHeight] = useState("");
+  const [aiExerciseCount, setAiExerciseCount] = useState(5);
   const [isGenerating, setIsGenerating] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState("Connecting to Gemini...");
+
+  const hasBiometrics = Boolean(user?.age && user?.weight && user?.height);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -60,21 +71,38 @@ const MyWorkouts = () => {
       const messages = [
         "Connecting to Gemini...",
         "Analyzing your fitness profile...",
-        "Reviewing your long & short term goals...",
-        "Considering your favorite exercises...",
         "Structuring custom workout plan...",
         "Mapping exercises to database...",
-        "Saving custom workout..."
+        "Saving custom routine...",
       ];
       let idx = 0;
       setLoadingMessage(messages[0]);
       interval = setInterval(() => {
         idx = (idx + 1) % messages.length;
         setLoadingMessage(messages[idx]);
-      }, 2500);
+      }, 2000);
     }
     return () => clearInterval(interval);
   }, [isGenerating]);
+
+  const handleCreateNewRoutine = async () => {
+    if (!isLoggedIn) {
+      dispatch(portalActions.setPortalOpen());
+      toast.info("Please log in or sign up to create and save routines!");
+      return;
+    }
+    try {
+      const workoutNumber = (user?.workouts?.length || 0) + 1;
+      const workoutName = `Custom Routine #${workoutNumber}`;
+      const workoutId = await addWorkout(dispatch, workoutName);
+      if (workoutId) {
+        toast.success(`Created "${workoutName}"!`);
+        navigate(`${workoutId}-${workoutName.replace(/\s+/g, "-")}`);
+      }
+    } catch (err) {
+      toast.error("Failed to create workout");
+    }
+  };
 
   const handleGenerateAIWorkout = async () => {
     if (!isLoggedIn) {
@@ -88,16 +116,17 @@ const MyWorkouts = () => {
       const payload = {
         prompt: aiPrompt,
         goal: aiGoal,
-        weight: aiWeight ? Number(aiWeight) : undefined,
-        height: aiHeight ? Number(aiHeight) : undefined,
+        exerciseCount: aiExerciseCount,
+        weight: user?.weight ? Number(user.weight) : undefined,
+        height: user?.height ? Number(user.height) : undefined,
+        age: user?.age ? Number(user.age) : undefined,
       };
       const result = await generateAIWorkout(dispatch, payload, REACT_APP_BASE_URL);
       setIsGenerating(false);
       setShowAIModal(false);
       setAiPrompt("");
-      setAiWeight("");
-      setAiHeight("");
       setAiGoal("General");
+      setAiExerciseCount(5);
       if (result && result.workoutId) {
         navigate(`${result.workoutId}-${result.workoutName}`);
       }
@@ -107,7 +136,7 @@ const MyWorkouts = () => {
     }
   };
 
-  const isProfileIncomplete = !user?.age || !user?.goals || user?.goals?.length === 0;
+  const isRoutineLimitReached = (user?.workouts?.length || 0) >= 7;
 
   return (
     <div className="my-workouts-container">
@@ -165,14 +194,20 @@ const MyWorkouts = () => {
               </p>
             </div>
             <div className="ai-workout-banner-right">
-              {user?.workouts?.length >= 7 ? (
+              {isRoutineLimitReached ? (
                 <div className="ai-workout-banner-limit">
-                  <span className="ai-workout-banner-limit-badge">Routine Limit Reached (7/7)</span>
-                  <p className="ai-workout-banner-limit-desc">Delete an existing workout to generate a new AI routine.</p>
+                  <Badge variant="warning" size="md">
+                    Routine Limit Reached (7/7)
+                  </Badge>
+                  <p className="ai-workout-banner-limit-desc" style={{ marginTop: "4px" }}>
+                    Delete an existing workout to generate a new AI routine.
+                  </p>
                 </div>
               ) : (
-                <button
-                  className="ai-workout-banner-btn"
+                <Button
+                  variant="accent"
+                  size="md"
+                  iconStart={<AutoAwesomeIcon />}
                   onClick={() => {
                     if (!isLoggedIn) {
                       dispatch(portalActions.setPortalOpen());
@@ -182,48 +217,67 @@ const MyWorkouts = () => {
                     setShowAIModal(true);
                   }}
                 >
-                  <AutoAwesomeIcon />
-                  <span>Generate Workout</span>
-                </button>
+                  Generate AI Routine
+                </Button>
               )}
             </div>
           </div>
 
-          <div className="my-workout-cards-container">
-            {user?.workouts?.length < 7 && (
-              <div
-                onClick={async () => {
-                  if (!isLoggedIn) {
-                    dispatch(portalActions.setPortalOpen());
-                    toast.info("Please log in or sign up to create and save routines!");
-                    return;
-                  }
-                  try {
-                    const workoutNumber = (user?.workouts?.length || 0) + 1;
-                    const workoutName = `Custom Routine #${workoutNumber}`;
-                    const workoutId = await addWorkout(dispatch, workoutName);
-                    if (workoutId) {
-                      toast.success(`Created "${workoutName}"!`);
-                      navigate(`${workoutId}-${workoutName.replace(/\s+/g, "-")}`);
-                    }
-                  } catch (err) {
-                    toast.error("Failed to create workout");
-                  }
-                }}
-                className="create-new-workout-card"
-              >
-                <div className="create-new-workout-card-icon">+ &nbsp;</div>
-                <p className="create-new-workout-card-text">Create New Workout</p>
-              </div>
-            )}
-            {user?.workouts?.map((workout, index) => (
-              <WorkoutCard
-                key={typeof workout === "string" ? workout : (workout?._id || index)}
-                workout={workout}
-                index={index}
-              />
-            ))}
+          <div className="my-workouts-action-bar">
+            <div className="my-workouts-count-badge">
+              <FitnessCenterIcon style={{ fontSize: "1.1rem", color: "var(--accent)" }} />
+              <span>
+                {user?.workouts?.length || 0} / 7 Routines
+              </span>
+            </div>
+
+            <Button
+              variant="primary"
+              size="md"
+              iconStart={<AddIcon />}
+              disabled={isRoutineLimitReached}
+              onClick={handleCreateNewRoutine}
+            >
+              Create Routine
+            </Button>
           </div>
+
+          {/* Routines Grid or Empty State */}
+          {user?.workouts && user.workouts.length > 0 ? (
+            <div className="my-workouts-grid">
+              {user.workouts.map((elem) => (
+                <WorkoutCard key={elem._id} workout={elem} />
+              ))}
+            </div>
+          ) : (
+            <EmptyState
+              icon={<FitnessCenterIcon />}
+              title="No Custom Routines Yet"
+              description="Start your fitness journey by creating a personalized routine or use our AI Generator to build an optimal plan."
+              action={
+                <div style={{ display: "flex", gap: "12px", justifyContent: "center", flexWrap: "wrap" }}>
+                  <Button variant="primary" size="md" iconStart={<AddIcon />} onClick={handleCreateNewRoutine}>
+                    Create Custom Routine
+                  </Button>
+                  <Button
+                    variant="accent"
+                    size="md"
+                    iconStart={<AutoAwesomeIcon />}
+                    onClick={() => {
+                      if (!isLoggedIn) {
+                        dispatch(portalActions.setPortalOpen());
+                        toast.info("Please sign up or log in to use the AI Workout Generator!");
+                        return;
+                      }
+                      setShowAIModal(true);
+                    }}
+                  >
+                    Generate with AI
+                  </Button>
+                </div>
+              }
+            />
+          )}
         </>
       )}
 
@@ -235,8 +289,6 @@ const MyWorkouts = () => {
               setShowAIModal(false);
               setAiPrompt("");
               setAiGoal("General");
-              setAiWeight("");
-              setAiHeight("");
               navigate(location.pathname, { replace: true });
             }
           }}
@@ -245,97 +297,131 @@ const MyWorkouts = () => {
             <div className="ai-modal-content">
               <div className="ai-modal-header">
                 <h2 className="ai-modal-title">
-                  <AutoAwesomeIcon style={{ color: "#00b3e6" }} /> Generate <span className="title-highlight">AI Workout</span>
+                  <AutoAwesomeIcon style={{ color: "var(--accent)" }} /> Generate <span className="title-highlight">AI Workout</span>
                 </h2>
                 <p className="ai-modal-subtitle">
-                  Gemini AI will design a custom workout based on your fitness goals, age, bio, and favorite exercises.
+                  Describe your training goals and routine preferences. Gemini will design an optimal routine mapped directly to our exercise database.
                 </p>
-                {isProfileIncomplete && (
-                  <p className="ai-modal-warning">
-                    ⚠️ Goals/age not set in profile. We'll generate a general plan, but completing your profile will give you a highly customized workout!
-                  </p>
-                )}
               </div>
-              <div className="ai-modal-form">
-                <div className="form-row">
-                  <div className="form-group half-width">
-                    <label htmlFor="aiWeight">Weight ({weightUnit})</label>
-                    <input
-                      type="number"
-                      id="aiWeight"
-                      placeholder={`e.g. ${isMetric ? "70" : "155"}`}
-                      value={aiWeight}
-                      onChange={(e) => setAiWeight(e.target.value)}
-                    />
+
+              <div className="ai-modal-body">
+                {/* Dynamic Biometrics Health & Advisory Notice */}
+                {!hasBiometrics ? (
+                  <div className="ai-modal-warning-notice missing-biometrics">
+                    <div className="warning-notice-header">
+                      <InfoOutlinedIcon style={{ fontSize: "1rem", color: "#fde047" }} />
+                      <span>Profile Metrics Notice</span>
+                    </div>
+                    <p>
+                      Your age, weight, and height are not provided in your profile, so this routine will be generated with general assumptions. Please add them in your{" "}
+                      <span
+                        className="notice-settings-link"
+                        onClick={() => {
+                          setShowAIModal(false);
+                          navigate(`/${user?.username}/settings`);
+                        }}
+                      >
+                        Profile Settings
+                      </span>{" "}
+                      so we can provide more accurate, personalized workouts.
+                    </p>
                   </div>
-                  <div className="form-group half-width">
-                    <label htmlFor="aiHeight">Height ({heightUnit})</label>
-                    <input
-                      type="number"
-                      id="aiHeight"
-                      placeholder={`e.g. ${isMetric ? "175" : "69"}`}
-                      value={aiHeight}
-                      onChange={(e) => setAiHeight(e.target.value)}
-                    />
+                ) : (
+                  <div className="ai-modal-warning-notice biometrics-ready">
+                    <div className="warning-notice-header">
+                      <AutoAwesomeIcon style={{ fontSize: "0.95rem", color: "var(--accent, #00e5ff)" }} />
+                      <span>Personalized Biometrics Active</span>
+                    </div>
+                    <p>
+                      Calibrating routine to your profile metrics ({user.age} yrs • {user.weight} {weightUnit} • {user.height} {heightUnit}).
+                    </p>
                   </div>
-                </div>
-                <div className="form-group">
-                  <label htmlFor="aiGoal">Fitness Goal / Style</label>
-                  <select
-                    id="aiGoal"
-                    value={aiGoal}
-                    onChange={(e) => setAiGoal(e.target.value)}
-                  >
-                    <option value="General">General Fitness / Just Chilling</option>
-                    <option value="Bodybuilding">Bodybuilding</option>
-                    <option value="Aesthetics">Aesthetics</option>
-                    <option value="Strength">Strength Training</option>
-                    <option value="Endurance">Endurance / Cardio</option>
-                    <option value="Weight Loss">Weight Loss / Fat Burn</option>
-                  </select>
-                </div>
-                <div className="form-group">
-                  <label htmlFor="aiPrompt">What is your focus for today?</label>
+                )}
+
+                <div className="ai-input-group">
+                  <label className="ai-label" htmlFor="ai-workout-prompt">Custom Workout Prompt (Optional)</label>
                   <textarea
-                    id="aiPrompt"
-                    rows={3}
-                    placeholder="e.g. 20-minute bodyweight cardio, focus on upper body strength, dumbbells only, etc."
+                    id="ai-workout-prompt"
+                    className="ai-textarea"
+                    rows="3"
+                    placeholder="e.g., High intensity chest and triceps focus with dumbbells only, 45 minutes duration..."
                     value={aiPrompt}
                     onChange={(e) => setAiPrompt(e.target.value)}
                   />
                 </div>
+
+                <div className="ai-input-group">
+                  <label className="ai-label" htmlFor="ai-goal-select">Primary Training Goal</label>
+                  <div className="ai-select-wrapper">
+                    <select
+                      id="ai-goal-select"
+                      className="ai-select-dropdown"
+                      value={aiGoal}
+                      onChange={(e) => setAiGoal(e.target.value)}
+                    >
+                      <option value="General">General Fitness & Full-Body Conditioning</option>
+                      <option value="Muscle Gain (Hypertrophy)">Muscle Gain (Hypertrophy Focus)</option>
+                      <option value="Strength">Strength & Powerlifting</option>
+                      <option value="Fat Loss / HIIT">Fat Loss / HIIT & Conditioning</option>
+                      <option value="Endurance">Cardiovascular & Muscular Endurance</option>
+                      <option value="Athletic Performance">Functional Athletic Performance</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="ai-input-group">
+                  <label className="ai-label" htmlFor="ai-count-select">Target Number of Exercises</label>
+                  <div className="ai-select-wrapper">
+                    <select
+                      id="ai-count-select"
+                      className="ai-select-dropdown"
+                      value={aiExerciseCount}
+                      onChange={(e) => setAiExerciseCount(Number(e.target.value))}
+                    >
+                      <option value={3}>3 Exercises (Quick / Express Session)</option>
+                      <option value={4}>4 Exercises (Targeted Focus)</option>
+                      <option value={5}>5 Exercises (Balanced Standard Split)</option>
+                      <option value={6}>6 Exercises (Full Comprehensive Workout)</option>
+                      <option value={7}>7 Exercises (High Volume Hypertrophy)</option>
+                      <option value={8}>8 Exercises (Elite High-Intensity Split)</option>
+                    </select>
+                  </div>
+                </div>
               </div>
-              <div className="ai-modal-buttons">
-                <button
-                  className="ai-btn-cancel"
+
+              <div className="ai-modal-footer">
+                <Button
+                  variant="ghost"
+                  size="md"
                   onClick={() => {
                     setShowAIModal(false);
-                    setAiPrompt("");
-                    setAiGoal("General");
-                    setAiWeight("");
-                    setAiHeight("");
                     navigate(location.pathname, { replace: true });
                   }}
                 >
                   Cancel
-                </button>
-                <button
-                  className="ai-btn-generate"
+                </Button>
+                <Button
+                  variant="accent"
+                  size="md"
+                  iconStart={<AutoAwesomeIcon />}
                   onClick={handleGenerateAIWorkout}
                 >
-                  Generate
-                </button>
+                  Generate Routine
+                </Button>
               </div>
             </div>
           ) : (
-            <div className="ai-loading-content">
-              <div className="ai-spinner-container">
-                <div className="ai-spinner"></div>
-                <div className="ai-spinner-inner"></div>
-                <AutoAwesomeIcon className="ai-spinner-sparkle" />
+            <div className="ai-modal-content loading-state">
+              <div className="ai-generating-spinner">
+                <div className="spinner-inner">
+                  <AutoAwesomeIcon className="spinning-sparkle" />
+                </div>
               </div>
-              <p className="ai-loading-title">Generating Workout</p>
-              <p className="ai-loading-subtitle">{loadingMessage}</p>
+              <h3 className="ai-loading-title">Crafting Your Custom Routine</h3>
+              <p className="ai-loading-desc">{loadingMessage}</p>
+              <div className="ai-loading-bar-wrapper">
+                <div className="ai-loading-bar-fill"></div>
+              </div>
             </div>
           )}
         </div>
@@ -345,6 +431,3 @@ const MyWorkouts = () => {
 };
 
 export default MyWorkouts;
-
-
-

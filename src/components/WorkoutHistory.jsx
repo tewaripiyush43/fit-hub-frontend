@@ -21,7 +21,7 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import SortIcon from "@mui/icons-material/Sort";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
-import { toast } from "react-toastify";
+import { toast } from "../helpers/errorPopUp";
 import { useUnitPreference } from "../utils/useUnitPreference";
 import { addWorkout, addExerciseToWorkout } from "../api/workoutApi";
 import "../styles/_workoutPage.scss";

@@ -10,45 +10,12 @@ import TrendingDownIcon from "@mui/icons-material/TrendingDown";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import TrendingFlatIcon from "@mui/icons-material/TrendingFlat";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import { toast } from "react-toastify";
+import { toast } from "../helpers/errorPopUp";
 import { useUnitPreference } from "../utils/useUnitPreference";
 import { addBodyMetric, deleteBodyMetric } from "../api/userApi";
 import { authActions } from "../store/index";
 
-const STORAGE_KEY = "fithub_body_metrics_history";
-
-const getDefaultStarterMetrics = (isMetric) => [
-  {
-    id: "1",
-    _id: "1",
-    date: new Date(Date.now() - 14 * 86400000).toISOString().split("T")[0],
-    timestamp: Date.now() - 14 * 86400000,
-    weight: isMetric ? 76.5 : 168.5,
-    height: isMetric ? 178 : 70,
-    bmi: 24.1,
-    unit: isMetric ? "metric" : "imperial",
-  },
-  {
-    id: "2",
-    _id: "2",
-    date: new Date(Date.now() - 7 * 86400000).toISOString().split("T")[0],
-    timestamp: Date.now() - 7 * 86400000,
-    weight: isMetric ? 75.8 : 167.0,
-    height: isMetric ? 178 : 70,
-    bmi: 23.9,
-    unit: isMetric ? "metric" : "imperial",
-  },
-  {
-    id: "3",
-    _id: "3",
-    date: new Date().toISOString().split("T")[0],
-    timestamp: Date.now(),
-    weight: isMetric ? 75.0 : 165.3,
-    height: isMetric ? 178 : 70,
-    bmi: 23.7,
-    unit: isMetric ? "metric" : "imperial",
-  },
-];
+const getStorageKey = (userId) => (userId ? `fithub_body_metrics_${userId}` : "fithub_body_metrics_guest");
 
 const BodyMetricsTracker = ({ mode = "full" }) => {
   const navigate = useNavigate();
@@ -57,21 +24,23 @@ const BodyMetricsTracker = ({ mode = "full" }) => {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const { isMetric, weightUnit, heightUnit } = useUnitPreference();
 
+  const storageKey = getStorageKey(user?._id);
+
   // Primary source of metrics is Redux user.bodyMetrics if present
   const reduxMetrics = user?.bodyMetrics;
 
   const [localLogs, setLocalLogs] = useState(() => {
     try {
-      const saved = localStorage.getItem(STORAGE_KEY);
+      const saved = localStorage.getItem(storageKey);
       if (saved) return JSON.parse(saved);
     } catch (e) {
       console.error("Failed to parse body metrics:", e);
     }
-    return getDefaultStarterMetrics(isMetric);
+    return [];
   });
 
   const logs = useMemo(() => {
-    if (reduxMetrics && Array.isArray(reduxMetrics) && reduxMetrics.length > 0) {
+    if (reduxMetrics && Array.isArray(reduxMetrics)) {
       return reduxMetrics.map((m) => ({
         ...m,
         id: m._id || m.id || m.timestamp?.toString() || m.date,
@@ -82,31 +51,35 @@ const BodyMetricsTracker = ({ mode = "full" }) => {
 
   const [showLogModal, setShowLogModal] = useState(false);
   const [inputWeight, setInputWeight] = useState("");
-  const [inputHeight, setInputHeight] = useState(
-    user?.height || localStorage.getItem("fithub_bmi_height") || (isMetric ? "178" : "70")
-  );
+  const [inputHeight, setInputHeight] = useState(user?.height || "");
   const [inputDate, setInputDate] = useState(
     new Date().toISOString().split("T")[0]
   );
   const [visibleCount, setVisibleCount] = useState(8);
 
-  // Keep local storage in sync as offline backup
+  // Keep user-scoped local storage in sync as offline backup
   useEffect(() => {
+    if (!storageKey) return;
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(logs));
+      if (logs && logs.length > 0) {
+        localStorage.setItem(storageKey, JSON.stringify(logs));
+      } else {
+        localStorage.removeItem(storageKey);
+      }
     } catch (e) {
       console.error("Failed to save metrics to localStorage:", e);
     }
-  }, [logs]);
+  }, [logs, storageKey]);
 
   const reloadMetrics = useCallback(() => {
     try {
-      const saved = localStorage.getItem(STORAGE_KEY);
+      const saved = localStorage.getItem(storageKey);
       if (saved) setLocalLogs(JSON.parse(saved));
+      else setLocalLogs([]);
     } catch (e) {
       console.error(e);
     }
-  }, []);
+  }, [storageKey]);
 
   useEffect(() => {
     window.addEventListener("fithub_metrics_changed", reloadMetrics);
@@ -336,10 +309,11 @@ const BodyMetricsTracker = ({ mode = "full" }) => {
           <div className="shelf-top-row">
             <h4 className="shelf-heading">Check-in Timeline ({logs.length} entries)</h4>
           </div>
-
-          {/* Desktop Table View */}
-          <div className="metrics-table-wrapper desktop-only">
-            <table className="metrics-table">
+          {logs.length > 0 ? (
+            <>
+              {/* Desktop Table View */}
+              <div className="metrics-table-wrapper desktop-only">
+                <table className="metrics-table">
               <thead>
                 <tr>
                   <th>Date</th>
@@ -446,6 +420,12 @@ const BodyMetricsTracker = ({ mode = "full" }) => {
             >
               Show More Check-ins ({reversedLogs.length - visibleCount} remaining)
             </button>
+          )}
+            </>
+          ) : (
+            <div className="analytics-empty">
+              <p>No body metric check-ins recorded yet. Tap "+ Log Check-in" above to log your first weight and track your progress!</p>
+            </div>
           )}
         </div>
       )}

@@ -5,6 +5,10 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import FlagIcon from "@mui/icons-material/Flag";
 import { errorPopUp } from "../helpers/errorPopUp";
 import { fetchGoals, updateGoals } from "../api/goalApi";
+import { toast } from "../helpers/errorPopUp";
+
+// UI Primitives
+import { Badge, Button } from "./ui";
 
 const GoalComponent = () => {
   const [errorMessage, setErrorMessage] = useState("");
@@ -86,18 +90,27 @@ const GoalComponent = () => {
 
   const handleSaveClick = async () => {
     try {
-      const data = await updateGoals(goals);
+      const payload = goals.map((g) => ({
+        _id: g._id,
+        goal: g.goal || "",
+        type: g.type,
+        startDate: g.startDate ? new Date(g.startDate).toISOString() : undefined,
+        deadline: g.deadline ? new Date(g.deadline).toISOString() : undefined,
+      }));
+      const data = await updateGoals(payload);
 
-      const adjustedGoals = data.map((goal) => ({
+      const adjustedGoals = (data || []).map((goal) => ({
         ...goal,
-        startDate: new Date(goal.startDate).toISOString(),
-        deadline: new Date(goal.deadline).toISOString(),
+        startDate: goal.startDate ? new Date(goal.startDate).toISOString() : "",
+        deadline: goal.deadline ? new Date(goal.deadline).toISOString() : "",
       }));
 
       setGoals(adjustedGoals);
-      setEditMode((prev) => !prev);
+      setEditMode(false);
+      toast.success("Fitness goals updated successfully!");
     } catch (err) {
-      setErrorMessage("Something went wrong. Please try again later.");
+      const msg = err.response?.data?.error?.message || err.message || "Something went wrong. Please try again later.";
+      setErrorMessage(msg);
     }
   };
 
@@ -120,16 +133,17 @@ const GoalComponent = () => {
   };
 
   const calculateProgress = (startDate, endDate) => {
-    startDate = new Date(startDate);
-    endDate = new Date(endDate);
-    const currentDate = new Date();
-    const totalDays = (endDate - startDate) / (1000 * 60 * 60 * 24);
-    const elapsedDays = (currentDate - startDate) / (1000 * 60 * 60 * 24);
-    let progressVal = Math.min(100, Math.max(0, (elapsedDays / totalDays) * 100));
+    const start = new Date(startDate).getTime();
+    const end = new Date(endDate).getTime();
+    const now = Date.now();
 
-    if (progressVal === 100) {
-      return "Goal Complete";
+    if (isNaN(start) || isNaN(end) || end <= start) {
+      return 0;
     }
+
+    const totalDuration = end - start;
+    const elapsed = Math.max(0, now - start);
+    const progressVal = Math.min(100, Math.max(0, (elapsed / totalDuration) * 100));
 
     return progressVal;
   };
@@ -137,6 +151,7 @@ const GoalComponent = () => {
   const formatDate = (dateStr) => {
     if (!dateStr) return "";
     const dateObj = new Date(dateStr);
+    if (isNaN(dateObj.getTime())) return "";
     const day = dateObj.getDate();
     const month = monthNames[dateObj.getMonth()];
     const year = dateObj.getFullYear();
@@ -152,13 +167,25 @@ const GoalComponent = () => {
           </h2>
           <div className="goal-edit-icon-container">
             {editMode ? (
-              <button onClick={handleSaveClick} title="Save Goals" className="goal-save-info-btn">
-                <SaveIcon style={{ fontSize: "1.1rem" }} /> Save
-              </button>
+              <Button
+                variant="primary"
+                size="sm"
+                iconStart={<SaveIcon />}
+                onClick={handleSaveClick}
+                title="Save Goals"
+              >
+                Save Goals
+              </Button>
             ) : (
-              <button onClick={handleEditClick} title="Edit Goals" className="goal-edit-btn">
-                <EditIcon style={{ fontSize: "1.1rem" }} /> Edit
-              </button>
+              <Button
+                variant="outline"
+                size="sm"
+                iconStart={<EditIcon />}
+                onClick={handleEditClick}
+                title="Edit Goals"
+              >
+                Edit Goals
+              </Button>
             )}
           </div>
         </div>
@@ -169,15 +196,22 @@ const GoalComponent = () => {
         {goals?.map((goal) => {
           const type = goal?.type;
           const isLongTerm = type === "longTerm";
-          const progressVal = progress[type];
-          const isComplete = progressVal === "Goal Complete" || progressVal >= 100;
-          const progressPercent = typeof progressVal === "number" ? Math.round(progressVal) : 100;
+          const progressVal = typeof progress[type] === "number" ? progress[type] : 0;
+          const progressPercent = Math.round(progressVal);
+          const isDeadlinePassed = progressPercent >= 100;
 
           return (
             <div key={goal?._id} className={`goal-card-item ${isLongTerm ? "long-term" : "short-term"}`}>
-              <h3 className="goal-card-label">
-                {isLongTerm ? "Long-Term Goal" : "Short-Term Goal"}
-              </h3>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
+                <Badge variant={isLongTerm ? "accent" : "primary"} size="sm">
+                  {isLongTerm ? "Long-Term Goal" : "Short-Term Goal"}
+                </Badge>
+                {isDeadlinePassed && (
+                  <Badge variant="warning" size="sm">
+                    Deadline Passed
+                  </Badge>
+                )}
+              </div>
 
               <div className="goal-body">
                 {editMode ? (
@@ -198,12 +232,12 @@ const GoalComponent = () => {
                   <div className="progress-bar-container">
                     <div className="progress-bar-track">
                       <div
-                        className={`progress-bar-fill ${isComplete ? "complete" : ""}`}
+                        className={`progress-bar-fill ${isDeadlinePassed ? "complete" : ""}`}
                         style={{ width: `${progressPercent}%` }}
                       ></div>
                     </div>
                     <div className="progress-label-row">
-                      <span>{isComplete ? "Goal Achieved!" : "Time Progress"}</span>
+                      <span>{isDeadlinePassed ? "Timeline Ended" : "Timeline Elapsed"}</span>
                       <span>{progressPercent}%</span>
                     </div>
                   </div>

@@ -118,7 +118,50 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 28px;
+    gap: 24px;
+
+    .navbar-streak-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      user-select: none;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: rgba(255, 255, 255, 0.5);
+
+      span {
+        font-weight: 700;
+        font-size: 0.84rem;
+        color: rgba(255, 255, 255, 0.5);
+      }
+
+      &.lit {
+        background: linear-gradient(135deg, rgba(255, 87, 34, 0.2) 0%, rgba(255, 23, 68, 0.12) 100%);
+        border: 1px solid rgba(255, 109, 0, 0.45);
+        box-shadow: 0 0 12px rgba(255, 87, 34, 0.3);
+
+        svg {
+          color: #ff5722 !important;
+          animation: flameFlicker 1.8s infinite ease-in-out;
+          filter: drop-shadow(0 0 6px #ff6d00);
+        }
+
+        span {
+          color: #ffffff;
+          font-weight: 800;
+        }
+
+        &:hover {
+          transform: translateY(-1px) scale(1.05);
+          box-shadow: 0 0 18px rgba(255, 87, 34, 0.5);
+          border-color: #ff6d00;
+        }
+      }
+    }
 
     .avatar-pill-container {
       cursor: pointer;
@@ -135,14 +178,14 @@
       margin-left: 8px;
 
       .profile-avatar {
-        background-color: $background !important;
-        color: $accent !important;
-        border: 2px solid $accent !important;
+        background-color: var(--bg-surface, #121522) !important;
+        color: var(--accent, #00e5ff) !important;
+        border: 2px solid var(--accent, #00e5ff) !important;
         width: 32px !important;
         height: 32px !important;
         font-size: 0.9rem !important;
         font-weight: 800 !important;
-        box-shadow: 0 0 10px rgba($accent, 0.2) !important;
+        box-shadow: 0 0 10px var(--accent-glow, rgba(0, 229, 255, 0.2)) !important;
         transition: all 0.3s ease !important;
         margin: 0 !important;
       }
@@ -156,7 +199,7 @@
       }
 
       .avatar-dropdown-arrow {
-        color: rgba($text, 0.5);
+        color: rgba($text, 0.7);
         font-size: 1.1rem;
         transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), color 0.3s ease;
         margin: 0 !important;
@@ -164,35 +207,35 @@
 
       &:hover {
         background: rgba(255, 255, 255, 0.06);
-        border-color: rgba($accent, 0.4);
-        box-shadow: 0 0 12px rgba($accent, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+        border-color: var(--border-accent, rgba(0, 229, 255, 0.4));
+        box-shadow: 0 0 12px var(--accent-glow, rgba(0, 229, 255, 0.15)), inset 0 1px 1px rgba(255, 255, 255, 0.1);
 
         .profile-avatar {
           transform: scale(1.05);
-          box-shadow: 0 0 12px rgba($accent, 0.5) !important;
+          box-shadow: 0 0 12px var(--accent-glow, rgba(0, 229, 255, 0.5)) !important;
         }
 
         .avatar-username {
-          color: $accent;
+          color: var(--accent, #00e5ff);
         }
 
         .avatar-dropdown-arrow {
-          color: $accent;
+          color: var(--accent, #00e5ff);
         }
       }
 
       &.active {
-        background: rgba($accent, 0.08);
-        border-color: $accent;
-        box-shadow: 0 0 15px rgba($accent, 0.25);
+        background: var(--accent-subtle, rgba(0, 229, 255, 0.08));
+        border-color: var(--accent, #00e5ff);
+        box-shadow: 0 0 15px var(--accent-glow, rgba(0, 229, 255, 0.25));
 
         .avatar-dropdown-arrow {
-          color: $accent;
+          color: var(--accent, #00e5ff);
           transform: rotate(180deg);
         }
 
         .avatar-username {
-          color: $accent;
+          color: var(--accent, #00e5ff);
         }
       }
     }
@@ -214,8 +257,8 @@
         left: 0;
         width: 0;
         height: 2px;
-        background: linear-gradient(90deg, $accent, lighten($accent, 15%));
-        box-shadow: 0 0 8px rgba($accent, 0.5);
+        background: linear-gradient(90deg, $accent, var(--accent-hover, $accent));
+        box-shadow: 0 0 8px rgba(0, 229, 255, 0.5);
         transition: width 0.35s cubic-bezier(0.25, 1, 0.5, 1);
       }
 
@@ -238,12 +281,12 @@
 
       .ai-nav-icon {
         font-size: 1rem;
-        filter: drop-shadow(0 0 4px rgba($accent, 0.4));
+        filter: drop-shadow(0 0 4px var(--accent-glow, rgba(0, 229, 255, 0.4)));
         animation: pulse-sparkle 2s infinite ease-in-out;
       }
 
       &:hover {
-        text-shadow: 0 0 8px rgba($accent, 0.6);
+        text-shadow: 0 0 8px var(--accent-glow, rgba(0, 229, 255, 0.6));
         transform: translateY(-1px);
       }
     }
@@ -251,28 +294,29 @@
     .login-btn {
       cursor: pointer;
       position: relative;
-      padding: 10px 24px;
-      background: linear-gradient(135deg, $accent 0%, darken($accent, 15%) 100%);
-      color: $text-secondary;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 30px; // modern pill shape
+      padding: 9px 22px;
+      background: linear-gradient(135deg, var(--accent, #00e5ff) 0%, var(--accent-hover, #00c7de) 100%);
+      color: #050811;
+      border: 1px solid var(--border-accent, rgba(0, 229, 255, 0.4));
+      border-radius: 12px;
       text-align: center;
       font-size: 0.88rem;
       font-weight: 800;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.3px;
       text-decoration: none;
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-      box-shadow: 0 4px 15px rgba($accent, 0.15);
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 14px var(--accent-glow, rgba(0, 229, 255, 0.25));
 
       &:hover {
-        background: linear-gradient(135deg, lighten($accent, 10%) 0%, $accent 100%);
-        box-shadow: 0 8px 24px rgba($accent, 0.35);
-        transform: translateY(-2px);
+        background: linear-gradient(135deg, var(--accent-hover, #00c7de) 0%, var(--accent, #00e5ff) 100%);
+        box-shadow: 0 6px 18px var(--accent-glow, rgba(0, 229, 255, 0.35));
+        color: #050811;
+        transform: translateY(-1px);
       }
 
-      &:focus {
-        outline: none;
-        box-shadow: 0 0 0 3px rgba($accent, 0.4);
+      &:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
       }
     }
   }
@@ -287,12 +331,12 @@
 }
 
 .MuiMenu-paper {
-  background-color: rgba(20, 20, 25, 0.9) !important;
+  background-color: var(--bg-elevated, #181c2e) !important;
   backdrop-filter: blur(16px) !important;
-  color: $text !important;
+  color: #ffffff !important;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.08) !important;
   border-radius: 16px !important;
-  border: 1px solid rgba($accent, 0.2) !important;
+  border: 1px solid var(--border-accent, rgba(0, 229, 255, 0.2)) !important;
   padding: 6px !important;
 }
 
@@ -307,47 +351,56 @@
     margin: 4px !important;
     border-radius: 10px !important;
     transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
-    color: rgba($text, 0.8) !important;
+    color: rgba(255, 255, 255, 0.9) !important;
     display: flex !important;
     align-items: center !important;
 
-    &:hover {
-      background-color: rgba($accent, 0.1) !important;
-      color: $accent !important;
-      transform: translateX(4px);
+    .MuiListItemIcon-root {
+      min-width: 32px !important;
+      color: rgba(255, 255, 255, 0.75) !important;
     }
 
     .account-menu-dropdown-icon {
-      margin: 0 12px 0 -4px !important;
+      margin: 0 10px 0 0 !important;
       width: 20px !important;
       height: 20px !important;
-      color: rgba($text, 0.6) !important;
+      color: var(--accent, #00e5ff) !important;
       background-color: transparent !important;
       transition: all 0.25s ease;
     }
 
-    &:hover .account-menu-dropdown-icon {
-      color: $accent !important;
-      transform: scale(1.1);
+    &:hover {
+      background-color: var(--accent-subtle, rgba(0, 229, 255, 0.12)) !important;
+      color: var(--accent, #00e5ff) !important;
+      transform: translateX(4px);
+
+      .MuiListItemIcon-root {
+        color: var(--accent, #00e5ff) !important;
+      }
+
+      .account-menu-dropdown-icon {
+        color: var(--accent, #00e5ff) !important;
+        transform: scale(1.1);
+      }
     }
   }
 
   .ai-menu-item {
-    color: $accent !important;
+    color: var(--accent, #00e5ff) !important;
     font-weight: 700 !important;
-    background: linear-gradient(90deg, rgba($accent, 0.08) 0%, rgba($accent, 0.01) 100%) !important;
-    border-left: 3px solid $accent !important;
+    background: linear-gradient(90deg, var(--accent-subtle, rgba(0, 229, 255, 0.08)) 0%, rgba(0, 0, 0, 0.01) 100%) !important;
+    border-left: 3px solid var(--accent, #00e5ff) !important;
     border-radius: 0 10px 10px 0 !important;
     margin-left: 0 !important;
 
     .account-menu-dropdown-icon {
-      color: $accent !important;
+      color: var(--accent, #00e5ff) !important;
       animation: pulse-sparkle 2s infinite ease-in-out;
     }
 
     &:hover {
-      background: linear-gradient(90deg, rgba($accent, 0.15) 0%, rgba($accent, 0.03) 100%) !important;
-      color: lighten($accent, 10%) !important;
+      background: linear-gradient(90deg, var(--accent-subtle, rgba(0, 229, 255, 0.15)) 0%, rgba(0, 0, 0, 0.03) 100%) !important;
+      color: var(--accent-hover, #00c7de) !important;
     }
   }
 }

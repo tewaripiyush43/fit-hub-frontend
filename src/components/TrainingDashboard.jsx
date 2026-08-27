@@ -16,6 +16,14 @@ import UserProfileSmallCard from "./UserProfileSmallCard";
 import MuscleRecoveryHeatmap from "./MuscleRecoveryHeatmap";
 import { useUnitPreference } from "../utils/useUnitPreference";
 
+// UI Primitives
+import {
+  StatCard,
+  Button,
+  Badge,
+  EmptyState,
+} from "./ui";
+
 const TrainingDashboard = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -72,12 +80,14 @@ const TrainingDashboard = () => {
           <p className="db-subtitle">Track your progress. Crush your goals.</p>
         </div>
         <div style={{ display: "flex", gap: "10px" }}>
-          <button
-            className="db-analytics-btn"
+          <Button
+            variant="accent"
+            size="sm"
+            iconStart={<BarChartIcon />}
             onClick={() => navigate(`/${user?.username}/analytics`)}
           >
-            <BarChartIcon /> Analytics
-          </button>
+            Analytics & PRs
+          </Button>
         </div>
       </div>
 
@@ -95,100 +105,49 @@ const TrainingDashboard = () => {
         <p className="db-streak-msg">{getStreakMessage(streak)}</p>
       </div>
 
-      {/* Quick Stats Row */}
-      <div className="db-stats-row">
-        <div className="db-stat-chip">
-          <FitnessCenterIcon className="db-stat-chip-icon blue" />
-          <div className="db-stat-chip-body">
-            <span className="db-stat-chip-val">{history.length}</span>
-            <span className="db-stat-chip-lbl">Sessions Logged</span>
-          </div>
-        </div>
-        <div className="db-stat-chip">
-          <TrendingUpIcon className="db-stat-chip-icon orange" />
-          <div className="db-stat-chip-body">
-            <span className="db-stat-chip-val">
-              {totalVolume >= 1000
-                ? `${(totalVolume / 1000).toFixed(1)}k`
-                : totalVolume.toLocaleString()}
-            </span>
-            <span className="db-stat-chip-lbl">{weightUnit} Lifted</span>
-          </div>
-        </div>
-        <div className="db-stat-chip">
-          <TimerIcon className="db-stat-chip-icon green" />
-          <div className="db-stat-chip-body">
-            <span className="db-stat-chip-val">
-              {totalHours}h {totalMins}m
-            </span>
-            <span className="db-stat-chip-lbl">Active Time</span>
-          </div>
-        </div>
+      {/* Quick Stats Grid using StatCard Primitives */}
+      <div className="db-stats-row" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "16px", marginBottom: "24px" }}>
+        <StatCard
+          icon={<FitnessCenterIcon />}
+          label="Total Sessions"
+          value={history.length}
+        />
+        <StatCard
+          icon={<TrendingUpIcon />}
+          label="Total Volume"
+          value={totalVolume >= 1000 ? `${(totalVolume / 1000).toFixed(1)}k` : totalVolume.toLocaleString()}
+          unit={weightUnit}
+        />
+        <StatCard
+          icon={<TimerIcon />}
+          label="Active Time"
+          value={`${totalHours}h ${totalMins}m`}
+        />
       </div>
 
       {/* Quick Action Banner */}
-      <div
-        style={{
-          background: "linear-gradient(135deg, rgba(0, 240, 255, 0.08) 0%, rgba(0, 114, 255, 0.05) 100%)",
-          border: "1px solid rgba(0, 240, 255, 0.2)",
-          borderRadius: "18px",
-          padding: "18px 24px",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          flexWrap: "wrap",
-          gap: "14px",
-          marginBottom: "24px",
-        }}
-      >
-        <div>
-          <h3 style={{ margin: "0 0 4px", fontSize: "1.1rem", fontWeight: "800", color: "#fff" }}>
-            Ready to train today?
-          </h3>
-          <p style={{ margin: 0, fontSize: "0.85rem", color: "#94a3b8" }}>
-            Launch an active routine or generate a customized workout plan with AI.
-          </p>
+      <div className="db-action-banner">
+        <div className="db-action-banner-info">
+          <h3>Ready to train today?</h3>
+          <p>Launch an active routine or generate a customized workout plan with AI.</p>
         </div>
-        <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
-          <button
+        <div className="db-action-banner-btns">
+          <Button
+            variant="accent"
+            size="md"
+            iconStart={<AutoAwesomeIcon />}
             onClick={() => navigate(`/${user?.username}/myworkouts?ai=true`)}
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "6px",
-              padding: "8px 16px",
-              borderRadius: "10px",
-              background: "rgba(0, 240, 255, 0.12)",
-              border: "1px solid rgba(0, 240, 255, 0.3)",
-              color: "#00f0ff",
-              fontSize: "0.85rem",
-              fontWeight: "700",
-              cursor: "pointer",
-              transition: "all 0.2s ease",
-            }}
           >
-            <AutoAwesomeIcon style={{ fontSize: "1rem" }} /> AI Generator
-          </button>
-          <button
+            AI Generator
+          </Button>
+          <Button
+            variant="primary"
+            size="md"
+            iconStart={<PlayArrowIcon />}
             onClick={() => navigate(`/${user?.username}/myworkouts`)}
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "6px",
-              padding: "8px 18px",
-              borderRadius: "10px",
-              background: "linear-gradient(135deg, #00f0ff 0%, #0072ff 100%)",
-              border: "none",
-              color: "#050811",
-              fontSize: "0.85rem",
-              fontWeight: "800",
-              cursor: "pointer",
-              boxShadow: "0 4px 14px rgba(0, 240, 255, 0.3)",
-              transition: "all 0.2s ease",
-            }}
           >
-            <PlayArrowIcon style={{ fontSize: "1.1rem" }} /> View Routines
-          </button>
+            View Routines
+          </Button>
         </div>
       </div>
 
@@ -219,6 +178,7 @@ const TrainingDashboard = () => {
             </div>
             {history.length > 0 && !showClearConfirm && (
               <button
+                type="button"
                 className="db-reset-btn"
                 onClick={() => setShowClearConfirm(true)}
               >
@@ -231,20 +191,17 @@ const TrainingDashboard = () => {
             <div className="db-confirm-box">
               <p>Clear your entire workout history? This cannot be undone.</p>
               <div className="db-confirm-actions">
-                <button className="db-confirm-yes" onClick={handleClearHistory}>
+                <Button variant="danger" size="sm" onClick={handleClearHistory}>
                   Yes, Clear
-                </button>
-                <button
-                  className="db-confirm-no"
-                  onClick={() => setShowClearConfirm(false)}
-                >
+                </Button>
+                <Button variant="ghost" size="sm" onClick={() => setShowClearConfirm(false)}>
                   Cancel
-                </button>
+                </Button>
               </div>
             </div>
           ) : displayedSessions.length > 0 ? (
             <div className="db-session-list">
-              {reversedHistory.slice(0, 3).map((log, i) => {
+              {displayedSessions.map((log, i) => {
                 const pct =
                   log.totalSets > 0
                     ? Math.round((log.completedSets / log.totalSets) * 100)
@@ -261,9 +218,9 @@ const TrainingDashboard = () => {
                       <span className="db-session-date">{log.date}</span>
                     </div>
                     <div className="db-session-stats">
-                      <span>⏱ {log.duration}</span>
-                      <span>🏋️ {(log.totalVolume || 0).toLocaleString()} {weightUnit}</span>
-                      <span>✅ {log.completedSets}/{log.totalSets}</span>
+                      <Badge variant="neutral" size="sm">⏱ {log.duration}</Badge>
+                      <Badge variant="accent" size="sm">🏋️ {(log.totalVolume || 0).toLocaleString()} {weightUnit}</Badge>
+                      <Badge variant="success" size="sm">✅ {log.completedSets}/{log.totalSets}</Badge>
                     </div>
                     <div className="db-session-bar-wrap">
                       <div className="db-session-bar-track">
@@ -278,32 +235,31 @@ const TrainingDashboard = () => {
                 );
               })}
 
-              <button
-                className="db-view-all-btn"
+              <Button
+                variant="outline"
+                size="md"
+                fullWidth
                 onClick={() => navigate(`/${user?.username}/history`)}
-                style={{
-                  marginTop: "8px",
-                  background: "rgba(0, 240, 255, 0.08)",
-                  border: "1px solid rgba(0, 240, 255, 0.25)",
-                  color: "#00f0ff",
-                  fontWeight: "800",
-                  padding: "11px 16px",
-                  borderRadius: "12px",
-                  cursor: "pointer",
-                  width: "100%",
-                }}
+                style={{ marginTop: "12px" }}
               >
-                View All Workout History & Exercise Logs &rarr;
-              </button>
+                View Full Workout History & Exercise Logs →
+              </Button>
             </div>
           ) : (
-            <div className="db-empty-state">
-              <HistoryIcon className="db-empty-icon" />
-              <p>No sessions logged yet.</p>
-              <span>
-                Hit "Start Workout" in any routine to begin tracking.
-              </span>
-            </div>
+            <EmptyState
+              icon={<HistoryIcon />}
+              title="No Sessions Logged Yet"
+              description="Hit 'Start Workout' in any routine to begin tracking volume and personal records."
+              action={
+                <Button
+                  variant="accent"
+                  size="sm"
+                  onClick={() => navigate(`/${user?.username}/myworkouts`)}
+                >
+                  Browse Routines
+                </Button>
+              }
+            />
           )}
         </div>
       </div>

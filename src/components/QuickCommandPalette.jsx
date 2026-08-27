@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import SearchIcon from "@mui/icons-material/Search";
@@ -14,8 +14,14 @@ import StarIcon from "@mui/icons-material/Star";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import CloseIcon from "@mui/icons-material/Close";
 import KeyboardIcon from "@mui/icons-material/Keyboard";
+import AccessibilityNewIcon from "@mui/icons-material/AccessibilityNew";
+import BoltIcon from "@mui/icons-material/Bolt";
+import WhatshotIcon from "@mui/icons-material/Whatshot";
+import PlateCalculatorModal from "./PlateCalculatorModal";
+import PreWorkoutWarmupModal from "./PreWorkoutWarmupModal";
+import { THEMES, applyTheme } from "../utils/themeService";
 import { portalActions } from "../store/index";
-import { toast } from "react-toastify";
+import { toast } from "../helpers/errorPopUp";
 
 import "../styles/_quickCommandPalette.scss";
 
@@ -24,6 +30,8 @@ const QuickCommandPalette = () => {
   const [showCheatsheet, setShowCheatsheet] = useState(false);
   const [query, setQuery] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [isPlateModalOpen, setIsPlateModalOpen] = useState(false);
+  const [isWarmupModalOpen, setIsWarmupModalOpen] = useState(false);
   const inputRef = useRef(null);
 
   const navigate = useNavigate();
@@ -31,7 +39,46 @@ const QuickCommandPalette = () => {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const user = useSelector((state) => state.auth.user);
 
-  const actions = [
+  const actions = useMemo(() => [
+    {
+      id: "plate_calculator",
+      title: "Visual Barbell Plate Calculator",
+      subtitle: "Instant color-coded Olympic plate loading diagrams",
+      icon: <FitnessCenterIcon style={{ color: "#f59e0b" }} />,
+      shortcut: "L",
+      action: () => setIsPlateModalOpen(true),
+    },
+    {
+      id: "anatomy",
+      title: "2D Muscle Anatomy Map",
+      subtitle: "Interactive biomechanics, target cues & stretches",
+      icon: <AccessibilityNewIcon style={{ color: "#00f0ff" }} />,
+      shortcut: "N",
+      action: () => navigate("/anatomy"),
+    },
+    {
+      id: "ai_generator",
+      title: "AI Workout Generator",
+      subtitle: "Generate tailored plans with Gemini AI",
+      icon: <AutoAwesomeIcon style={{ color: "#c084fc" }} />,
+      shortcut: "A",
+      authRequired: true,
+      action: () => {
+        if (user?.username) {
+          navigate(`/${user.username}/myworkouts?ai=true`);
+        } else {
+          navigate("/workouts?ai=true");
+        }
+      },
+    },
+    {
+      id: "warmup",
+      title: "Pre-Workout Warmup & Stretches",
+      subtitle: "Dynamic activation drills and injury prevention",
+      icon: <WhatshotIcon style={{ color: "#ef4444" }} />,
+      shortcut: "U",
+      action: () => setIsWarmupModalOpen(true),
+    },
     {
       id: "dashboard",
       title: "Training Dashboard",
@@ -57,21 +104,6 @@ const QuickCommandPalette = () => {
       shortcut: "M",
       authRequired: true,
       action: () => navigate(user?.username ? `/${user.username}/myworkouts` : "/workouts"),
-    },
-    {
-      id: "ai_generator",
-      title: "AI Workout Generator",
-      subtitle: "Generate tailored plans with Gemini AI",
-      icon: <AutoAwesomeIcon style={{ color: "#a855f7" }} />,
-      shortcut: "A",
-      authRequired: true,
-      action: () => {
-        if (user?.username) {
-          navigate(`/${user.username}/myworkouts?ai=true`);
-        } else {
-          navigate("/workouts?ai=true");
-        }
-      },
     },
     {
       id: "exercises",
@@ -124,16 +156,39 @@ const QuickCommandPalette = () => {
       authRequired: true,
       action: () => navigate(user?.username ? `/${user.username}/settings` : "/profile/settings"),
     },
-  ];
+    ...THEMES.map((theme) => ({
+      id: `theme-${theme.id}`,
+      title: `Theme: ${theme.name} ${theme.emoji}`,
+      subtitle: `${theme.purpose} — ${theme.description}`,
+      icon: (
+        <span
+          style={{
+            display: "inline-block",
+            width: "14px",
+            height: "14px",
+            borderRadius: "50%",
+            backgroundColor: theme.accent,
+            boxShadow: `0 0 8px ${theme.accent}`,
+          }}
+        />
+      ),
+      action: () => {
+        applyTheme(theme.id);
+        toast.success(`Applied ${theme.name} theme!`);
+      },
+    })),
+  ], [user?.username, navigate]);
 
-  const filteredActions = actions.filter(
-    (item) =>
-      item.title.toLowerCase().includes(query.toLowerCase()) ||
-      item.subtitle.toLowerCase().includes(query.toLowerCase()) ||
-      (item.shortcut && item.shortcut.toLowerCase() === query.toLowerCase().trim())
-  );
+  const filteredActions = useMemo(() => {
+    return actions.filter(
+      (item) =>
+        item.title.toLowerCase().includes(query.toLowerCase()) ||
+        item.subtitle.toLowerCase().includes(query.toLowerCase()) ||
+        (item.shortcut && item.shortcut.toLowerCase() === query.toLowerCase().trim())
+    );
+  }, [actions, query]);
 
-  const handleSelectAction = (item) => {
+  const handleSelectAction = useCallback((item) => {
     if (item.authRequired && !isLoggedIn) {
       setIsOpen(false);
       dispatch(portalActions.setPortalOpen());
@@ -143,7 +198,7 @@ const QuickCommandPalette = () => {
     setIsOpen(false);
     setQuery("");
     item.action();
-  };
+  }, [isLoggedIn, dispatch]);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -185,7 +240,7 @@ const QuickCommandPalette = () => {
       }
 
       // Single-key shortcuts when NOT in an input field
-      if (!isInput && !e.metaKey && !e.ctrlKey && !e.altKey) {
+      if (!isInput && e.key && typeof e.key === "string" && !e.metaKey && !e.ctrlKey && !e.altKey) {
         if (e.key === "?") {
           e.preventDefault();
           setShowCheatsheet((prev) => !prev);
@@ -203,140 +258,138 @@ const QuickCommandPalette = () => {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen, showCheatsheet, selectedIndex, filteredActions, isLoggedIn, user]);
+  }, [isOpen, showCheatsheet, filteredActions, selectedIndex, actions, handleSelectAction]);
 
   useEffect(() => {
-    if (isOpen) {
-      setSelectedIndex(0);
-      setTimeout(() => inputRef.current?.focus(), 50);
+    if (isOpen && inputRef.current) {
+      inputRef.current.focus();
     }
   }, [isOpen]);
 
-  if (!isOpen && !showCheatsheet) return null;
-
   return (
-    <div
-      className="command-palette-backdrop"
-      onClick={() => {
-        setIsOpen(false);
-        setShowCheatsheet(false);
-      }}
-    >
-      {showCheatsheet ? (
-        <div className="cheatsheet-card" onClick={(e) => e.stopPropagation()}>
-          <div className="palette-header">
-            <div className="palette-header-title">
-              <KeyboardIcon className="header-icon" />
-              <span>Keyboard Shortcuts</span>
-            </div>
-            <button className="palette-close-btn" onClick={() => setShowCheatsheet(false)}>
-              <CloseIcon />
-            </button>
-          </div>
-          <div className="cheatsheet-grid">
-            <div className="shortcut-row">
-              <span className="shortcut-label">Quick Search & Palette</span>
-              <kbd className="kbd-badge">⌘ K</kbd>
-            </div>
-            <div className="shortcut-row">
-              <span className="shortcut-label">Explore Workouts & WOD</span>
-              <kbd className="kbd-badge">W</kbd>
-            </div>
-            <div className="shortcut-row">
-              <span className="shortcut-label">Exercise Library (1,300+)</span>
-              <kbd className="kbd-badge">E</kbd>
-            </div>
-            <div className="shortcut-row">
-              <span className="shortcut-label">Healthy Recipes</span>
-              <kbd className="kbd-badge">R</kbd>
-            </div>
-            <div className="shortcut-row">
-              <span className="shortcut-label">Training Dashboard</span>
-              <kbd className="kbd-badge">D</kbd>
-            </div>
-            <div className="shortcut-row">
-              <span className="shortcut-label">My Saved Routines</span>
-              <kbd className="kbd-badge">M</kbd>
-            </div>
-            <div className="shortcut-row">
-              <span className="shortcut-label">AI Workout Generator</span>
-              <kbd className="kbd-badge">A</kbd>
-            </div>
-            <div className="shortcut-row">
-              <span className="shortcut-label">Strength & PR Analytics</span>
-              <kbd className="kbd-badge">P</kbd>
-            </div>
-            <div className="shortcut-row">
-              <span className="shortcut-label">Workout Logs & History</span>
-              <kbd className="kbd-badge">H</kbd>
-            </div>
-            <div className="shortcut-row">
-              <span className="shortcut-label">Fitness Tools (1RM / BMI)</span>
-              <kbd className="kbd-badge">T</kbd>
-            </div>
-            <div className="shortcut-row">
-              <span className="shortcut-label">Settings & Units</span>
-              <kbd className="kbd-badge">S</kbd>
-            </div>
-            <div className="shortcut-row">
-              <span className="shortcut-label">Close Palette / Modal</span>
-              <kbd className="kbd-badge">ESC</kbd>
-            </div>
-          </div>
-        </div>
-      ) : (
-        <div className="command-palette-card" onClick={(e) => e.stopPropagation()}>
-          <div className="palette-input-wrap">
-            <SearchIcon className="palette-search-icon" />
-            <input
-              ref={inputRef}
-              type="text"
-              className="palette-search-input"
-              placeholder="Type a command, page name or press shortcut (e.g. 'W', 'Exercises')..."
-              value={query}
-              onChange={(e) => {
-                setQuery(e.target.value);
-                setSelectedIndex(0);
-              }}
-            />
-            <kbd className="palette-esc-badge">ESC</kbd>
-          </div>
+    <>
+      {/* ⚡ Floating Quick Access Hub Trigger Button (Mobile & Desktop) */}
+      <button
+        type="button"
+        className="quick-hub-floating-btn"
+        onClick={() => setIsOpen(true)}
+        title="Quick Gym Hub (Cmd + K)"
+      >
+        <BoltIcon className="bolt-icon" />
+        <span className="hub-label">Quick Hub</span>
+        <span className="key-badge">⌘K</span>
+      </button>
 
-          <div className="palette-results-list">
-            {filteredActions.length === 0 ? (
-              <div className="palette-empty-state">
-                <p>No matching commands found for "{query}"</p>
-              </div>
-            ) : (
-              filteredActions.map((item, index) => (
-                <div
-                  key={item.id}
-                  className={`palette-item ${index === selectedIndex ? "selected" : ""}`}
-                  onClick={() => handleSelectAction(item)}
-                  onMouseEnter={() => setSelectedIndex(index)}
-                >
-                  <div className="palette-item-icon">{item.icon}</div>
-                  <div className="palette-item-info">
-                    <span className="item-title">{item.title}</span>
-                    <span className="item-subtitle">{item.subtitle}</span>
+      {/* Global Plate Calculator Modal */}
+      <PlateCalculatorModal
+        open={isPlateModalOpen}
+        onClose={() => setIsPlateModalOpen(false)}
+        initialWeight={60}
+        unit={user?.settings?.weightUnit || "kg"}
+      />
+
+      {/* Global Pre-Workout Warmup Modal */}
+      <PreWorkoutWarmupModal
+        open={isWarmupModalOpen}
+        onClose={() => setIsWarmupModalOpen(false)}
+        targetMuscleGroup="Full Body"
+      />
+
+      {/* 🔍 Quick Command Palette Modal */}
+      {isOpen && (
+        <div className="quick-palette-backdrop" onClick={() => setIsOpen(false)}>
+          <div className="quick-palette-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="palette-input-row">
+              <SearchIcon className="search-icon" />
+              <input
+                ref={inputRef}
+                type="text"
+                placeholder="Type a feature name or single shortcut (e.g. L for Plate Calc, N for Anatomy, A for AI)..."
+                value={query}
+                onChange={(e) => {
+                  setQuery(e.target.value);
+                  setSelectedIndex(0);
+                }}
+              />
+              <button
+                type="button"
+                className="btn-close-palette"
+                onClick={() => setIsOpen(false)}
+              >
+                <CloseIcon style={{ fontSize: "1.1rem" }} />
+              </button>
+            </div>
+
+            <div className="palette-results-list">
+              {filteredActions.length === 0 ? (
+                <div className="no-actions-found">No features found for "{query}"</div>
+              ) : (
+                filteredActions.map((item, idx) => (
+                  <div
+                    key={item.id}
+                    className={`palette-action-item ${idx === selectedIndex ? "selected" : ""}`}
+                    onClick={() => handleSelectAction(item)}
+                    onMouseEnter={() => setSelectedIndex(idx)}
+                  >
+                    <div className="action-left">
+                      <div className="action-icon-wrap">{item.icon}</div>
+                      <div className="action-text">
+                        <span className="action-title">{item.title}</span>
+                        <span className="action-subtitle">{item.subtitle}</span>
+                      </div>
+                    </div>
+                    {item.shortcut && (
+                      <span className="action-shortcut-pill">{item.shortcut}</span>
+                    )}
                   </div>
-                  {item.shortcut && <kbd className="palette-item-shortcut">{item.shortcut}</kbd>}
-                </div>
-              ))
-            )}
-          </div>
+                ))
+              )}
+            </div>
 
-          <div className="palette-footer">
-            <div className="footer-tip">
-              <span>Navigate</span> <kbd>↑</kbd> <kbd>↓</kbd>
-              <span style={{ marginLeft: "10px" }}>Select</span> <kbd>↵</kbd>
-              <span style={{ marginLeft: "10px" }}>Shortcuts</span> <kbd>?</kbd>
+            <div className="palette-footer">
+              <div className="footer-keys">
+                <span><kbd>↑</kbd><kbd>↓</kbd> to navigate</span>
+                <span><kbd>↵</kbd> to select</span>
+                <span><kbd>esc</kbd> to close</span>
+                <span><kbd>?</kbd> for cheat-sheet</span>
+              </div>
             </div>
           </div>
         </div>
       )}
-    </div>
+
+      {/* ⌨️ Keyboard Shortcuts Cheat-Sheet Modal */}
+      {showCheatsheet && (
+        <div className="quick-palette-backdrop" onClick={() => setShowCheatsheet(false)}>
+          <div className="cheatsheet-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="cheatsheet-header">
+              <div className="header-title">
+                <KeyboardIcon style={{ color: "#00f0ff" }} />
+                <h3>Keyboard Shortcuts & Fast Access</h3>
+              </div>
+              <button
+                type="button"
+                className="btn-close-palette"
+                onClick={() => setShowCheatsheet(false)}
+              >
+                <CloseIcon style={{ fontSize: "1.1rem" }} />
+              </button>
+            </div>
+            <div className="cheatsheet-grid">
+              {actions.map((act) => (
+                <div key={act.id} className="cheatsheet-item" onClick={() => handleSelectAction(act)}>
+                  <span className="cheatsheet-key">{act.shortcut}</span>
+                  <div className="cheatsheet-info">
+                    <strong>{act.title}</strong>
+                    <span>{act.subtitle}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 

@@ -5,7 +5,7 @@ import CalculateIcon from "@mui/icons-material/Calculate";
 import LocalFireDepartmentIcon from "@mui/icons-material/LocalFireDepartment";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import BookmarkAddedIcon from "@mui/icons-material/BookmarkAdded";
-import { toast } from "react-toastify";
+import { toast } from "../helpers/errorPopUp";
 import { useUnitPreference } from "../utils/useUnitPreference";
 import { updatePRs } from "../api/userApi";
 
@@ -15,6 +15,9 @@ import {
   PLATE_COLORS_LBS,
 } from "../utils/gymExperienceUtils";
 import "../styles/_gymModals.scss";
+
+// UI Primitives
+import { Button } from "./ui";
 
 const POPULAR_1RM_EXERCISES = [
   "Bench Press",
@@ -352,9 +355,14 @@ const FitnessTools = () => {
                 </div>
 
                 <div className="action-button-row">
-                  <button className="calculate-btn" onClick={calculateCalories}>
+                  <Button
+                    variant="primary"
+                    size="md"
+                    iconStart={<LocalFireDepartmentIcon />}
+                    onClick={calculateCalories}
+                  >
                     Calculate Targets
-                  </button>
+                  </Button>
                 </div>
 
                 {macroResults && (
@@ -484,9 +492,14 @@ const FitnessTools = () => {
                 </div>
 
                 <div className="action-button-row">
-                  <button className="calculate-btn" onClick={calculate1RM}>
+                  <Button
+                    variant="primary"
+                    size="md"
+                    iconStart={<FitnessCenterIcon />}
+                    onClick={calculate1RM}
+                  >
                     Estimate 1RM
-                  </button>
+                  </Button>
                 </div>
 
                 {rmResults && (
@@ -498,15 +511,16 @@ const FitnessTools = () => {
                           {rmResults.estimated1RM} <span className="unit">{weightUnit}</span>
                         </span>
                       </div>
-                      <button
-                        className="save-to-prs-btn"
+                      <Button
+                        variant="accent"
+                        size="sm"
+                        iconStart={<BookmarkAddedIcon />}
                         onClick={handleSaveToPRs}
                         disabled={isSavingPR}
                         title="Save this record directly to your Dashboard PRs"
                       >
-                        <BookmarkAddedIcon fontSize="small" />
-                        <span>{isSavingPR ? "Saving..." : "Save to My PRs"}</span>
-                      </button>
+                        {isSavingPR ? "Saving..." : "Save to My PRs"}
+                      </Button>
                     </div>
 
                     <h4 className="section-subtitle">Estimated Load Percentages</h4>

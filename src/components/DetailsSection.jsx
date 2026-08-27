@@ -1,12 +1,9 @@
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
-import "swiper/css/effect-cards";
-
-import "swiper/css";
-import "swiper/css/navigation";
 import "swiper/css/pagination";
-import { EffectCards, Pagination } from "swiper";
+import "swiper/css/navigation";
+import { Pagination, Navigation, Keyboard } from "swiper";
 
 import ExerciseCard from "../components/ExerciseCard";
 import { useNavigate } from "react-router-dom";
@@ -16,6 +13,8 @@ import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import LocalFireDepartmentIcon from "@mui/icons-material/LocalFireDepartment";
 import LightbulbIcon from "@mui/icons-material/Lightbulb";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
 const DetailSection = ({ ex, data, type }) => {
   const navigate = useNavigate();
@@ -26,6 +25,7 @@ const DetailSection = ({ ex, data, type }) => {
   };
 
   const focusArea = type === "muscle" ? ex?.target : ex?.bodyPart;
+  const navId = `${type}-${focusArea}`.replace(/\s+/g, "-");
 
   return (
     <div
@@ -83,27 +83,51 @@ const DetailSection = ({ ex, data, type }) => {
           <ArrowForwardIcon />
         </button>
       </div>
-      <div>
+
+      <div className="swiper-slider-wrapper">
+        {/* Custom navigation arrows */}
+        <div className="detail-carousel-nav">
+          <button
+            className="detail-carousel-btn detail-carousel-btn--prev"
+            id={`${navId}-prev`}
+            aria-label="Previous exercise"
+          >
+            <ChevronLeftIcon />
+          </button>
+          <span className="detail-carousel-count">
+            {data?.length || 0} exercises
+          </span>
+          <button
+            className="detail-carousel-btn detail-carousel-btn--next"
+            id={`${navId}-next`}
+            aria-label="Next exercise"
+          >
+            <ChevronRightIcon />
+          </button>
+        </div>
+
         <Swiper
-          effect={"cards"}
           grabCursor={true}
-          pagination={{
-            clickable: "true",
+          slidesPerView={1}
+          spaceBetween={16}
+          keyboard={{ enabled: true }}
+          pagination={{ clickable: true }}
+          navigation={{
+            prevEl: `#${navId}-prev`,
+            nextEl: `#${navId}-next`,
           }}
-          modules={[EffectCards, Pagination]}
-          cardsEffect={{}}
-          className="mySwiper"
+          modules={[Pagination, Navigation, Keyboard]}
+          className="mySwiper detail-swiper"
         >
           {data?.map((exercise, index) => {
             return (
-              <SwiperSlide
-                key={index}
-              >
-                <ExerciseCard
-                  className="exercise-card"
-                  key={exercise._id}
-                  exerciseData={exercise}
-                />
+              <SwiperSlide key={exercise._id || index}>
+                <div className="detail-carousel-card-wrap">
+                  <ExerciseCard
+                    className="exercise-card"
+                    exerciseData={exercise}
+                  />
+                </div>
               </SwiperSlide>
             );
           })}
@@ -114,3 +138,4 @@ const DetailSection = ({ ex, data, type }) => {
 };
 
 export default DetailSection;
+

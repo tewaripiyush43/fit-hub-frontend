@@ -1,0 +1,1337 @@
+@import "./variables";
+
+.interactive-muscle-map-widget {
+  background: linear-gradient(135deg, rgba(17, 24, 39, 0.95) 0%, rgba(11, 15, 25, 0.98) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 1.5rem;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 2rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  @media (max-width: 480px) {
+    padding: 0.85rem 0.6rem;
+    border-radius: 16px;
+    margin-bottom: 1rem;
+  }
+
+  &.compact-mode {
+    .map-header {
+      margin-bottom: 0.8rem;
+
+      @media (max-width: 768px) {
+        .header-info {
+          display: none;
+        }
+
+        .map-controls {
+          width: 100%;
+          justify-content: space-between;
+        }
+      }
+    }
+  }
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #00f0ff, #3b82f6, #10b981, transparent);
+    opacity: 0.8;
+  }
+
+  .map-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+
+    .header-info {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+
+      .header-icon-badge {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, rgba(0, 240, 255, 0.15), rgba(59, 130, 246, 0.2));
+        border: 1px solid rgba(0, 240, 255, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #00f0ff;
+        box-shadow: 0 0 16px rgba(0, 240, 255, 0.25);
+
+        svg {
+          font-size: 1.5rem;
+        }
+      }
+
+      .title-text {
+        h3 {
+          margin: 0;
+          font-size: 1.15rem;
+          font-weight: 700;
+          color: #f3f4f6;
+          letter-spacing: -0.01em;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+
+          .badge-beta {
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 0.15rem 0.45rem;
+            border-radius: 9999px;
+            background: linear-gradient(90deg, #00f0ff, #3b82f6);
+            color: #000;
+          }
+        }
+
+        p {
+          margin: 0.2rem 0 0;
+          font-size: 0.82rem;
+          color: #9ca3af;
+        }
+      }
+    }
+
+    .map-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+
+      .view-toggle-pill {
+        display: flex;
+        background: rgba(0, 0, 0, 0.45);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        padding: 3px;
+        gap: 2px;
+
+        button {
+          background: transparent;
+          border: none;
+          color: #9ca3af;
+          font-size: 0.8rem;
+          font-weight: 600;
+          padding: 0.4rem 0.85rem;
+          border-radius: 7px;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          display: flex;
+          align-items: center;
+          gap: 0.35rem;
+
+        .btn-dual-view {
+          @media (max-width: 768px) {
+            display: none !important;
+          }
+        }
+
+          &.active {
+            background: linear-gradient(135deg, var(--accent-subtle, rgba(0, 240, 255, 0.2)), rgba(59, 130, 246, 0.25));
+            color: var(--accent, #00f0ff);
+            border: 1px solid var(--border-accent, rgba(0, 240, 255, 0.4));
+            box-shadow: 0 0 12px var(--accent-glow, rgba(0, 240, 255, 0.2));
+          }
+        }
+      }
+
+      .btn-clear-selection {
+        background: rgba(239, 68, 68, 0.12);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        color: #f87171;
+        font-size: 0.78rem;
+        font-weight: 600;
+        padding: 0.4rem 0.75rem;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+
+        &:hover {
+          background: rgba(239, 68, 68, 0.25);
+          color: #fca5a5;
+        }
+      }
+    }
+  }
+
+  .map-workspace {
+    display: grid;
+    grid-template-columns: minmax(280px, 360px) 1fr;
+    gap: 2rem;
+    align-items: center;
+
+    @media (max-width: 900px) {
+      grid-template-columns: 1fr;
+      justify-items: center;
+    }
+  }
+
+  .mannequin-container {
+    position: relative;
+    width: 100%;
+    max-width: 340px;
+    height: 480px;
+    background: radial-gradient(circle at 50% 40%, var(--accent-subtle, rgba(0, 240, 255, 0.05)) 0%, rgba(0, 0, 0, 0.4) 80%);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    overflow: hidden;
+
+    .body-scanner-line {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent, rgba(0, 240, 255, 0.7)), transparent);
+      box-shadow: 0 0 10px var(--accent, #00f0ff);
+      animation: scanAnim 3.5s ease-in-out infinite alternate;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    svg.mannequin-svg {
+      width: 100%;
+      height: 100%;
+      max-height: 540px;
+      filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.6));
+      overflow: visible;
+
+      /* Authentic MuscleWiki Vector Line Art styling */
+      &.musclewiki-vector-model {
+        .body-map__model,
+        g[id="body"],
+        g[id="body-map__model"] {
+          path {
+            fill: none !important;
+            stroke: #64748b !important;
+            stroke-width: 1.8px !important;
+            stroke-linecap: round !important;
+            stroke-linejoin: round !important;
+            pointer-events: none;
+          }
+        }
+
+        .muscle-region {
+          cursor: pointer;
+          transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+          path {
+            fill: rgba(30, 41, 59, 0.6);
+            stroke: #475569;
+            stroke-width: 1.2px;
+            transition: all 0.2s ease;
+          }
+
+          &:hover path,
+          &.hovered path {
+            fill: rgba(0, 240, 255, 0.65) !important;
+            stroke: #00f0ff !important;
+            stroke-width: 2.2px !important;
+            filter: drop-shadow(0 0 12px rgba(0, 240, 255, 0.85));
+          }
+
+          &.selected path {
+            fill: rgba(0, 240, 255, 0.9) !important;
+            stroke: #ffffff !important;
+            stroke-width: 2.5px !important;
+            filter: drop-shadow(0 0 16px rgba(0, 240, 255, 1));
+          }
+
+          /* Recovery Heatmap Status classes */
+          &.status-fatigued path {
+            fill: rgba(239, 68, 68, 0.75) !important;
+            stroke: #f87171 !important;
+            filter: drop-shadow(0 0 10px rgba(239, 68, 68, 0.8));
+          }
+
+          &.status-recovering path {
+            fill: rgba(245, 158, 11, 0.75) !important;
+            stroke: #fbbf24 !important;
+            filter: drop-shadow(0 0 10px rgba(245, 158, 11, 0.8));
+          }
+
+          &.status-ready path {
+            fill: rgba(16, 185, 129, 0.75) !important;
+            stroke: #34d399 !important;
+            filter: drop-shadow(0 0 10px rgba(16, 185, 129, 0.8));
+          }
+        }
+      }
+
+      .body-base-outline {
+        fill: #151d2f;
+        stroke: rgba(255, 255, 255, 0.12);
+        stroke-width: 1.5;
+        stroke-linejoin: round;
+      }
+
+      .joint-marker {
+        fill: rgba(0, 240, 255, 0.25);
+        stroke: rgba(0, 240, 255, 0.5);
+        stroke-width: 1;
+      }
+
+      .muscle-region {
+        cursor: pointer;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        fill: rgba(30, 41, 59, 0.7);
+        stroke: rgba(255, 255, 255, 0.15);
+        stroke-width: 1.2;
+
+        &:hover {
+          fill: rgba(0, 240, 255, 0.45) !important;
+          stroke: #00f0ff !important;
+          stroke-width: 2.2 !important;
+          filter: drop-shadow(0 0 10px rgba(0, 240, 255, 0.75));
+        }
+
+        &.selected {
+          fill: rgba(0, 240, 255, 0.75) !important;
+          stroke: #ffffff !important;
+          stroke-width: 2.5 !important;
+          filter: drop-shadow(0 0 14px rgba(0, 240, 255, 0.95));
+        }
+
+        /* Recovery status mode classes */
+        &.status-fatigued {
+          fill: rgba(239, 68, 68, 0.45);
+          stroke: rgba(239, 68, 68, 0.7);
+
+          &:hover {
+            fill: rgba(239, 68, 68, 0.75) !important;
+            stroke: #ef4444 !important;
+            filter: drop-shadow(0 0 10px rgba(239, 68, 68, 0.9));
+          }
+
+          &.selected {
+            fill: rgba(239, 68, 68, 0.85) !important;
+            stroke: #ffffff !important;
+          }
+        }
+
+        &.status-recovering {
+          fill: rgba(245, 158, 11, 0.4);
+          stroke: rgba(245, 158, 11, 0.7);
+
+          &:hover {
+            fill: rgba(245, 158, 11, 0.75) !important;
+            stroke: #f59e0b !important;
+            filter: drop-shadow(0 0 10px rgba(245, 158, 11, 0.9));
+          }
+
+          &.selected {
+            fill: rgba(245, 158, 11, 0.85) !important;
+            stroke: #ffffff !important;
+          }
+        }
+
+        &.status-ready {
+          fill: rgba(16, 185, 129, 0.35);
+          stroke: rgba(16, 185, 129, 0.6);
+
+          &:hover {
+            fill: rgba(16, 185, 129, 0.7) !important;
+            stroke: #10b981 !important;
+            filter: drop-shadow(0 0 10px rgba(16, 185, 129, 0.9));
+          }
+
+          &.selected {
+            fill: rgba(16, 185, 129, 0.85) !important;
+            stroke: #ffffff !important;
+          }
+        }
+      }
+    }
+  }
+
+  /* Muscle Detail Panel on the right side of mannequin */
+  .muscle-details-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    width: 100%;
+
+    .active-muscle-card {
+      background: rgba(18, 21, 34, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 18px;
+      padding: 1.25rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+      position: relative;
+      overflow: hidden;
+
+      .card-header-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.85rem;
+
+        .name-and-tag {
+          display: flex;
+          align-items: center;
+          gap: 0.65rem;
+
+          .emoji-avatar {
+            font-size: 1.5rem;
+          }
+
+          .title-grp {
+            h4 {
+              margin: 0;
+              font-size: 1.2rem;
+              font-weight: 800;
+              color: #ffffff;
+            }
+
+            span.latin-name {
+              font-size: 0.76rem;
+              color: var(--accent, #00e5ff);
+              font-family: inherit;
+              letter-spacing: 0.02em;
+            }
+          }
+        }
+
+        .status-badge {
+          font-size: 0.72rem;
+          font-weight: 800;
+          padding: 0.25rem 0.65rem;
+          border-radius: 20px;
+          display: flex;
+          align-items: center;
+          gap: 0.3rem;
+
+          &.ready {
+            background: rgba(16, 185, 129, 0.12);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+          }
+
+          &.recovering {
+            background: rgba(245, 158, 11, 0.12);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+          }
+
+          &.fatigued {
+            background: rgba(239, 68, 68, 0.12);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+          }
+        }
+      }
+
+      /* Equipment Filter Block */
+      .equipment-filter-block {
+        margin: 0.75rem 0;
+        padding: 0.65rem 0.85rem;
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+
+        .filter-label {
+          font-size: 0.7rem;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          color: rgba(255, 255, 255, 0.5);
+          display: block;
+          margin-bottom: 0.4rem;
+        }
+
+        .equip-chips-row {
+          display: flex;
+          gap: 5px;
+          flex-wrap: wrap;
+
+          .equip-chip-btn {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            color: rgba(255, 255, 255, 0.7);
+            padding: 4px 9px;
+            font-size: 0.74rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            font-family: inherit;
+
+            &:hover {
+              background: rgba(255, 255, 255, 0.08);
+              color: #ffffff;
+            }
+
+            &.active {
+              background: rgba(0, 229, 255, 0.15);
+              border-color: var(--accent, #00e5ff);
+              color: var(--accent, #00e5ff);
+              font-weight: 800;
+            }
+          }
+        }
+      }
+
+      .recommended-exercises-preview {
+        margin-top: 0.75rem;
+        background: rgba(0, 0, 0, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+        padding: 0.65rem 0.85rem;
+
+        .preview-heading {
+          display: flex;
+          align-items: center;
+          gap: 0.4rem;
+          font-size: 0.7rem;
+          font-weight: 700;
+          color: rgba(255, 255, 255, 0.55);
+          text-transform: uppercase;
+          letter-spacing: 0.04em;
+          margin-bottom: 0.45rem;
+        }
+
+        .preview-tags-row {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.35rem;
+
+          .preview-ex-tag {
+            background: rgba(0, 229, 255, 0.08);
+            border: 1px solid rgba(0, 229, 255, 0.18);
+            color: #ffffff;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.2rem 0.55rem;
+            border-radius: 6px;
+          }
+        }
+      }
+
+      .action-row {
+        margin-top: 1rem;
+        display: flex;
+        gap: 0.65rem;
+        flex-wrap: wrap;
+
+        .btn-filter-action {
+          flex: 1;
+          min-width: 160px;
+          background: linear-gradient(135deg, var(--accent, #00e5ff) 0%, #00b4d8 100%);
+          color: #050811;
+          font-size: 0.84rem;
+          font-weight: 800;
+          border: none;
+          padding: 8px 14px;
+          border-radius: 10px;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.45rem;
+          box-shadow: 0 4px 12px rgba(0, 229, 255, 0.25);
+          transition: all 0.2s ease;
+
+          &:hover {
+            transform: translateY(-1px);
+            background: linear-gradient(135deg, #00f0ff 0%, #00c4ea 100%);
+            box-shadow: 0 6px 18px rgba(0, 229, 255, 0.35);
+          }
+        }
+
+        .btn-ai-advice {
+          background: rgba(192, 132, 252, 0.12);
+          border: 1px solid rgba(192, 132, 252, 0.3);
+          color: #d8b4fe;
+          border-radius: 10px;
+          padding: 8px 14px;
+          font-weight: 700;
+          font-size: 0.82rem;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 0.4rem;
+          transition: all 0.2s ease;
+
+          &:hover {
+            background: rgba(192, 132, 252, 0.2);
+            color: #ffffff;
+            border-color: #c084fc;
+          }
+        }
+      }
+    }
+
+    /* Muscle Quick Chips Grid */
+    .muscle-chips-selector {
+      h5 {
+        margin: 0 0 0.55rem;
+        font-size: 0.74rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: rgba(255, 255, 255, 0.5);
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+      }
+
+      .chips-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.35rem;
+
+        .muscle-chip-btn {
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          color: rgba(255, 255, 255, 0.75);
+          font-size: 0.75rem;
+          font-weight: 600;
+          padding: 0.28rem 0.6rem;
+          border-radius: 8px;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 0.3rem;
+          transition: all 0.15s ease;
+          font-family: inherit;
+
+          .chip-pct {
+            font-size: 0.68rem;
+            opacity: 0.65;
+          }
+
+          &:hover {
+            background: rgba(0, 229, 255, 0.1);
+            border-color: rgba(0, 229, 255, 0.3);
+            color: #ffffff;
+          }
+
+          &.selected {
+            background: rgba(0, 229, 255, 0.18);
+            border-color: var(--accent, #00e5ff);
+            color: var(--accent, #00e5ff);
+            font-weight: 800;
+            box-shadow: 0 0 10px rgba(0, 229, 255, 0.2);
+          }
+        }
+      }
+    }
+  }
+}
+
+@keyframes scanAnim {
+  0% {
+    top: 5%;
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    top: 92%;
+    opacity: 0.2;
+  }
+}
+
+@media (max-width: 900px) {
+  .interactive-muscle-map-widget {
+    padding: 1.25rem;
+
+    .map-workspace {
+      grid-template-columns: 1fr !important;
+      gap: 1.5rem;
+    }
+
+    .mannequin-container {
+      max-width: 100% !important;
+    }
+  }
+}
+
+@media (max-width: 640px) {
+  .interactive-muscle-map-widget {
+    padding: 0.9rem;
+    border-radius: 14px;
+
+    .map-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.75rem;
+
+      .header-info {
+        gap: 0.65rem;
+
+        .header-icon-badge {
+          width: 38px;
+          height: 38px;
+          border-radius: 10px;
+
+          svg {
+            font-size: 1.25rem;
+          }
+        }
+
+        .title-text {
+          h3 {
+            font-size: 1rem;
+          }
+
+          p {
+            font-size: 0.75rem;
+          }
+        }
+      }
+
+      .map-controls {
+        width: 100%;
+        justify-content: space-between;
+        gap: 0.5rem;
+
+        .view-toggle-pill {
+          width: 100%;
+          justify-content: stretch;
+
+          button {
+            flex: 1;
+            padding: 0.35rem 0.5rem;
+            font-size: 0.72rem;
+            justify-content: center;
+          }
+        }
+
+        .btn-clear-selection {
+          font-size: 0.72rem;
+          padding: 0.35rem 0.6rem;
+        }
+      }
+    }
+
+    .mannequin-container {
+      flex-direction: column !important;
+      gap: 1rem !important;
+      min-height: auto !important;
+      padding: 1rem 0.5rem !important;
+
+      > div {
+        max-width: 100% !important;
+        width: 100% !important;
+      }
+
+      svg.mannequin-svg {
+        max-height: 380px !important;
+      }
+    }
+
+    .muscle-details-panel {
+      .active-muscle-card {
+        padding: 1rem;
+
+        .card-header-row {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 0.4rem;
+        }
+
+        .action-row {
+          flex-direction: column;
+
+          button {
+            width: 100% !important;
+            flex: 1 1 100% !important;
+            justify-content: center;
+          }
+        }
+      }
+
+      .muscle-chips-selector {
+        .chips-container {
+          gap: 0.35rem;
+
+          .muscle-chip-btn {
+            font-size: 0.72rem;
+            padding: 0.28rem 0.55rem;
+          }
+        }
+      }
+    }
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ANATOMY PAGE - MODERN, BALANCED & RESPONSIVE DESIGN SYSTEM
+   ═══════════════════════════════════════════════════════════════ */
+
+.anatomy-page-root {
+  padding: 95px 1.5rem 70px;
+  max-width: 1280px;
+  margin: 0 auto;
+  min-height: 100vh;
+  box-sizing: border-box;
+
+  /* Header Section */
+  .anatomy-page-header {
+    text-align: center;
+    margin-bottom: 2rem;
+
+    .header-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(0, 240, 255, 0.1);
+      border: 1px solid rgba(0, 240, 255, 0.25);
+      color: #00f0ff;
+      padding: 0.35rem 0.9rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.75rem;
+    }
+
+    h1 {
+      font-size: clamp(1.5rem, 3.5vw, 2.4rem);
+      font-weight: 800;
+      color: #f3f4f6;
+      letter-spacing: -0.02em;
+      margin: 0 0 0.45rem;
+
+      span {
+        color: #00f0ff;
+        background: linear-gradient(135deg, #00f0ff 0%, #3b82f6 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+    }
+
+    p {
+      color: #9ca3af;
+      font-size: clamp(0.82rem, 1.8vw, 0.95rem);
+      max-width: 680px;
+      margin: 0 auto;
+      line-height: 1.5;
+    }
+
+    .mode-selector-pill {
+      display: inline-flex;
+      background: rgba(0, 0, 0, 0.45);
+      border-radius: 12px;
+      padding: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      margin-top: 1.25rem;
+      gap: 4px;
+      max-width: 100%;
+
+      button {
+        background: transparent;
+        color: #9ca3af;
+        border: none;
+        border-radius: 8px;
+        padding: 0.45rem 1.1rem;
+        font-size: 0.82rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        white-space: nowrap;
+
+        &:hover {
+          color: #f3f4f6;
+        }
+
+        &.active {
+          background: linear-gradient(135deg, rgba(0, 240, 255, 0.25), rgba(59, 130, 246, 0.3));
+          color: #00f0ff;
+          border: 1px solid rgba(0, 240, 255, 0.4);
+          box-shadow: 0 0 12px rgba(0, 240, 255, 0.25);
+        }
+      }
+    }
+  }
+
+  /* AI Biomechanics Coach Panel */
+  .ai-muscle-coach-panel {
+    background: linear-gradient(135deg, rgba(30, 27, 75, 0.55) 0%, rgba(15, 23, 42, 0.9) 100%);
+    border: 1px solid rgba(168, 85, 247, 0.35);
+    border-radius: 18px;
+    padding: 1.5rem;
+    margin-top: 2rem;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45);
+    position: relative;
+    overflow: hidden;
+
+    .coach-panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+
+      .coach-title-block {
+        display: flex;
+        align-items: center;
+        gap: 0.85rem;
+
+        .coach-avatar {
+          width: 42px;
+          height: 42px;
+          border-radius: 12px;
+          background: linear-gradient(135deg, rgba(168, 85, 247, 0.3), rgba(0, 240, 255, 0.3));
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #c084fc;
+          box-shadow: 0 0 16px rgba(168, 85, 247, 0.3);
+          flex-shrink: 0;
+        }
+
+        h3 {
+          margin: 0;
+          font-size: 1.15rem;
+          color: #f3f4f6;
+          display: flex;
+          align-items: center;
+          flex-wrap: wrap;
+          gap: 0.5rem;
+
+          .gemini-tag {
+            font-size: 0.62rem;
+            background: linear-gradient(90deg, #c084fc, #00f0ff);
+            color: #000;
+            padding: 0.12rem 0.45rem;
+            border-radius: 9999px;
+            font-weight: 800;
+            letter-spacing: 0.04em;
+          }
+        }
+
+        p {
+          margin: 0.2rem 0 0;
+          color: #9ca3af;
+          font-size: 0.8rem;
+          line-height: 1.4;
+        }
+      }
+
+      .coach-actions-row {
+        display: flex;
+        gap: 0.65rem;
+        flex-wrap: wrap;
+
+        button {
+          border: none;
+          border-radius: 10px;
+          padding: 0.55rem 1rem;
+          font-weight: 700;
+          font-size: 0.82rem;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 0.4rem;
+          transition: all 0.2s ease;
+
+          &.btn-coach-analyze {
+            background: linear-gradient(135deg, #a855f7 0%, #3b82f6 100%);
+            color: #ffffff;
+            box-shadow: 0 4px 14px rgba(168, 85, 247, 0.35);
+
+            &:hover {
+              transform: translateY(-1px);
+              box-shadow: 0 6px 18px rgba(168, 85, 247, 0.5);
+            }
+          }
+
+          &.btn-coach-routine {
+            background: linear-gradient(135deg, #00f0ff 0%, #10b981 100%);
+            color: #0b0f19;
+            box-shadow: 0 4px 14px rgba(0, 240, 255, 0.3);
+
+            &:hover {
+              transform: translateY(-1px);
+              box-shadow: 0 6px 18px rgba(0, 240, 255, 0.45);
+            }
+          }
+        }
+      }
+    }
+
+    .ai-results-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 0.85rem;
+      margin-top: 1rem;
+
+      .ai-card {
+        background: rgba(0, 0, 0, 0.35);
+        border-radius: 12px;
+        padding: 0.95rem;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+
+        &.verdict {
+          border-color: rgba(168, 85, 247, 0.3);
+          .card-label { color: #c084fc; }
+        }
+
+        &.cue {
+          border-color: rgba(0, 240, 255, 0.3);
+          .card-label { color: #00f0ff; }
+        }
+
+        &.reps {
+          border-color: rgba(16, 185, 129, 0.3);
+          .card-label { color: #34d399; }
+        }
+
+        &.injury {
+          border-color: rgba(245, 158, 11, 0.3);
+          .card-label { color: #fbbf24; }
+        }
+
+        .card-label {
+          display: flex;
+          align-items: center;
+          gap: 0.4rem;
+          font-size: 0.74rem;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.04em;
+          margin-bottom: 0.4rem;
+
+          svg {
+            font-size: 0.95rem;
+          }
+        }
+
+        p {
+          margin: 0;
+          color: #f3f4f6;
+          font-size: 0.84rem;
+          line-height: 1.45;
+        }
+      }
+    }
+
+    .ai-empty-prompt {
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px dashed rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 1.25rem;
+      text-align: center;
+
+      p {
+        color: #9ca3af;
+        margin: 0;
+        font-size: 0.85rem;
+      }
+    }
+  }
+
+  /* Deep Dive Grid & Cards */
+  .muscle-deep-dive-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.25rem;
+    margin-top: 2rem;
+
+    .deep-dive-card {
+      background: rgba(17, 24, 39, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 1.35rem;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+      display: flex;
+      flex-direction: column;
+
+      .card-header {
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+        margin-bottom: 0.9rem;
+
+        .header-icon {
+          width: 36px;
+          height: 36px;
+          border-radius: 10px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+
+          &.cyan {
+            background: rgba(0, 240, 255, 0.15);
+            color: #00f0ff;
+          }
+
+          &.blue {
+            background: rgba(59, 130, 246, 0.15);
+            color: #60a5fa;
+          }
+
+          &.green {
+            background: rgba(16, 185, 129, 0.15);
+            color: #10b981;
+          }
+
+          &.purple {
+            background: rgba(168, 85, 247, 0.15);
+            color: #c084fc;
+          }
+        }
+
+        h3 {
+          margin: 0;
+          font-size: 1.02rem;
+          color: #f3f4f6;
+          font-weight: 700;
+        }
+
+        .sub-tag {
+          font-size: 0.72rem;
+          color: #9ca3af;
+          display: block;
+        }
+      }
+
+      .desc-text {
+        color: #d1d5db;
+        font-size: 0.86rem;
+        line-height: 1.5;
+        margin: 0 0 1rem;
+      }
+
+      .card-sub-section {
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+        padding-top: 0.85rem;
+        margin-top: auto;
+
+        h4 {
+          margin: 0 0 0.4rem;
+          font-size: 0.78rem;
+          text-transform: uppercase;
+          color: #9ca3af;
+          letter-spacing: 0.04em;
+        }
+
+        .cue-quote {
+          margin: 0;
+          color: #9ca3af;
+          font-size: 0.8rem;
+          font-style: italic;
+          background: rgba(0, 0, 0, 0.3);
+          padding: 0.55rem 0.75rem;
+          border-radius: 8px;
+          border-left: 3px solid #00f0ff;
+          line-height: 1.4;
+        }
+      }
+
+      .exercise-list-group {
+        .group-title {
+          font-size: 0.74rem;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.04em;
+          display: block;
+
+          &.blue { color: #60a5fa; }
+          &.cyan { color: #00f0ff; }
+        }
+
+        ul {
+          margin: 0.3rem 0 0;
+          padding-left: 1.15rem;
+          color: #e5e7eb;
+          font-size: 0.84rem;
+          line-height: 1.55;
+
+          li {
+            margin-bottom: 0.2rem;
+          }
+        }
+      }
+
+      .btn-browse-all {
+        width: 100%;
+        margin-top: 1.1rem;
+        background: rgba(0, 240, 255, 0.12);
+        border: 1px solid rgba(0, 240, 255, 0.3);
+        color: #00f0ff;
+        border-radius: 10px;
+        padding: 0.55rem 0.9rem;
+        font-weight: 700;
+        font-size: 0.82rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+        transition: all 0.2s ease;
+
+        &:hover {
+          background: rgba(0, 240, 255, 0.22);
+          transform: translateY(-1px);
+        }
+      }
+
+      .routines-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.55rem;
+
+        .routine-step-item {
+          background: rgba(0, 0, 0, 0.3);
+          border: 1px solid rgba(255, 255, 255, 0.04);
+          border-radius: 10px;
+          padding: 0.55rem 0.75rem;
+          display: flex;
+          gap: 0.6rem;
+          align-items: flex-start;
+
+          .step-num {
+            background: rgba(16, 185, 129, 0.2);
+            color: #34d399;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 800;
+            flex-shrink: 0;
+            margin-top: 2px;
+
+            &.purple {
+              background: rgba(168, 85, 247, 0.2);
+              color: #c084fc;
+            }
+          }
+
+          .step-content {
+            flex: 1;
+
+            .step-top {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              gap: 0.35rem;
+              margin-bottom: 0.15rem;
+
+              strong {
+                color: #f3f4f6;
+                font-size: 0.82rem;
+              }
+
+              .step-duration {
+                color: #10b981;
+                font-size: 0.72rem;
+                font-weight: 700;
+
+                &.purple {
+                  color: #c084fc;
+                }
+              }
+            }
+
+            p {
+              margin: 0;
+              color: #9ca3af;
+              font-size: 0.76rem;
+              line-height: 1.35;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  /* ── Breakpoints for Flawless Responsiveness ── */
+  @media (max-width: 768px) {
+    padding: 78px 1rem 50px;
+
+    .anatomy-page-header {
+      margin-bottom: 1.5rem;
+
+      .mode-selector-pill {
+        width: 100%;
+        display: flex;
+
+        button {
+          flex: 1;
+          padding: 0.4rem 0.5rem;
+          font-size: 0.74rem;
+        }
+      }
+    }
+
+    .ai-muscle-coach-panel {
+      padding: 1rem;
+      border-radius: 14px;
+
+      .coach-panel-header {
+        flex-direction: column;
+        align-items: flex-start;
+
+        .coach-actions-row {
+          width: 100%;
+          flex-direction: column;
+
+          button {
+            width: 100%;
+            justify-content: center;
+          }
+        }
+      }
+    }
+
+    .muscle-deep-dive-grid {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    padding: 72px 0.65rem 40px;
+
+    .anatomy-page-header {
+      h1 {
+        font-size: 1.45rem;
+      }
+    }
+
+    .ai-muscle-coach-panel {
+      padding: 0.85rem;
+
+      .ai-results-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .muscle-deep-dive-grid {
+      .deep-dive-card {
+        padding: 1rem;
+        border-radius: 12px;
+      }
+    }
+  }
+}

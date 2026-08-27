@@ -3,6 +3,17 @@ import { getAccessToken, setAccessToken, clearAccessToken } from "../utils/token
 import { store, authActions } from "../store";
 import { errorPopUp } from "../helpers/errorPopUp";
 
+export const getApiBaseUrl = () => {
+  const envUrl = process.env.REACT_APP_BASE_URL;
+  if (typeof window !== "undefined" && window.location && window.location.hostname) {
+    const hostname = window.location.hostname;
+    if (hostname !== "localhost" && hostname !== "127.0.0.1") {
+      return `${window.location.protocol}//${hostname}:9000/api`;
+    }
+  }
+  return envUrl || "http://localhost:9000/api";
+};
+
 let refreshPromise = null;
 
 const refreshAccessToken = async () => {
@@ -10,8 +21,9 @@ const refreshAccessToken = async () => {
 
   const performRefresh = async () => {
     try {
+      const baseUrl = getApiBaseUrl();
       const res = await axios.post(
-        `${process.env.REACT_APP_BASE_URL}/auth/refreshToken`,
+        `${baseUrl}/auth/refreshToken`,
         {},
         { withCredentials: true }
       );
@@ -19,10 +31,14 @@ const refreshAccessToken = async () => {
       setAccessToken(token);
       return token;
     } catch (err) {
-      // If refresh fails, force logout
-      store.dispatch(authActions.setUser({}));
-      store.dispatch(authActions.logout());
-      clearAccessToken();
+      // Only force logout if the server explicitly rejected the token (401 or 403)
+      // Do NOT log out on network drop, screen sleep, or connection timeout
+      const status = err.response?.status;
+      if (status === 401 || status === 403) {
+        store.dispatch(authActions.setUser({}));
+        store.dispatch(authActions.logout());
+        clearAccessToken();
+      }
       throw err;
     } finally {
       refreshPromise = null;
@@ -34,7 +50,7 @@ const refreshAccessToken = async () => {
 };
 
 const api = axios.create({
-  baseURL: process.env.REACT_APP_BASE_URL,
+  baseURL: getApiBaseUrl(),
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",

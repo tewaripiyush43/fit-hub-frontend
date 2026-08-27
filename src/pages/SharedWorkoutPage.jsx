@@ -1,14 +1,24 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { toast } from "react-toastify";
+import { toast } from "../helpers/errorPopUp";
 import ExerciseCard from "../components/ExerciseCard";
 import { cloneWorkout } from "../api/workoutApi";
 import { portalActions } from "../store/index";
+import { updateSEO } from "../utils/seoHelper";
 import api from "../api/client";
-import Loader from "../components/Loader";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import LibraryAddIcon from "@mui/icons-material/LibraryAdd";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import LockIcon from "@mui/icons-material/Lock";
+
+// UI Primitives
+import {
+  Badge,
+  Button,
+  ErrorState,
+  Skeleton,
+} from "../components/ui";
 
 const renderFormattedDescription = (text) => {
   if (!text) return null;
@@ -51,7 +61,7 @@ const renderFormattedDescription = (text) => {
 
 const SharedWorkoutPage = () => {
   const { workoutId } = useParams();
-  const [id] = workoutId.split("-");
+  const [id] = (workoutId || "").split("-");
   const navigate = useNavigate();
   const dispatch = useDispatch();
   
@@ -66,26 +76,54 @@ const SharedWorkoutPage = () => {
 
   useEffect(() => {
     const fetchSharedWorkout = async () => {
+      if (!id || id === "undefined") {
+        setError("Invalid workout routine link.");
+        setLoading(false);
+        return;
+      }
+
       try {
         setLoading(true);
+        setError("");
         const response = await api.get(`/workout/get/${id}`);
         
-        if (response.status === 201) {
-          setWorkout(response.data.workout);
+        if (response.status === 200 && response.data) {
+          setWorkout(response.data.workout || response.data);
+        } else {
+          setError("Failed to load workout routine.");
         }
       } catch (err) {
-        console.error(err);
-        setError(err.response?.data?.error?.message || "Workout not found or is private.");
+        console.error("Shared workout fetch error:", err);
+        const status = err.response?.status;
+        if (status === 403) {
+          setError("This workout routine is private and can only be viewed by its creator.");
+        } else if (status === 404) {
+          setError("Workout routine not found. It may have been deleted or the link is incorrect.");
+        } else {
+          setError(err.response?.data?.error?.message || "Failed to load shared routine. Please try again later.");
+        }
       } finally {
         setLoading(false);
       }
     };
     
-    fetchSharedWorkout();
+      fetchSharedWorkout();
   }, [id]);
 
+  useEffect(() => {
+    if (workout?.name) {
+      const exerciseCount = workout.exercises?.length || 0;
+      updateSEO({
+        title: `${workout.name} - Custom Workout Routine | FitHub`,
+        description: `Explore the "${workout.name}" routine on FitHub (${exerciseCount} exercises). View target muscle sets, reps, and clone it directly to your workout library.`,
+        pathname: `/share/workout/${workoutId}`,
+        keywords: `${workout.name}, workout routine, gym program, custom split, fitHub workout`,
+      });
+    }
+  }, [workout, workoutId]);
+
   const handleClone = async () => {
-    if (!isLoggedIn || !user) {
+    if (!isLoggedIn || !user?._id) {
       dispatch(portalActions.setPortalOpen());
       toast.info("Please log in or sign up to save this routine to your library!");
       return;
@@ -100,7 +138,8 @@ const SharedWorkoutPage = () => {
       }
     } catch (err) {
       console.error(err);
-      toast.error("Failed to save workout. Please try again.");
+      const msg = err.response?.data?.error?.message || err.response?.data?.message || "Failed to save workout. Please try again.";
+      toast.error(msg);
     } finally {
       setSaving(false);
     }
@@ -111,19 +150,35 @@ const SharedWorkoutPage = () => {
     const shareUrl = `${window.location.origin}/share/workout/${id}-${slug}`;
     navigator.clipboard.writeText(shareUrl);
     setCopied(true);
+    toast.info("Workout link copied to clipboard!");
     setTimeout(() => setCopied(false), 2000);
   };
 
-  if (loading) return <Loader />;
+  if (loading) {
+    return (
+      <div className="workout-page shared-workout-page" style={{ maxWidth: "1200px", margin: "0 auto", padding: "100px 20px" }}>
+        <Skeleton variant="text" width="200px" height="30px" />
+        <Skeleton variant="text" width="60%" height="48px" style={{ margin: "16px 0" }} />
+        <Skeleton variant="card" height="120px" style={{ marginBottom: "24px" }} />
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "20px" }}>
+          <Skeleton variant="exercise-card" height="260px" />
+          <Skeleton variant="exercise-card" height="260px" />
+          <Skeleton variant="exercise-card" height="260px" />
+        </div>
+      </div>
+    );
+  }
 
   if (error) {
     return (
-      <div className="shared-workout-error-container">
-        <div className="error-card">
-          <h2>Access Denied / Not Found</h2>
-          <p>{error}</p>
-          <button onClick={() => navigate("/")}>Go to Homepage</button>
-        </div>
+      <div className="shared-workout-error-container" style={{ minHeight: "80vh", display: "flex", alignItems: "center", justifyContent: "center", padding: "100px 20px" }}>
+        <ErrorState
+          icon={<LockIcon />}
+          title="Shared Routine Notice"
+          message={error}
+          onRetry={() => navigate("/")}
+          retryLabel="Explore Public Routines"
+        />
       </div>
     );
   }
@@ -131,48 +186,69 @@ const SharedWorkoutPage = () => {
   return (
     <div className="workout-page shared-workout-page">
       <div className="workout-page-header">
-        <span className="workout-page-back-btn" onClick={() => navigate(-1)}>
-          &larr; Back
-        </span>
+        <Button
+          variant="ghost"
+          size="sm"
+          iconStart={<ArrowBackIcon />}
+          onClick={() => navigate(-1)}
+        >
+          Back
+        </Button>
 
         <div className="workout-page-actions">
-          <button className="workout-share-btn" onClick={handleCopyLink}>
-            <ContentCopyIcon style={{ fontSize: "1.1rem" }} />
-            <span>{copied ? "Copied!" : "Copy Link"}</span>
-          </button>
+          <Button
+            variant="outline"
+            size="sm"
+            iconStart={<ContentCopyIcon />}
+            onClick={handleCopyLink}
+            title="Copy Public Link"
+          >
+            {copied ? "Copied!" : "Share Link"}
+          </Button>
 
-          <button
-            className="workout-page-save-info-btn"
+          <Button
+            variant="primary"
+            size="sm"
+            iconStart={<LibraryAddIcon />}
             onClick={handleClone}
             disabled={saving}
           >
-            <LibraryAddIcon style={{ fontSize: "1.1rem", marginRight: "4px" }} />
-            <span>{saving ? "Saving..." : "Save to My Workouts"}</span>
-          </button>
+            {saving ? "Saving..." : "Save to My Workouts"}
+          </Button>
         </div>
       </div>
 
       <div className="workout-page-meta">
-        <span className="shared-badge">Shared Routine</span>
-        <h1 className="workout-page-title">{workout?.name}</h1>
-        <div className="workout-page-stats-badge">
-          <span>{workout?.exercises?.length || 0}</span> Exercises Included
+        <div style={{ display: "flex", gap: "8px", alignItems: "center", flexWrap: "wrap", marginBottom: "8px" }}>
+          <Badge variant="accent" size="md">
+            Shared Community Routine
+          </Badge>
+          <Badge variant="neutral" size="md">
+            {workout?.exercises?.length || 0} Exercises Included
+          </Badge>
         </div>
+        <h1 className="workout-page-title">{workout?.name}</h1>
       </div>
 
       <div className="workout-page-description">
-        <h3 className="description-heading">Workout Overview</h3>
+        <h3 className="description-heading">Workout Overview & Guidelines</h3>
         <div className="workout-page-content">
           {workout?.description ? (
             renderFormattedDescription(workout.description)
           ) : (
-            <p className="empty-description-placeholder">No description provided.</p>
+            <p className="empty-description-placeholder">No special guidelines provided for this routine.</p>
           )}
         </div>
       </div>
 
       <div className="workout-page-exercises-section">
-        <h2 className="exercises-section-title">Routine Exercises</h2>
+        <div className="exercises-section-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
+          <h2 className="exercises-section-title">Routine Exercises</h2>
+          <Badge variant="accent" size="sm">
+            {workout?.exercises?.length || 0} Movements
+          </Badge>
+        </div>
+
         <div className="workout-page-exercises-container">
           {workout?.exercises?.map((exercise) => (
             <ExerciseCard

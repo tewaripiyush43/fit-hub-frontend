@@ -259,9 +259,9 @@
     }
 
     &:hover {
-      background-color: darken(#00e5ff, 5%);
+      background-color: var(--accent-hover, #00c7de);
       transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(0, 229, 255, 0.25);
+      box-shadow: 0 8px 24px var(--accent-glow, rgba(0, 229, 255, 0.25));
 
       .btn-arrow {
         transform: translateX(4px);

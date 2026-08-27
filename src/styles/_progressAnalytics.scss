@@ -217,12 +217,31 @@
 
 // Bar Chart
 .monthly-chart-card {
+  .analytics-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+
+    .monthly-total-badge {
+      font-size: 0.75rem;
+      font-weight: 750;
+      color: var(--accent, #00e5ff);
+      background: var(--accent-subtle, rgba(0, 229, 255, 0.1));
+      border: 1px solid var(--border-accent, rgba(0, 229, 255, 0.25));
+      padding: 3px 10px;
+      border-radius: 12px;
+    }
+  }
+
   .bar-chart {
     display: flex;
     align-items: flex-end;
-    gap: 10px;
-    height: 160px;
-    padding-bottom: 4px;
+    justify-content: space-between;
+    gap: 12px;
+    height: 180px;
+    padding: 14px 4px 4px;
+    box-sizing: border-box;
 
     @media (max-width: 480px) {
       gap: 6px;
@@ -230,10 +249,41 @@
 
     .bar-group {
       flex: 1;
+      max-width: 56px;
       display: flex;
       flex-direction: column;
       align-items: center;
       height: 100%;
+      transition: transform 0.2s ease;
+      cursor: pointer;
+
+      &:hover {
+        transform: translateY(-3px);
+
+        .bar-track {
+          border-color: var(--border-accent, rgba(0, 229, 255, 0.4));
+          background: rgba(255, 255, 255, 0.07);
+        }
+
+        .bar-fill {
+          box-shadow: 0 0 14px var(--accent-glow, rgba(0, 229, 255, 0.5));
+        }
+
+        .bar-label {
+          color: var(--accent, #00e5ff);
+        }
+      }
+
+      &.is-current {
+        .bar-label {
+          color: var(--accent, #00e5ff);
+          font-weight: 800;
+        }
+
+        .bar-track {
+          border-color: var(--border-accent, rgba(0, 229, 255, 0.3));
+        }
+      }
 
       .bar-wrapper {
         flex: 1;
@@ -241,36 +291,56 @@
         display: flex;
         align-items: flex-end;
         justify-content: center;
+        padding-bottom: 4px;
 
-        .bar-fill {
-          width: 70%;
-          min-height: 6px;
-          background: linear-gradient(180deg, $accent, rgba($accent, 0.5));
-          border-radius: 6px 6px 0 0;
+        .bar-track {
+          width: 100%;
+          max-width: 44px;
+          height: 100%;
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.06);
+          border-radius: 12px;
+          display: flex;
+          align-items: flex-end;
+          justify-content: center;
+          padding: 3px;
+          box-sizing: border-box;
           position: relative;
-          transition: height 0.5s ease;
-          box-shadow: 0 0 8px rgba($accent, 0.3);
+          transition: all 0.25s ease;
 
-          .bar-value {
-            position: absolute;
-            top: -20px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 0.72rem;
-            font-weight: 700;
-            color: $accent;
-            white-space: nowrap;
+          .bar-fill {
+            width: 100%;
+            min-height: 0;
+            background: linear-gradient(180deg, var(--accent, #00e5ff) 0%, var(--accent-hover, #00c7de) 100%);
+            border-radius: 9px;
+            position: relative;
+            transition: height 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+            box-shadow: 0 2px 10px var(--accent-glow, rgba(0, 229, 255, 0.3));
+
+            .bar-value {
+              position: absolute;
+              top: -24px;
+              left: 50%;
+              transform: translateX(-50%);
+              font-size: 0.8rem;
+              font-weight: 850;
+              color: var(--accent, #00e5ff);
+              white-space: nowrap;
+              text-shadow: 0 0 10px var(--accent-glow, rgba(0, 229, 255, 0.5));
+            }
           }
         }
       }
 
       .bar-label {
-        margin-top: 8px;
-        font-size: 0.65rem;
-        color: $text-input-field-secondary;
-        font-weight: 600;
+        margin-top: 10px;
+        font-size: 0.72rem;
+        color: rgba(255, 255, 255, 0.6);
+        font-weight: 700;
         text-align: center;
         white-space: nowrap;
+        letter-spacing: 0.2px;
+        transition: color 0.2s ease;
       }
     }
   }
@@ -426,7 +496,7 @@
 
         .pr-mini-fill {
           height: 100%;
-          background: linear-gradient(90deg, $accent, lighten($accent, 15%));
+          background: linear-gradient(90deg, $accent, var(--accent-hover, $accent));
           border-radius: 2px;
         }
       }
@@ -490,7 +560,7 @@
 
         .completion-bar-fill {
           height: 100%;
-          background: linear-gradient(90deg, $accent, lighten($accent, 15%));
+          background: linear-gradient(90deg, $accent, var(--accent-hover, $accent));
           border-radius: 3px;
           transition: width 0.5s ease;
         }

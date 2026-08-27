@@ -146,30 +146,33 @@
 
   .toggle-group {
     display: flex;
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: 8px;
-    padding: 4px;
-    border: 1px solid $glass-border;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    padding: 3px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
 
     .toggle-btn {
       background: transparent;
       border: none;
-      color: $text-input-field-secondary;
-      padding: 8px 16px;
-      border-radius: 6px;
+      color: rgba(255, 255, 255, 0.65);
+      padding: 7px 16px;
+      border-radius: 8px;
       cursor: pointer;
-      font-weight: 600;
-      font-size: 0.9rem;
+      font-weight: 700;
+      font-size: 0.85rem;
       transition: all 0.2s ease;
+      font-family: inherit;
 
       &.active {
-        background: $accent;
-        color: $text-secondary;
-        box-shadow: 0 2px 8px rgba($accent, 0.3);
+        background: linear-gradient(135deg, var(--accent, #00e5ff) 0%, #00b4d8 100%);
+        color: #050811;
+        font-weight: 800;
+        box-shadow: 0 2px 10px rgba(0, 229, 255, 0.3);
       }
 
       &:hover:not(.active) {
-        color: $text;
+        color: #ffffff;
+        background: rgba(255, 255, 255, 0.05);
       }
     }
   }
@@ -186,8 +189,8 @@
         appearance: none;
         width: 20px;
         height: 20px;
-        border: 2px solid $text-input-field-secondary;
-        border-radius: 4px;
+        border: 2px solid rgba(255, 255, 255, 0.25);
+        border-radius: 6px;
         background: transparent;
         cursor: pointer;
         display: grid;
@@ -196,13 +199,13 @@
         transition: all 0.2s ease;
 
         &:checked {
-          border-color: $accent;
-          background: $accent;
+          border-color: var(--accent, #00e5ff);
+          background: var(--accent, #00e5ff);
 
           &::before {
             content: "✓";
-            color: $text-secondary;
-            font-size: 14px;
+            color: #050811;
+            font-size: 13px;
             font-weight: 900;
           }
         }
@@ -342,26 +345,28 @@
   }
 
   .bmi-submit-btn {
-    background-color: rgba($accent, 0.08);
-    border: 1px solid rgba($accent, 0.3);
-    color: $accent;
-    border-radius: 8px;
-    padding: 10px 20px;
-    font-size: 0.95rem;
-    font-weight: 700;
+    background: linear-gradient(135deg, var(--accent, #00e5ff) 0%, #00b4d8 100%);
+    border: none;
+    color: #050811;
+    border-radius: 10px;
+    padding: 10px 22px;
+    font-size: 0.92rem;
+    font-weight: 800;
     cursor: pointer;
-    transition: all 0.25s ease;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(0, 229, 255, 0.25);
 
     &:hover:not(:disabled) {
-      background-color: $accent;
-      color: $text-secondary;
-      box-shadow: 0 0 12px rgba($accent, 0.4);
-      border-color: transparent;
+      background: linear-gradient(135deg, #00f0ff 0%, #00c4ea 100%);
+      box-shadow: 0 6px 18px rgba(0, 229, 255, 0.35);
+      color: #050811;
+      transform: translateY(-1px);
     }
 
     &:disabled {
-      opacity: 0.5;
+      opacity: 0.45;
       cursor: not-allowed;
+      box-shadow: none;
     }
   }
 }
@@ -372,42 +377,44 @@
   bottom: 28px;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(30, 30, 36, 0.92);
+  background: rgba(18, 21, 34, 0.95);
   backdrop-filter: blur(16px);
-  border: 1px solid rgba($accent, 0.35);
+  border: 1px solid rgba(0, 229, 255, 0.35);
   border-radius: 16px;
-  padding: 14px 24px;
+  padding: 12px 20px;
   display: flex;
   align-items: center;
-  gap: 20px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba($accent, 0.1);
+  gap: 16px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 229, 255, 0.15);
   z-index: 2000;
   animation: slideUpBar 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 
   .floating-save-message {
-    font-size: 0.9rem;
-    color: $text-input-field-secondary;
+    font-size: 0.88rem;
+    color: rgba(255, 255, 255, 0.8);
     white-space: nowrap;
   }
 
   .floating-save-btn {
     display: flex;
     align-items: center;
-    gap: 7px;
-    background: $accent;
-    color: $text-secondary;
+    gap: 6px;
+    background: linear-gradient(135deg, var(--accent, #00e5ff) 0%, #00b4d8 100%);
+    color: #050811;
     border: none;
     border-radius: 10px;
-    padding: 9px 20px;
-    font-size: 0.9rem;
-    font-weight: 700;
+    padding: 8px 18px;
+    font-weight: 800;
+    font-size: 0.85rem;
     cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0, 229, 255, 0.3);
     transition: all 0.2s ease;
-    white-space: nowrap;
 
     &:hover {
-      background: $accent-hover;
-      box-shadow: 0 0 14px rgba($accent, 0.4);
+      background: linear-gradient(135deg, #00f0ff 0%, #00c4ea 100%);
+      box-shadow: 0 4px 14px rgba(0, 229, 255, 0.4);
+      color: #050811;
+      transform: translateY(-1px);
     }
   }
 
@@ -443,4 +450,128 @@
 @keyframes slideUpBar {
   from { opacity: 0; transform: translateX(-50%) translateY(20px); }
   to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+// ── Fitness Theme Selector Card Grid ──
+.theme-selector-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.theme-options-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+  width: 100%;
+}
+
+.theme-card-item {
+  background: var(--bg-input, #151827);
+  border: 1.5px solid var(--border-subtle, rgba(255, 255, 255, 0.08));
+  border-radius: 16px;
+  padding: 18px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: left;
+  user-select: none;
+
+  &:hover {
+    transform: translateY(-3px);
+    border-color: var(--border-default, rgba(255, 255, 255, 0.2));
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  }
+
+  &.active {
+    border-color: var(--accent, #00e5ff);
+    background: var(--bg-elevated, #181c2e);
+    box-shadow: 0 0 20px var(--accent-glow, rgba(0, 229, 255, 0.25)), 0 4px 18px rgba(0, 0, 0, 0.4);
+
+    .theme-card-header .theme-name {
+      color: var(--accent, #00e5ff);
+    }
+  }
+
+  .theme-card-top-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .theme-card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    .theme-emoji {
+      font-size: 1.35rem;
+      line-height: 1;
+    }
+
+    .theme-name {
+      font-size: 1.05rem;
+      font-weight: 750;
+      color: #ffffff;
+      margin: 0;
+    }
+  }
+
+  .theme-preview-palette {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0, 0, 0, 0.35);
+    padding: 8px 12px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+
+    .color-swatch {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255, 255, 255, 0.2);
+      flex-shrink: 0;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+
+      &.accent {
+        box-shadow: 0 0 8px currentColor;
+      }
+    }
+
+    .swatch-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.7);
+      margin-left: 4px;
+      text-transform: capitalize;
+    }
+  }
+
+  .theme-description {
+    font-size: 0.84rem;
+    line-height: 1.45;
+    color: var(--text-secondary, #b0b0c2);
+    margin: 0;
+  }
+
+  .theme-active-indicator {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--accent, #00e5ff);
+    margin-top: auto;
+    padding-top: 4px;
+
+    svg {
+      font-size: 1rem;
+    }
+  }
 }

@@ -2,22 +2,25 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import ConfirmationPopup from "../components/ConfirmationPopUp.jsx";
-import { updateUserInfo, updateUserSettings } from "../api/userApi";
+import { updateUserSettings } from "../api/userApi";
 import { deleteAccount } from "../api/authApi";
 import { usePwa } from "../context/PwaContext";
 import { useUnitPreference } from "../utils/useUnitPreference";
+import { useTheme } from "../hooks/useTheme";
 import { authActions } from "../store/index";
 
 import SettingsIcon from "@mui/icons-material/Settings";
-import PersonIcon from "@mui/icons-material/Person";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import SecurityIcon from "@mui/icons-material/Security";
 import TuneIcon from "@mui/icons-material/Tune";
+import PaletteIcon from "@mui/icons-material/Palette";
 import SaveIcon from "@mui/icons-material/Save";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import GetAppIcon from "@mui/icons-material/GetApp";
 
-const PROFILE_BIO_MAX_LENGTH = 170;
+// UI Primitives
+import { Badge, Button } from "./ui";
 
 const Settings = () => {
   const navigate = useNavigate();
@@ -26,12 +29,13 @@ const Settings = () => {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const { isInstallable, installApp, isAppInstalled } = usePwa();
   const { unitSystem, setUnitSystem } = useUnitPreference();
+  const { currentTheme, setTheme, themes } = useTheme();
 
   const [defaultPrivacy, setDefaultPrivacy] = useState(
     () => user?.settings?.defaultWorkoutPrivacy || localStorage.getItem("fithub_default_privacy") || "private"
   );
 
-  // Notifications state — track initial values to detect changes
+  // Notifications state
   const [emailReminders, setEmailReminders] = useState(
     () => (user?.settings?.emailReminders !== undefined ? user.settings.emailReminders : localStorage.getItem("fithub_notif_email") !== "false")
   );
@@ -42,17 +46,6 @@ const Settings = () => {
   const [notifSaved, setNotifSaved] = useState(false);
 
   const [showConfirmation, setShowConfirmation] = useState(false);
-
-  // User Profile edit states
-  const [profileInfo, setProfileInfo] = useState({
-    fullname: user?.fullname || "",
-    bio: user?.bio || "",
-    location: user?.location || "",
-    age: user?.age !== undefined && user?.age !== null ? user?.age : "",
-    playlistLink: user?.playlistLink || "",
-  });
-  const [isSavingProfile, setIsSavingProfile] = useState(false);
-  const [saveSuccess, setSaveSuccess] = useState(false);
 
   useEffect(() => {
     if (user?.settings) {
@@ -67,18 +60,6 @@ const Settings = () => {
       }
     }
   }, [user?.settings]);
-
-  useEffect(() => {
-    if (user) {
-      setProfileInfo({
-        fullname: user?.fullname || "",
-        bio: user?.bio || "",
-        location: user?.location || "",
-        age: user?.age !== undefined && user?.age !== null ? user?.age : "",
-        playlistLink: user?.playlistLink || "",
-      });
-    }
-  }, [user]);
 
   const handleDefaultPrivacyChange = async (val) => {
     setDefaultPrivacy(val);
@@ -123,19 +104,7 @@ const Settings = () => {
     setTimeout(() => setNotifSaved(false), 3000);
   };
 
-  const handleProfileSave = async (e) => {
-    e.preventDefault();
-    setIsSavingProfile(true);
-    try {
-      await updateUserInfo(dispatch, profileInfo);
-      setSaveSuccess(true);
-      setTimeout(() => setSaveSuccess(false), 3000);
-    } catch (err) {
-      console.error("Failed to save profile settings:", err);
-    } finally {
-      setIsSavingProfile(false);
-    }
-  };
+
 
   const sendDeleteReq = async () => {
     try {
@@ -145,14 +114,6 @@ const Settings = () => {
       console.error("Unable to delete account:", err);
     }
   };
-
-  const joinedDate = user?.createdAt
-    ? new Date(user.createdAt).toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      })
-    : "December 2023";
 
   return (
     <div className="settings-page-container">
@@ -171,9 +132,9 @@ const Settings = () => {
       {notifDirty && (
         <div className="settings-floating-save-bar">
           <span className="floating-save-message">You have unsaved notification changes</span>
-          <button className="floating-save-btn" onClick={handleNotifSave}>
-            <SaveIcon style={{ fontSize: "1.1rem" }} /> Save Notifications
-          </button>
+          <Button variant="primary" size="sm" iconStart={<SaveIcon />} onClick={handleNotifSave}>
+            Save Notifications
+          </Button>
         </div>
       )}
 
@@ -185,124 +146,18 @@ const Settings = () => {
       )}
 
       <div className="settings-header">
-        <h1 className="settings-title">
-          <SettingsIcon className="settings-title-icon" /> Settings
-        </h1>
-        <p className="settings-subtitle">Manage your account preferences and safety settings.</p>
+        <div style={{ display: "flex", justifyContent: "center", marginBottom: "8px" }}>
+          <Badge variant="accent" size="md">
+            <SettingsIcon style={{ fontSize: "0.95rem", marginRight: "4px" }} />
+            Account & Security Control
+          </Badge>
+        </div>
+        <h1 className="settings-title">Account <span>Settings</span></h1>
+        <p className="settings-subtitle">Manage your account preferences, biometrics, and security settings.</p>
       </div>
 
       <div className="settings-content">
-        {/* Section 1: Account Profile Details (Summary) */}
-        <div className="settings-section">
-          <h2 className="section-title">
-            <PersonIcon className="section-icon" /> Account Details
-          </h2>
-          <div className="section-card">
-            <div className="detail-row">
-              <span className="detail-label">Username</span>
-              <span className="detail-value">{user?.username || "testuser1"}</span>
-            </div>
-            <div className="detail-row">
-              <span className="detail-label">Email</span>
-              <span className="detail-value">{user?.email || "user@example.com"}</span>
-            </div>
-            <div className="detail-row">
-              <span className="detail-label">Member Since</span>
-              <span className="detail-value">{joinedDate}</span>
-            </div>
-            <div className="detail-row">
-              <span className="detail-label">Account Status</span>
-              <span className="status-badge">Active Member</span>
-            </div>
-          </div>
-        </div>
 
-        {/* Section 2: Edit Profile Details Form */}
-        <div className="settings-section">
-          <h2 className="section-title">
-            <PersonIcon className="section-icon" /> Edit Profile Details
-          </h2>
-          <form className="section-card" onSubmit={handleProfileSave}>
-            <div className="form-grid">
-              <div className="form-group">
-                <label htmlFor="settings-fullname">Full Name</label>
-                <input
-                  type="text"
-                  id="settings-fullname"
-                  value={profileInfo.fullname}
-                  onChange={(e) => setProfileInfo({ ...profileInfo, fullname: e.target.value })}
-                  placeholder="e.g. Fit Hub"
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="settings-age">Age</label>
-                <input
-                  type="number"
-                  id="settings-age"
-                  value={profileInfo.age}
-                  onChange={(e) => setProfileInfo({ ...profileInfo, age: e.target.value })}
-                  placeholder="e.g. 25"
-                />
-              </div>
-            </div>
-
-            <div className="form-grid">
-              <div className="form-group">
-                <label htmlFor="settings-location">Location</label>
-                <input
-                  type="text"
-                  id="settings-location"
-                  value={profileInfo.location}
-                  onChange={(e) => setProfileInfo({ ...profileInfo, location: e.target.value })}
-                  placeholder="e.g. Earth"
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="settings-playlist">Spotify Playlist Link</label>
-                <input
-                  type="text"
-                  id="settings-playlist"
-                  value={profileInfo.playlistLink}
-                  onChange={(e) => setProfileInfo({ ...profileInfo, playlistLink: e.target.value })}
-                  placeholder="Paste playlist URL"
-                />
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="settings-bio">Bio</label>
-              <textarea
-                id="settings-bio"
-                rows={3}
-                maxLength={PROFILE_BIO_MAX_LENGTH}
-                value={profileInfo.bio}
-                onChange={(e) => setProfileInfo({ ...profileInfo, bio: e.target.value })}
-                placeholder="Tell us about yourself..."
-              />
-              <div className="settings-character-count">
-                {(profileInfo.bio || "").length} / {PROFILE_BIO_MAX_LENGTH}
-              </div>
-            </div>
-
-            <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", gap: "15px" }}>
-              {saveSuccess && (
-                <span style={{ color: "#00e676", fontWeight: "600", fontSize: "0.95rem" }}>
-                  ✓ Profile updated!
-                </span>
-              )}
-              <button
-                type="submit"
-                className="bmi-submit-btn"
-                disabled={isSavingProfile}
-                style={{ display: "flex", alignItems: "center", gap: "6px" }}
-              >
-                {isSavingProfile ? "Saving..." : "Save Changes"}
-              </button>
-            </div>
-          </form>
-        </div>
-
-        {/* Section 3: Preferences */}
         <div className="settings-section">
           <h2 className="section-title">
             <TuneIcon className="section-icon" /> Preferences
@@ -354,6 +209,80 @@ const Settings = () => {
           </div>
         </div>
 
+        {/* Section 2: Fitness Themes & Visual Atmosphere */}
+        <div className="settings-section">
+          <h2 className="section-title">
+            <PaletteIcon className="section-icon" /> Gym Theme & Visual Atmosphere
+          </h2>
+          <div className="section-card">
+            <div className="theme-selector-container">
+              <div className="control-text" style={{ maxWidth: "100%" }}>
+                <span className="control-label">Performance Color Palette</span>
+                <span className="control-description">
+                  Select a tailored visual atmosphere engineered for your gym intensity, hypertrophy focus, and aesthetic vibe.
+                </span>
+              </div>
+
+              <div className="theme-options-grid">
+                {themes.map((theme) => {
+                  const isActive = currentTheme === theme.id;
+                  return (
+                    <div
+                      key={theme.id}
+                      className={`theme-card-item ${isActive ? "active" : ""}`}
+                      onClick={() => setTheme(theme.id)}
+                      role="button"
+                      tabIndex={0}
+                      aria-label={`Select ${theme.name} theme`}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          setTheme(theme.id);
+                        }
+                      }}
+                    >
+                      <div className="theme-card-top-row">
+                        <div className="theme-card-header">
+                          <span className="theme-emoji">{theme.emoji}</span>
+                          <h4 className="theme-name">{theme.name}</h4>
+                        </div>
+                        <Badge variant={isActive ? "accent" : "neutral"} size="sm">
+                          {theme.badge}
+                        </Badge>
+                      </div>
+
+                      <div className="theme-preview-palette">
+                        <span
+                          className="color-swatch accent"
+                          style={{ backgroundColor: theme.accent, color: theme.accent }}
+                        />
+                        <span
+                          className="color-swatch bg"
+                          style={{ backgroundColor: theme.bgSurface }}
+                        />
+                        <span className="swatch-label">{theme.purpose}</span>
+                      </div>
+
+                      <p className="theme-description">{theme.description}</p>
+
+                      {isActive ? (
+                        <div className="theme-active-indicator">
+                          <CheckCircleIcon style={{ fontSize: "1.1rem" }} />
+                          <span>Active Theme</span>
+                        </div>
+                      ) : (
+                        <div className="theme-active-indicator" style={{ opacity: 0.45 }}>
+                          <span>Click to Apply</span>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Section 3.5: Progressive Web App */}
         <div className="settings-section">
           <h2 className="section-title">
@@ -371,21 +300,21 @@ const Settings = () => {
               </div>
               <div className="pwa-status-action">
                 {isAppInstalled ? (
-                  <span className="pwa-installed-badge">
-                    <CheckCircleOutlineIcon style={{ fontSize: "1.1rem" }} /> Installed
-                  </span>
+                  <Badge variant="success" size="md">
+                    <CheckCircleOutlineIcon style={{ fontSize: "1rem", marginRight: "4px" }} /> Installed
+                  </Badge>
                 ) : isInstallable ? (
-                  <button 
-                    type="button" 
-                    className="bmi-submit-btn pwa-install-settings-btn"
+                  <Button 
+                    variant="accent"
+                    size="md"
+                    iconStart={<GetAppIcon />}
                     onClick={installApp}
-                    style={{ display: "flex", alignItems: "center", gap: "6px" }}
                   >
-                    <GetAppIcon style={{ fontSize: "1.1rem" }} /> Install FitHub
-                  </button>
+                    Install FitHub
+                  </Button>
                 ) : (
                   <span className="pwa-guide-text">
-                    Tap your browser's menu (or <span style={{ color: "#00f0ff" }}>Share</span> on iOS Safari) and select <span style={{ color: "#00f0ff" }}>'Add to Home Screen'</span>.
+                    Tap your browser's menu (or <span style={{ color: "var(--accent)" }}>Share</span> on iOS Safari) and select <span style={{ color: "var(--accent)" }}>'Add to Home Screen'</span>.
                   </span>
                 )}
               </div>
@@ -426,6 +355,10 @@ const Settings = () => {
                 </div>
               </label>
             </div>
+
+            <div style={{ marginTop: "12px", padding: "10px 14px", background: "rgba(0, 240, 255, 0.05)", border: "1px solid rgba(0, 240, 255, 0.15)", borderRadius: "8px", fontSize: "0.85rem", color: "#8ab4f8" }}>
+              ℹ️ Note: Automated email notification delivery is currently in development. Your selected preferences are saved and will automatically apply as delivery channels are deployed.
+            </div>
           </div>
         </div>
 
@@ -442,9 +375,13 @@ const Settings = () => {
                   Permanently delete your profile, workouts, and achievements. This action is irreversible.
                 </span>
               </div>
-              <button onClick={() => setShowConfirmation(true)} className="btn-delete-account">
+              <Button
+                variant="danger"
+                size="md"
+                onClick={() => setShowConfirmation(true)}
+              >
                 Delete Account
-              </button>
+              </Button>
             </div>
           </div>
         </div>

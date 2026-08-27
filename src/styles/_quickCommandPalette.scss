@@ -1,26 +1,92 @@
-@import "variables.scss";
+// ── ⚡ Floating Quick Access Hub Trigger Button (Desktop Only) ──────────────────────────────
+.quick-hub-floating-btn {
+  display: none;
 
-.command-palette-backdrop {
+  @media (min-width: 769px) {
+    position: fixed;
+    bottom: 24px;
+    left: 24px;
+    z-index: 9990;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(18, 18, 24, 0.92);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #fff;
+    padding: 7px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(12px);
+    transition: all 0.2s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+      border-color: rgba(0, 229, 255, 0.4);
+      background: rgba(24, 24, 32, 0.98);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+
+      .bolt-icon {
+        color: var(--accent, #00e5ff);
+      }
+    }
+  }
+
+  .bolt-icon {
+    font-size: 1.15rem;
+    color: #00f0ff;
+    transition: transform 0.2s ease, color 0.2s ease;
+  }
+
+  .hub-label {
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 0.3px;
+    color: #fff;
+  }
+
+  .key-badge {
+    background: rgba(0, 240, 255, 0.15);
+    border: 1px solid rgba(0, 240, 255, 0.3);
+    color: #00f0ff;
+    font-size: 0.68rem;
+    font-weight: 800;
+    padding: 2px 6px;
+    border-radius: 6px;
+
+    @media (max-width: 480px) {
+      display: none;
+    }
+  }
+}
+
+// ── 🔍 Quick Command Palette Modal Backdrop & Body ────────────────────────────
+.quick-palette-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(4, 6, 12, 0.75);
-  backdrop-filter: blur(12px);
+  background: rgba(4, 6, 12, 0.78);
+  backdrop-filter: blur(14px);
   z-index: 99999;
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  padding-top: 15vh;
+  padding-top: 12vh;
   animation: backdropFadeIn 0.2s ease;
+
+  @media (max-width: 768px) {
+    padding-top: 5vh;
+  }
 }
 
-.command-palette-card {
+.quick-palette-modal,
+.cheatsheet-modal {
   width: 100%;
-  max-width: 620px;
-  background: radial-gradient(circle at 50% 0%, rgba($accent, 0.08) 0%, rgba(18, 20, 28, 0.98) 70%),
-              linear-gradient(135deg, rgba(24, 27, 38, 0.95) 0%, rgba(12, 14, 20, 0.98) 100%);
-  border: 1px solid rgba($accent, 0.3);
-  border-radius: 20px;
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 35px rgba($accent, 0.2);
+  max-width: 580px;
+  background: radial-gradient(circle at 50% 0%, rgba(0, 240, 255, 0.08) 0%, rgba(18, 20, 28, 0.98) 70%),
+              linear-gradient(135deg, rgba(24, 27, 38, 0.96) 0%, rgba(12, 14, 20, 0.98) 100%);
+  border: 1px solid rgba(0, 240, 255, 0.35);
+  border-radius: 22px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), 0 0 35px rgba(0, 240, 255, 0.2);
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -28,42 +94,48 @@
   margin: 0 16px;
 }
 
-.palette-input-wrap {
+.palette-input-row {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 18px 22px;
+  padding: 16px 20px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 
-  .palette-search-icon {
-    font-size: 1.4rem;
-    color: $accent;
+  .search-icon {
+    font-size: 1.35rem;
+    color: #00f0ff;
   }
 
-  .palette-search-input {
+  input {
     flex: 1;
     background: transparent;
     border: none;
     outline: none;
-    font-size: 1.05rem;
+    font-size: 1rem;
     font-weight: 600;
     color: #fff;
     font-family: inherit;
 
     &::placeholder {
       color: rgba(#94a3b8, 0.7);
-      font-size: 0.95rem;
+      font-size: 0.88rem;
     }
   }
 
-  .palette-esc-badge {
-    padding: 3px 8px;
-    border-radius: 6px;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+  .btn-close-palette {
+    background: transparent;
+    border: none;
     color: #94a3b8;
-    font-size: 0.72rem;
-    font-weight: 800;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 4px;
+    border-radius: 6px;
+
+    &:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.08);
+    }
   }
 }
 
@@ -82,160 +154,139 @@
     background: rgba(255, 255, 255, 0.15);
     border-radius: 4px;
   }
-}
 
-.palette-item {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 12px 16px;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: all 0.15s ease;
-  border: 1px solid transparent;
-
-  .palette-item-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
-    background: rgba(255, 255, 255, 0.04);
-    color: #cbd5e1;
-
-    svg {
-      font-size: 1.25rem;
-    }
+  .no-actions-found {
+    padding: 24px;
+    text-align: center;
+    color: #94a3b8;
+    font-size: 0.88rem;
   }
 
-  .palette-item-info {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    flex: 1;
-
-    .item-title {
-      font-size: 0.95rem;
-      font-weight: 700;
-      color: #fff;
-    }
-
-    .item-subtitle {
-      font-size: 0.78rem;
-      color: #94a3b8;
-    }
-  }
-
-  .palette-item-shortcut {
-    padding: 3px 8px;
-    border-radius: 6px;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    color: $accent;
-    font-size: 0.75rem;
-    font-weight: 800;
-  }
-
-  &.selected,
-  &:hover {
-    background: rgba($accent, 0.12);
-    border-color: rgba($accent, 0.35);
-
-    .palette-item-icon {
-      background: rgba($accent, 0.2);
-      color: $accent;
-    }
-
-    .item-title {
-      color: $accent;
-    }
-  }
-}
-
-.palette-empty-state {
-  padding: 36px;
-  text-align: center;
-  color: #94a3b8;
-  font-size: 0.92rem;
-}
-
-.palette-footer {
-  padding: 12px 20px;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(0, 0, 0, 0.2);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  .footer-tip {
-    font-size: 0.78rem;
-    color: #64748b;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-
-    kbd {
-      padding: 2px 6px;
-      border-radius: 4px;
-      background: rgba(255, 255, 255, 0.08);
-      color: #cbd5e1;
-      font-size: 0.72rem;
-      font-weight: 700;
-    }
-  }
-}
-
-// ── Keyboard Cheatsheet Card ──────────────────────────────────────────────────
-.cheatsheet-card {
-  width: 100%;
-  max-width: 520px;
-  background: radial-gradient(circle at 50% 0%, rgba($accent, 0.1) 0%, rgba(18, 20, 28, 0.98) 70%),
-              linear-gradient(135deg, rgba(24, 27, 38, 0.95) 0%, rgba(12, 14, 20, 0.98) 100%);
-  border: 1px solid rgba($accent, 0.35);
-  border-radius: 20px;
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 35px rgba($accent, 0.25);
-  overflow: hidden;
-  padding: 24px;
-  animation: modalScaleUp 0.22s cubic-bezier(0.16, 1, 0.3, 1);
-  margin: 0 16px;
-
-  .palette-header {
+  .palette-action-item {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding-bottom: 16px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    margin-bottom: 16px;
+    padding: 10px 14px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    border: 1px solid transparent;
 
-    .palette-header-title {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 1.15rem;
-      font-weight: 800;
-      color: #fff;
+    &:hover,
+    &.selected {
+      background: rgba(0, 240, 255, 0.1);
+      border-color: rgba(0, 240, 255, 0.3);
 
-      .header-icon {
-        color: $accent;
-        font-size: 1.3rem;
+      .action-title {
+        color: #00f0ff;
       }
     }
 
-    .palette-close-btn {
-      background: transparent;
-      border: none;
-      color: #94a3b8;
-      cursor: pointer;
+    .action-left {
       display: flex;
       align-items: center;
-      justify-content: center;
-      padding: 4px;
-      border-radius: 6px;
+      gap: 12px;
+      min-width: 0;
 
-      &:hover {
+      .action-icon-wrap {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+
+        svg {
+          font-size: 1.15rem;
+        }
+      }
+
+      .action-text {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+
+        .action-title {
+          font-size: 0.92rem;
+          font-weight: 700;
+          color: #fff;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .action-subtitle {
+          font-size: 0.75rem;
+          color: #94a3b8;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+    }
+
+    .action-shortcut-pill {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #94a3b8;
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 6px;
+      flex-shrink: 0;
+    }
+  }
+}
+
+.palette-footer {
+  padding: 10px 18px;
+  background: rgba(0, 0, 0, 0.4);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+
+  .footer-keys {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    font-size: 0.72rem;
+    color: #94a3b8;
+
+    kbd {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 4px;
+      padding: 1px 5px;
+      color: #fff;
+      font-weight: 800;
+      margin-right: 3px;
+    }
+  }
+}
+
+// ── ⌨️ Cheatsheet Modal ───────────────────────────────────────────────────────
+.cheatsheet-modal {
+  padding: 20px;
+
+  .cheatsheet-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
+    .header-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      h3 {
+        margin: 0;
+        font-size: 1.1rem;
+        font-weight: 800;
         color: #fff;
-        background: rgba(255, 255, 255, 0.08);
       }
     }
   }
@@ -244,35 +295,65 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 10px;
+    max-height: 400px;
+    overflow-y: auto;
 
     @media (max-width: 480px) {
       grid-template-columns: 1fr;
     }
-  }
 
-  .shortcut-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 8px 12px;
-    background: rgba(255, 255, 255, 0.03);
-    border-radius: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    .cheatsheet-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.15s ease;
 
-    .shortcut-label {
-      font-size: 0.82rem;
-      color: #cbd5e1;
-      font-weight: 600;
-    }
+      &:hover {
+        background: rgba(0, 240, 255, 0.08);
+        border-color: rgba(0, 240, 255, 0.3);
+      }
 
-    .kbd-badge {
-      padding: 3px 8px;
-      border-radius: 6px;
-      background: rgba($accent, 0.12);
-      border: 1px solid rgba($accent, 0.3);
-      color: $accent;
-      font-size: 0.75rem;
-      font-weight: 800;
+      .cheatsheet-key {
+        width: 24px;
+        height: 24px;
+        border-radius: 6px;
+        background: rgba(0, 240, 255, 0.15);
+        border: 1px solid rgba(0, 240, 255, 0.35);
+        color: #00f0ff;
+        font-size: 0.76rem;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+
+      .cheatsheet-info {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+
+        strong {
+          font-size: 0.8rem;
+          color: #fff;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        span {
+          font-size: 0.68rem;
+          color: #94a3b8;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
     }
   }
 }
@@ -285,5 +366,14 @@
   to {
     opacity: 1;
     transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes backdropFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }

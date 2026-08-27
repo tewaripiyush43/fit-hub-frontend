@@ -22,8 +22,13 @@
     <link rel="preload" as="image" href="/back.jpg" fetchpriority="high" />
 
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover" />
-    <meta name="theme-color" content="#1e1e24" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <meta name="theme-color" content="#121522" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="FitHub" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="format-detection" content="telephone=no" />
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     <link rel="canonical" href="https://fit-hubb.netlify.app/" />
@@ -49,21 +54,62 @@
     <meta name="twitter:description" content="FitHub is a fitness tracker and AI workout generator. Log workouts, track streaks, explore 1,300+ exercises with guides, and browse healthy nutrition recipes." />
     <meta name="twitter:image" content="https://fit-hubb.netlify.app/Modern%20Gym%20and%20Fitness%20Center%20Logo.png" />
 
-    <!-- Structured Data (JSON-LD) -->
+    <!-- Structured Data (JSON-LD Graph for Google Rich Snippets) -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@type": "WebApplication",
-        "name": "FitHub",
-        "url": "https://fit-hubb.netlify.app/",
-        "description": "FitHub is a fitness tracker and AI workout generator. Log workouts, track streaks, explore 1,300+ exercises with guides, and browse healthy nutrition recipes.",
-        "applicationCategory": "HealthApplication",
-        "operatingSystem": "All",
-        "offers": {
-          "@type": "Offer",
-          "price": "0",
-          "priceCurrency": "USD"
-        }
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "@id": "https://fit-hubb.netlify.app/#website",
+            "url": "https://fit-hubb.netlify.app/",
+            "name": "FitHub",
+            "description": "AI-powered fitness tracker, custom workout routine generator, 1,300+ animated exercise database, interactive 2D muscle anatomy map, and healthy nutrition recipes.",
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": {
+                "@type": "EntryPoint",
+                "urlTemplate": "https://fit-hubb.netlify.app/exercises?search={search_term_string}"
+              },
+              "query-input": "required name=search_term_string"
+            }
+          },
+          {
+            "@type": "Organization",
+            "@id": "https://fit-hubb.netlify.app/#organization",
+            "name": "FitHub",
+            "url": "https://fit-hubb.netlify.app/",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://fit-hubb.netlify.app/Modern%20Gym%20and%20Fitness%20Center%20Logo.png",
+              "width": "512",
+              "height": "512"
+            }
+          },
+          {
+            "@type": "WebApplication",
+            "@id": "https://fit-hubb.netlify.app/#webapp",
+            "name": "FitHub - AI Workout Generator & Fitness Companion",
+            "url": "https://fit-hubb.netlify.app/",
+            "description": "FitHub is a progressive fitness tracker and AI workout generator. Log workouts, track streaks, explore 1,300+ exercises with guides, and browse healthy nutrition recipes.",
+            "applicationCategory": "HealthApplication",
+            "operatingSystem": "All",
+            "browserRequirements": "Requires JavaScript. Requires HTML5.",
+            "featureList": [
+              "AI Workout Routine Generator powered by Google Gemini",
+              "1,300+ Exercise Database with Animated Demonstrations",
+              "Interactive 2D Muscle Anatomy and Biomechanics Map",
+              "Active Workout Session Tracker with Barbell Plate Calculator",
+              "Workout Streak and Progressive Overload Analytics",
+              "Nutritional Recipe Explorer with High-Protein Meal Guides"
+            ],
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD"
+            }
+          }
+        ]
       }
     </script>
 

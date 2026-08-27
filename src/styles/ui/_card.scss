@@ -1,0 +1,101 @@
+/* ==========================================================================
+   FitHub UI Primitive — Card Styles
+   ========================================================================== */
+
+.fh-card {
+  position: relative;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  color: var(--text-primary);
+  overflow: hidden;
+  transition: all var(--duration-base) var(--ease-standard);
+
+  /* Padding Scale */
+  &--pad-none {
+    padding: 0;
+  }
+  &--pad-sm {
+    padding: var(--space-sm);
+  }
+  &--pad-md {
+    padding: var(--space-md);
+  }
+  &--pad-lg {
+    padding: var(--space-lg);
+  }
+  &--pad-xl {
+    padding: var(--space-xl);
+  }
+
+  /* Card Variants */
+  &--default {
+    background: var(--bg-surface);
+  }
+
+  &--elevated {
+    background: var(--bg-elevated);
+    border-color: var(--border-default);
+    box-shadow: var(--shadow-lg);
+  }
+
+  &--glass {
+    background: var(--bg-glass-card);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-color: var(--border-subtle);
+    box-shadow: var(--shadow-glass);
+  }
+
+  &--interactive {
+    cursor: pointer;
+    user-select: none;
+
+    &:hover {
+      transform: translateY(-2px);
+      border-color: var(--border-accent);
+      box-shadow: var(--shadow-lg), 0 0 16px rgba(0, 229, 255, 0.15);
+    }
+
+    &:active {
+      transform: translateY(0);
+      box-shadow: var(--shadow-md);
+    }
+  }
+
+  .fh-card__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-md);
+  }
+
+  .fh-card__title {
+    font-family: var(--font-display);
+    font-size: var(--font-size-lg);
+    font-weight: var(--weight-bold);
+    color: var(--text-primary);
+  }
+
+  .fh-card__subtitle {
+    font-size: var(--font-size-xs);
+    color: var(--text-secondary);
+    margin-top: 2px;
+  }
+
+  .fh-card__body {
+    width: 100%;
+  }
+
+  .fh-card__footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--space-sm);
+    margin-top: var(--space-md);
+    padding-top: var(--space-sm);
+    border-top: 1px solid var(--border-subtle);
+  }
+}

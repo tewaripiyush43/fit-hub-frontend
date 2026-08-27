@@ -34,12 +34,17 @@ const PreWorkoutWarmupModal = ({
   const warmupList =
     WARMUP_ROUTINES_BY_MUSCLE[dominantMuscle] || WARMUP_ROUTINES_BY_MUSCLE.default;
 
-  // Derive initial working weight from first exercise
+  // Escape key handler
   useEffect(() => {
-    if (exercises && exercises.length > 0 && exercises[0].sets && exercises[0].sets[0]) {
-      setWorkingWeight(exercises[0].sets[0].weight || 60);
-    }
-  }, [exercises]);
+    if (!open) return;
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") {
+        onClose();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [open, onClose]);
 
   if (!open) return null;
 

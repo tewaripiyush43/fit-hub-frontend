@@ -1,13 +1,13 @@
 import React, { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import PropTypes from "prop-types";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import AddTwoToneIcon from "@mui/icons-material/AddTwoTone";
 import RemoveTwoToneIcon from "@mui/icons-material/RemoveTwoTone";
 import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
 import { useDispatch, useSelector } from "react-redux";
-import { errorPopUp } from "../helpers/errorPopUp.js";
-import { toast } from "react-toastify";
+import { errorPopUp, successPopUp, infoPopUp, actionPopUp } from "../helpers/errorPopUp";
 import { addToFavorites as addFavoriteService, removeFromFavorites as removeFavoriteService } from "../api/userApi";
 
 import {
@@ -16,14 +16,17 @@ import {
   removeExerciseFromWorkout,
 } from "../api/workoutApi";
 
+// UI Primitives
+import { Badge } from "./ui";
+
 const ExerciseCard = ({
   exerciseData,
   animation = false,
   removeBtn = false,
+  className = "",
 }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  // const favoriteIcon = useRef();
   const moreOptionsRef = useRef(null);
   const [showMore, setShowMore] = useState(false);
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
@@ -31,25 +34,17 @@ const ExerciseCard = ({
   const [takingInput, setTakingInput] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
   const user = useSelector((state) => state.auth.user);
-  const workoutData = useSelector((state) => state.workout.workoutData);
-  const [errorMessage, setErrorMessage] = useState("");
   const [isCreating, setIsCreating] = useState(false);
 
-  const { _id, bodyPart, target, gifUrl, name } = exerciseData;
-  // console.log(exerciseData);
+  const { _id, bodyPart, target, gifUrl, name } = exerciseData || {};
 
-  useEffect(() => {
-    if (errorMessage.length > 0) {
-      errorPopUp(errorMessage);
-      setErrorMessage("");
-    }
-  }, [errorMessage]);
-
-  const bodyPartPage = () => {
+  const bodyPartPage = (e) => {
+    e.stopPropagation();
     navigate(`/exercises/${bodyPart}`);
   };
 
-  const targetMusclePage = () => {
+  const targetMusclePage = (e) => {
+    e.stopPropagation();
     navigate(`/exercises/${target}`);
   };
 
@@ -62,8 +57,9 @@ const ExerciseCard = ({
     try {
       await addFavoriteService(dispatch, _id);
       setIsFavorite(true);
+      successPopUp(`Added ${name} to favorites`);
     } catch (err) {
-      setErrorMessage("Something went wrong. Please try again later.");
+      errorPopUp("Something went wrong. Please try again later.");
     }
   }
 
@@ -72,18 +68,21 @@ const ExerciseCard = ({
     try {
       await removeFavoriteService(dispatch, _id);
       setIsFavorite(false);
+      infoPopUp(`Removed ${name} from favorites`);
     } catch (err) {
-      setErrorMessage("Something went wrong. Please try again later.");
+      errorPopUp("Something went wrong. Please try again later.");
     }
   }
 
   useEffect(() => {
     if (
       user?.favoriteExercises?.some(
-        (favoriteExercise) => favoriteExercise._id === _id
+        (favoriteExercise) => (typeof favoriteExercise === "string" ? favoriteExercise : favoriteExercise._id) === _id
       )
     ) {
       setIsFavorite(true);
+    } else {
+      setIsFavorite(false);
     }
 
     const handleClickOutside = (event) => {
@@ -122,24 +121,30 @@ const ExerciseCard = ({
 
     const trimmedName = newWorkoutInput.trim();
     if (!trimmedName) {
-      toast.error("Workout name cannot be empty");
+      errorPopUp("Workout name cannot be empty");
       return;
     }
 
     setIsCreating(true);
     try {
-      await addWorkout(
-        dispatch,
-        trimmedName,
-        _id
-      );
+      const createdId = await addWorkout(dispatch, trimmedName, _id);
 
       setTakingInput(false);
       setNewWorkoutInput("");
       setShowMore(false);
-      toast.success(`Created "${trimmedName}" and added ${name}!`);
+      actionPopUp({
+        message: `Created "${trimmedName}" & added ${name}!`,
+        actionLabel: `Open ${trimmedName} →`,
+        onAction: () => {
+          if (createdId) {
+            navigate(`/${user?.username}/myworkouts?workout=${createdId}`);
+          } else {
+            navigate(`/${user?.username}/myworkouts`);
+          }
+        },
+      });
     } catch (error) {
-      toast.error("Failed to create workout. Please try again.");
+      errorPopUp("Something went wrong. Please try again later.");
     } finally {
       setIsCreating(false);
     }
@@ -147,68 +152,84 @@ const ExerciseCard = ({
 
   return (
     <div
-      className={
-        "exercise-card " +
-        (animation ? "animation " : "") +
-        (showMore ? "active-dropdown" : "")
-      }
+      onClick={exercisePage}
+      className={`exercise-card ${animation ? "animation" : ""} ${showMore ? "active-dropdown" : ""} ${className}`}
+      tabIndex={0}
+      role="button"
+      onKeyDown={(e) => {
+        if (e.key === "Enter") exercisePage();
+      }}
     >
       <div className="exercise-card-img-wrapper">
-        <img onClick={exercisePage} src={gifUrl} alt={name} loading="lazy" />
+        <img
+          src={gifUrl}
+          alt={name}
+          loading="lazy"
+          draggable="false"
+        />
       </div>
-      {isLoggedIn && animation && (
+
+      {isLoggedIn && (
         <div className="exercise-card-icon-container" ref={moreOptionsRef}>
           <div className="exercise-card-icon-group">
             {isFavorite ? (
               <button
                 type="button"
-                className="exercise-card-btn-pill active-favorite"
-                onClick={(e) => removeFromFavorites(e)}
+                className="exercise-card-btn-pill exercise-card-favorite-icon favorite-active"
+                onClick={removeFromFavorites}
+                aria-label="Remove from favorites"
                 title="Remove from favorites"
               >
-                <FavoriteIcon style={{ fontSize: "1rem" }} />
+                <FavoriteIcon style={{ color: "var(--danger)", fontSize: "1rem" }} />
               </button>
             ) : (
               <button
                 type="button"
-                className="exercise-card-btn-pill"
-                onClick={(e) => addToFavorites(e)}
+                className="exercise-card-btn-pill exercise-card-favorite-icon"
+                onClick={addToFavorites}
+                aria-label="Add to favorites"
                 title="Add to favorites"
               >
                 <FavoriteBorderIcon style={{ fontSize: "1rem" }} />
               </button>
             )}
-            {!removeBtn && (
+
+            {!removeBtn ? (
               <button
                 type="button"
-                className="exercise-card-btn-pill more-btn"
-                onClick={() => setShowMore(!showMore)}
-                title="Add to workout"
+                className="exercise-card-btn-pill exercise-card-more-icon"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowMore(!showMore);
+                }}
+                aria-label="Add to routine"
+                title="Add to custom workout routine"
               >
-                <AddTwoToneIcon style={{ fontSize: "1rem" }} />
+                <AddTwoToneIcon style={{ fontSize: "1.1rem" }} />
               </button>
-            )}
-            {removeBtn && (
+            ) : (
               <button
                 type="button"
-                className="exercise-card-btn-pill delete-btn"
-                onClick={() =>
+                className="exercise-card-btn-pill exercise-card-delete-icon"
+                onClick={(e) =>
                   removeExerciseFromWorkout(
                     dispatch,
-                    workoutData._id,
+                    user.workouts[0]._id,
                     _id
                   )
                 }
+                aria-label="Remove exercise from routine"
                 title="Remove exercise from routine"
               >
                 <DeleteTwoToneIcon style={{ fontSize: "1rem" }} />
               </button>
             )}
           </div>
+
           {showMore && (
-            <div className="exercise-card-more-options">
+            <div className="exercise-card-more-options" onClick={(e) => e.stopPropagation()}>
               <ul className="exercise-card-more-options-list">
-                <p className="exercise-card-more-options-label">Add To</p>
+                <p className="exercise-card-more-options-label">Add To Routine</p>
                 {user?.workouts?.map((workout) => {
                   const exerciseCount = workout.exercises?.length || 0;
                   const isFull = exerciseCount >= 10;
@@ -218,7 +239,7 @@ const ExerciseCard = ({
                       onClick={async (e) => {
                         e.preventDefault();
                         if (isFull) {
-                          setErrorMessage("Workout is full! (Max 10 exercises)");
+                          errorPopUp("Workout is full! (Max 10 exercises)");
                           return;
                         }
                         const exists = workout.exercises?.some((ex) => {
@@ -226,7 +247,7 @@ const ExerciseCard = ({
                           return exId === _id;
                         });
                         if (exists) {
-                          toast.info("Exercise already exists in this workout");
+                          infoPopUp("Exercise already exists in this workout");
                           setShowMore(false);
                           return;
                         }
@@ -237,9 +258,15 @@ const ExerciseCard = ({
                           _id
                         );
                         if (success) {
-                          toast.success(`Added ${name} to ${workout.name}!`);
+                          actionPopUp({
+                            message: `Added ${name} to ${workout.name}!`,
+                            actionLabel: `Open ${workout.name} →`,
+                            onAction: () => {
+                              navigate(`/${user?.username}/myworkouts?workout=${workout._id}`);
+                            },
+                          });
                         } else {
-                          toast.error(`Failed to add ${name} to ${workout.name}`);
+                          errorPopUp(`Failed to add ${name} to ${workout.name}`);
                         }
                       }}
                       className={`exercise-card-more-options-list-item ${isFull ? "workout-full" : ""}`}
@@ -297,7 +324,7 @@ const ExerciseCard = ({
                   }}
                   className="exercise-card-create-workout-btn exercise-card-more-options-list-item"
                 >
-                  View Workouts
+                  View All Workouts
                 </p>
               </ul>
             </div>
@@ -306,18 +333,35 @@ const ExerciseCard = ({
       )}
 
       <div className="exercise-card-body">
-        <div className="card-info">
-          <button onClick={bodyPartPage} className="exercise-button">
+        <div className="card-info" style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
+          <Badge
+            variant="accent"
+            size="sm"
+            style={{ cursor: "pointer", textTransform: "capitalize" }}
+            onClick={bodyPartPage}
+          >
             {bodyPart}
-          </button>
-          <button onClick={targetMusclePage} className="exercise-button">
+          </Badge>
+          <Badge
+            variant="primary"
+            size="sm"
+            style={{ cursor: "pointer", textTransform: "capitalize" }}
+            onClick={targetMusclePage}
+          >
             {target}
-          </button>
+          </Badge>
         </div>
         <p className="exercise-name">{name}</p>
       </div>
     </div>
   );
+};
+
+ExerciseCard.propTypes = {
+  exerciseData: PropTypes.object.isRequired,
+  animation: PropTypes.bool,
+  removeBtn: PropTypes.bool,
+  className: PropTypes.string,
 };
 
 export default ExerciseCard;

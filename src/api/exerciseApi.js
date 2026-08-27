@@ -25,12 +25,17 @@ export const fetchExerciseCount = async (searchValue) => {
   return res.data;
 };
 
-export const fetchExercises = async (searchValue, page) => {
-  const res = await api.get(`/exercise/exercises?exercise=${searchValue}&page=${page}`);
+export const fetchExercises = async (searchValue, page, limit = 12) => {
+  const res = await api.get(`/exercise/exercises?exercise=${searchValue}&page=${page}&limit=${limit}`);
   return res.data;
 };
 
 export const fetchExerciseNames = async () => {
   const res = await api.get("/exercise/fetchnames");
+  return res.data;
+};
+
+export const fetchSubstitutions = async (exerciseId, target) => {
+  const res = await api.get(`/exercise/exercises/substitutions?exerciseId=${exerciseId || ""}&target=${encodeURIComponent(target || "")}`);
   return res.data;
 };

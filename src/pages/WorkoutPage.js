@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { createPortal } from "react-dom";
-import { toast } from "react-toastify";
+import { toast } from "../helpers/errorPopUp";
 import { fetchWorkout, deleteWorkout, updateWorkout, fetchAICoachSummary, cloneWorkout } from "../api/workoutApi";
 import { logWorkoutSession, updatePRs } from "../api/userApi";
 import { workoutActions, activeWorkoutActions, portalActions, selectActiveWorkout } from "../store/index";
@@ -16,8 +16,6 @@ import {
   triggerHaptic,
 } from "../utils/audioFeedback";
 
-import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
-
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
 import AddTwoToneIcon from "@mui/icons-material/AddTwoTone";
@@ -25,25 +23,12 @@ import LockIcon from "@mui/icons-material/Lock";
 import PublicIcon from "@mui/icons-material/Public";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
-import TimerIcon from "@mui/icons-material/Timer";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
-import RemoveIcon from "@mui/icons-material/Remove";
-import AddIcon from "@mui/icons-material/Add";
-import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
-import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
-import HourglassEmptyIcon from "@mui/icons-material/HourglassEmpty";
 import PauseIcon from "@mui/icons-material/Pause";
 import SkipNextIcon from "@mui/icons-material/SkipNext";
-import ShareIcon from "@mui/icons-material/Share";
-import CheckIcon from "@mui/icons-material/Check";
+import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
+import HourglassEmptyIcon from "@mui/icons-material/HourglassEmpty";
 import BoltIcon from "@mui/icons-material/Bolt";
-import SwapHorizIcon from "@mui/icons-material/SwapHoriz";
-import CalculateIcon from "@mui/icons-material/Calculate";
 import WhatshotIcon from "@mui/icons-material/Whatshot";
-import NoteAltIcon from "@mui/icons-material/NoteAlt";
-import SpaIcon from "@mui/icons-material/Spa";
-import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -53,6 +38,18 @@ import PostWorkoutCooldownModal from "../components/PostWorkoutCooldownModal";
 import PlateCalculatorModal from "../components/PlateCalculatorModal";
 import ExerciseSwapModal from "../components/ExerciseSwapModal";
 import GymSessionLegendModal from "../components/GymSessionLegendModal";
+
+// Modular Workout Components
+import {
+  WorkoutSessionHeader,
+  ActiveExerciseCard,
+  FloatingRestIsland,
+  WorkoutSummaryModal,
+  WorkoutProgressFooter,
+} from "../components/workout";
+
+// UI Primitives
+import { Badge, Button, EmptyState } from "../components/ui";
 
 const renderFormattedDescription = (text) => {
   if (!text) return null;
@@ -732,7 +729,7 @@ const WorkoutPage = () => {
       totalVolume: volumeSum,
       completedSets: completedCount,
       totalSets: totalCount,
-      date: now.toLocaleDateString(),
+      date: now.toISOString().split("T")[0],
       time: now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
       timestamp: now.getTime(),
       exercises: exercisesBreakdown,
@@ -909,115 +906,32 @@ const WorkoutPage = () => {
         />
 
         {/* Workout Complete Summary Modal */}
-        {showSummary && createPortal(
-          <div className="active-summary-overlay">
-            <div className="active-summary-modal">
-              <div className="modal-header">
-                <EmojiEventsIcon className="trophy-gold" />
-                <h2>Workout Completed!</h2>
-                <p>Outstanding effort! Here is your training session breakdown:</p>
-              </div>
-              <div className="stats-grid">
-                <div className="stat-card">
-                  <span className="stat-label">Duration</span>
-                  <span className="stat-value">{formatTime(seconds)}</span>
-                </div>
-                <div className="stat-card">
-                  <span className="stat-label">Volume Lifted</span>
-                  <span className="stat-value">{totalVolume.toLocaleString()} <span className="stat-unit">{weightUnit}</span></span>
-                </div>
-                <div className="stat-card">
-                  <span className="stat-label">Sets Completed</span>
-                  <span className="stat-value">{completedSets} / {totalSets}</span>
-                </div>
-              </div>
-              <div className="badge-unlock-section">
-                <span className="badge-label">Earned Achievement</span>
-                <span className="badge-name">{getEarnedBadge(totalVolume)}</span>
-              </div>
-
-              {/* Token-Efficient 1-Tap AI Performance Coach Debrief */}
-              <div className="summary-ai-coach-section">
-                {!aiCoachDebrief ? (
-                  <button
-                    className="ai-coach-trigger-btn"
-                    onClick={handleGetAICoachDebrief}
-                    disabled={loadingAICoach}
-                  >
-                    <AutoAwesomeIcon style={{ color: "#00f0ff", fontSize: "1.1rem" }} />
-                    <span>{loadingAICoach ? "Coach is analyzing session..." : "🤖 1-Tap AI Coach Debrief"}</span>
-                  </button>
-                ) : (
-                  <div className="ai-coach-debrief-card">
-                    <div className="debrief-card-header">
-                      <AutoAwesomeIcon style={{ color: "#00f0ff", fontSize: "1.1rem" }} />
-                      <strong>FitHub AI Coach Debrief</strong>
-                    </div>
-                    <p className="debrief-card-text">{aiCoachDebrief}</p>
-                  </div>
-                )}
-              </div>
-
-              <div className="summary-actions-row">
-                <button
-                  className="cooldown-launch-btn"
-                  onClick={() => {
-                    setShowSummary(false);
-                    setShowCooldownModal(true);
-                  }}
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: "6px",
-                    background: "linear-gradient(135deg, #00e676 0%, #00f0ff 100%)",
-                    color: "#050811",
-                    fontWeight: 900,
-                    fontSize: "0.92rem",
-                    border: "none",
-                    padding: "10px 18px",
-                    borderRadius: "12px",
-                    cursor: "pointer",
-                  }}
-                >
-                  <SpaIcon style={{ fontSize: "1.1rem" }} /> Start Cooldown & Stretch
-                </button>
-                <button className="share-summary-btn" onClick={handleShareSummary}>
-                  <ShareIcon style={{ fontSize: "1.1rem" }} />
-                  <span>{summaryCopied ? "Copied!" : "Share"}</span>
-                </button>
-                <button className="finish-dismiss-btn" onClick={handleCloseSummary}>
-                  Dashboard
-                </button>
-              </div>
-            </div>
-          </div>,
-          document.body
-        )}
+        <WorkoutSummaryModal
+          open={showSummary}
+          seconds={seconds}
+          totalVolume={totalVolume}
+          completedSets={completedSets}
+          totalSets={totalSets}
+          weightUnit={weightUnit}
+          aiCoachDebrief={aiCoachDebrief}
+          loadingAICoach={loadingAICoach}
+          summaryCopied={summaryCopied}
+          onGetAICoachDebrief={handleGetAICoachDebrief}
+          onLaunchCooldown={() => {
+            setShowSummary(false);
+            setShowCooldownModal(true);
+          }}
+          onShareSummary={handleShareSummary}
+          onCloseSummary={handleCloseSummary}
+        />
 
         {/* Top Session Header */}
-        <div className="workout-page-header">
-          <div className="active-timer-section">
-            <TimerIcon className="timer-icon" />
-            <span className="active-timer-display">{formatTime(seconds)}</span>
-          </div>
-          <div className="active-header-actions">
-            <button
-              className="gym-guide-trigger-btn"
-              type="button"
-              onClick={() => setShowLegendModal(true)}
-              title="Learn what Set Types (N, W, D, F) and Gym Tools mean"
-            >
-              <HelpOutlineIcon style={{ fontSize: "1.05rem" }} />
-              <span>Guide & Legend</span>
-            </button>
-            <button className="finish-workout-btn" onClick={handleFinishWorkout}>
-              <CheckIcon style={{ fontSize: "1.1rem" }} /> Finish Workout
-            </button>
-            <button className="cancel-workout-btn" onClick={() => setShowCancelModal(true)}>
-              Cancel
-            </button>
-          </div>
-        </div>
+        <WorkoutSessionHeader
+          seconds={seconds}
+          onOpenLegendModal={() => setShowLegendModal(true)}
+          onFinishWorkout={handleFinishWorkout}
+          onRequestCancel={() => setShowCancelModal(true)}
+        />
 
         <div className="workout-page-meta">
           <span className="active-status-badge">Session In Progress</span>
@@ -1062,7 +976,7 @@ const WorkoutPage = () => {
               </span>
             </div>
             <div className="rest-timer-presets">
-              {[30, 60, 90, 120, 180].map((durationSec) => (
+              {[30, 60, 90, 120].map((durationSec) => (
                 <button
                   key={durationSec}
                   className={`preset-btn ${restDuration === durationSec ? "active" : ""}`}
@@ -1077,7 +991,7 @@ const WorkoutPage = () => {
                 </button>
               ))}
               <button
-                className={`preset-btn custom-preset-btn ${![30, 60, 90, 120, 180].includes(restDuration) ? "active" : ""}`}
+                className={`preset-btn custom-preset-btn ${![30, 60, 90, 120].includes(restDuration) ? "active" : ""}`}
                 onClick={() => {
                   setCustomRestMins(String(Math.floor(restDuration / 60)));
                   setCustomRestSecs(String(restDuration % 60));
@@ -1085,8 +999,8 @@ const WorkoutPage = () => {
                 }}
                 title="Set custom rest interval"
               >
-                <EditIcon style={{ fontSize: "0.75rem" }} />
-                <span>{![30, 60, 90, 120, 180].includes(restDuration) ? `${restDuration}s` : "Custom"}</span>
+                <EditIcon style={{ fontSize: "0.72rem" }} />
+                <span>{![30, 60, 90, 120].includes(restDuration) ? `${restDuration}s` : "Custom"}</span>
               </button>
             </div>
           </div>
@@ -1233,262 +1147,75 @@ const WorkoutPage = () => {
             const prevStats =
               previousSessionStats[exercise._id] ||
               previousSessionStats[(exercise.name || "").toLowerCase().trim()];
-            const firstSetWeight = sets[0]?.weight || 60;
             const isNotesOpen = Boolean(openNotes[exercise._id]);
 
             return (
-              <div key={exercise._id} className="active-exercise-card">
-                <div className="exercise-header">
-                  <div className="header-title-group">
-                    <FitnessCenterIcon className="ex-icon" />
-                    <div>
-                      <h3>{exercise.name}</h3>
-                      {prevStats && (
-                        <span className="previous-ghost-badge" title={`Recorded on ${prevStats.date}`}>
-                          📊 Last: <strong>{prevStats.weight} {weightUnit}</strong> × {prevStats.reps} reps
-                        </span>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Exercise Tools Quick Action Bar */}
-                  <div className="exercise-tools-bar">
-                    <button
-                      className="ex-tool-btn plate-calc-tool"
-                      onClick={() => {
-                        setPlateCalcWeight(firstSetWeight);
-                        setShowPlateModal(true);
-                      }}
-                      title="Open Barbell Plate Calculator"
-                      type="button"
-                    >
-                      <CalculateIcon style={{ fontSize: "1rem" }} />
-                      <span>Plates</span>
-                    </button>
-
-                    <button
-                      className="ex-tool-btn swap-tool"
-                      onClick={() => setSwapTargetExercise(exercise)}
-                      title="Swap exercise if equipment is busy"
-                      type="button"
-                    >
-                      <SwapHorizIcon style={{ fontSize: "1rem" }} />
-                      <span>Swap</span>
-                    </button>
-
-                    <button
-                      className={`ex-tool-btn notes-tool ${isNotesOpen ? "active" : ""}`}
-                      onClick={() =>
-                        setOpenNotes((prev) => ({
-                          ...prev,
-                          [exercise._id]: !prev[exercise._id],
-                        }))
-                      }
-                      title="Add seat/pin height or form cue"
-                      type="button"
-                    >
-                      <NoteAltIcon style={{ fontSize: "1rem" }} />
-                    </button>
-                  </div>
-                </div>
-
-                {/* Optional Expandable Form Cue / Seat Notes */}
-                {isNotesOpen && (
-                  <div className="exercise-notes-field">
-                    <input
-                      type="text"
-                      placeholder="Form cues or machine pin/seat height (e.g. Pin #4, wide grip)..."
-                      value={exerciseNotes[exercise._id] || ""}
-                      onChange={(e) =>
-                        setExerciseNotes((prev) => ({
-                          ...prev,
-                          [exercise._id]: e.target.value,
-                        }))
-                      }
-                    />
-                  </div>
-                )}
-
-                <div className="sets-table">
-                  <div className="table-header-row">
-                    <span
-                      className="col-num clickable-header-guide"
-                      onClick={() => setShowLegendModal(true)}
-                      title="Click to view Set Types & Tools Guide (N = Normal, W = Warmup, D = Drop Set, F = Failure)"
-                    >
-                      <span>SET</span>
-                      <HelpOutlineIcon className="header-info-icon" />
-                    </span>
-                    <span className="col-weight">Weight ({weightUnit})</span>
-                    <span className="col-reps">Reps</span>
-                    <span className="col-check">Done</span>
-                  </div>
-                  {sets.map((set, idx) => {
-                    const tag = set.tag || "N";
-                    return (
-                      <div key={idx} className={`set-row ${set.completed ? "completed" : ""}`}>
-                        <span className="col-num">
-                          <span className="set-num-text">#{set.setNum}</span>
-                          <button
-                            type="button"
-                            className={`set-tag-badge tag-${tag.toLowerCase()}`}
-                            onClick={() => handleToggleSetTag(exercise._id, idx)}
-                            title={`Set Tag: ${tag === "N" ? "Normal" : tag === "W" ? "Warmup" : tag === "D" ? "Drop Set" : "Failure"} (Click to cycle)`}
-                            disabled={set.completed}
-                          >
-                            {tag}
-                          </button>
-                          {set.isPR && (
-                            <span className="pr-celebration-badge" title="All-Time Personal Record!">
-                              🏆 PR
-                            </span>
-                          )}
-                        </span>
-                        <span className="col-weight">
-                          <div className="stepper-input-wrapper">
-                            <button
-                              type="button"
-                              className="step-btn"
-                              onClick={() => handleAdjustValue(exercise._id, idx, "weight", -weightStep)}
-                              disabled={set.completed}
-                            >
-                              <RemoveIcon style={{ fontSize: "0.9rem" }} />
-                            </button>
-                            <input
-                              type="number"
-                              value={set.weight}
-                              onChange={(e) => handleActiveSetChange(exercise._id, idx, "weight", e.target.value)}
-                              disabled={set.completed}
-                            />
-                            <button
-                              type="button"
-                              className="step-btn"
-                              onClick={() => handleAdjustValue(exercise._id, idx, "weight", weightStep)}
-                              disabled={set.completed}
-                            >
-                              <AddIcon style={{ fontSize: "0.9rem" }} />
-                            </button>
-                          </div>
-                        </span>
-                        <span className="col-reps">
-                          <div className="stepper-input-wrapper">
-                            <button
-                              type="button"
-                              className="step-btn"
-                              onClick={() => handleAdjustValue(exercise._id, idx, "reps", -1)}
-                              disabled={set.completed}
-                            >
-                              <RemoveIcon style={{ fontSize: "0.9rem" }} />
-                            </button>
-                            <input
-                              type="number"
-                              value={set.reps}
-                              onChange={(e) => handleActiveSetChange(exercise._id, idx, "reps", e.target.value)}
-                              disabled={set.completed}
-                            />
-                            <button
-                              type="button"
-                              className="step-btn"
-                              onClick={() => handleAdjustValue(exercise._id, idx, "reps", 1)}
-                              disabled={set.completed}
-                            >
-                              <AddIcon style={{ fontSize: "0.9rem" }} />
-                            </button>
-                          </div>
-                        </span>
-                        <span className="col-check">
-                          <button
-                            className={`set-check-btn ${set.completed ? "checked" : ""}`}
-                            onClick={() => handleToggleSetCompleted(exercise._id, idx)}
-                            title={set.completed ? "Mark Set Incomplete" : "Complete Set & Start Rest"}
-                          >
-                            {set.completed ? <CheckCircleIcon /> : <CheckCircleOutlineIcon />}
-                          </button>
-                        </span>
-                      </div>
-                    );
-                  })}
-                </div>
-                <div className="sets-row-controls">
-                  <button className="add-set-btn" onClick={() => handleAddActiveSet(exercise._id)}>
-                    <AddTwoToneIcon style={{ fontSize: "1.1rem" }} /> Add Set
-                  </button>
-                  <button className="remove-set-btn" onClick={() => handleRemoveActiveSet(exercise._id)}>
-                    <RemoveIcon style={{ fontSize: "1.1rem" }} /> Remove Set
-                  </button>
-                </div>
-              </div>
+              <ActiveExerciseCard
+                key={exercise._id}
+                exercise={exercise}
+                sets={sets}
+                prevStats={prevStats}
+                weightUnit={weightUnit}
+                weightStep={weightStep}
+                isNotesOpen={isNotesOpen}
+                exerciseNotes={exerciseNotes}
+                onToggleNotes={(exId) =>
+                  setOpenNotes((prev) => ({
+                    ...prev,
+                    [exId]: !prev[exId],
+                  }))
+                }
+                onNotesChange={(exId, val) =>
+                  setExerciseNotes((prev) => ({
+                    ...prev,
+                    [exId]: val,
+                  }))
+                }
+                onOpenPlateModal={(firstWeight) => {
+                  setPlateCalcWeight(firstWeight);
+                  setShowPlateModal(true);
+                }}
+                onOpenSwapModal={(ex) => setSwapTargetExercise(ex)}
+                onOpenLegendModal={() => setShowLegendModal(true)}
+                onAdjustValue={handleAdjustValue}
+                onActiveSetChange={handleActiveSetChange}
+                onToggleSetTag={handleToggleSetTag}
+                onToggleSetCompleted={handleToggleSetCompleted}
+                onAddActiveSet={handleAddActiveSet}
+                onRemoveActiveSet={handleRemoveActiveSet}
+              />
             );
           })}
         </div>
 
         {/* Floating Sticky Bottom Rest Mode Island */}
-        {isRestActive && restTimeLeft > 0 && (
-          <div className="floating-rest-island">
-            <div className="island-left">
-              <HourglassEmptyIcon className={`hourglass-spin ${!isRestPaused ? "active" : ""}`} />
-              <div className="island-text-group">
-                <span className="island-label">{isRestPaused ? "REST PAUSED" : "REST MODE ACTIVE"}</span>
-                <span className="island-time">{formatTime(restTimeLeft)}</span>
-              </div>
-            </div>
-
-            <div className="island-progress-track">
-              <div
-                className="island-progress-fill"
-                style={{
-                  width: `${Math.max(0, Math.min(100, (restTimeLeft / (restDuration || 60)) * 100))}%`,
-                }}
-              ></div>
-            </div>
-
-            <div className="island-actions">
-              <button
-                className="island-adjust-btn"
-                onClick={() => handleAdjustRestTime(15)}
-                title="Add 15 seconds"
-              >
-                +15s
-              </button>
-              <button
-                className="island-pause-btn"
-                onClick={() => {
-                  if (isRestPaused) {
-                    dispatch(activeWorkoutActions.resumeActiveRest());
-                  } else {
-                    dispatch(activeWorkoutActions.pauseActiveRest());
-                  }
-                  setIsRestPaused(!isRestPaused);
-                }}
-                title={isRestPaused ? "Resume Rest" : "Pause Rest"}
-              >
-                {isRestPaused ? <PlayArrowIcon style={{ fontSize: "1rem" }} /> : <PauseIcon style={{ fontSize: "1rem" }} />}
-              </button>
-              <button
-                className="island-skip-btn"
-                onClick={() => {
-                  setIsRestActive(false);
-                  setRestTimeLeft(0);
-                  dispatch(activeWorkoutActions.stopActiveRest());
-                }}
-                title="Skip Rest"
-              >
-                <SkipNextIcon style={{ fontSize: "1rem" }} /> Skip
-              </button>
-            </div>
-          </div>
-        )}
+        <FloatingRestIsland
+          isRestActive={isRestActive}
+          isRestPaused={isRestPaused}
+          restTimeLeft={restTimeLeft}
+          restDuration={restDuration}
+          onAdjustRestTime={handleAdjustRestTime}
+          onTogglePause={() => {
+            if (isRestPaused) {
+              dispatch(activeWorkoutActions.resumeActiveRest());
+            } else {
+              dispatch(activeWorkoutActions.pauseActiveRest());
+            }
+            setIsRestPaused(!isRestPaused);
+          }}
+          onSkipRest={() => {
+            setIsRestActive(false);
+            setRestTimeLeft(0);
+            dispatch(activeWorkoutActions.stopActiveRest());
+          }}
+        />
 
         {/* Sticky Progress Footer */}
-        <div className="active-progress-footer">
-          <div className="progress-text-row">
-            <span>Overall Session Progress</span>
-            <span>{progressPercent}% ({completedSetsCount} / {totalSetsCount} sets completed)</span>
-          </div>
-          <div className="progress-bar-track">
-            <div className="progress-bar-fill" style={{ width: `${progressPercent}%` }}></div>
-          </div>
-        </div>
+        <WorkoutProgressFooter
+          completedSetsCount={completedSetsCount}
+          totalSetsCount={totalSetsCount}
+          progressPercent={progressPercent}
+        />
       </div>
     );
   }
@@ -1628,8 +1355,13 @@ const WorkoutPage = () => {
         ) : (
           <h1 className="workout-page-title">{workoutData?.name}</h1>
         )}
-        <div className="workout-page-stats-badge">
-          <span>{workoutData?.exercises?.length || 0}</span> Exercises Included
+        <div style={{ display: "flex", gap: "8px", alignItems: "center", flexWrap: "wrap", marginTop: "8px" }}>
+          <Badge variant="accent" size="md">
+            {workoutData?.exercises?.length || 0} / 10 Exercises
+          </Badge>
+          <Badge variant={workoutData?.isPrivate ? "neutral" : "success"} size="md">
+            {workoutData?.isPrivate ? "Private Routine" : "Public Routine"}
+          </Badge>
         </div>
       </div>
 
@@ -1759,14 +1491,23 @@ const WorkoutPage = () => {
             )}
           </div>
         ) : (
-          <div className="empty-exercises-state">
-            <p>No exercises in this workout routine yet.</p>
-            {isOwner && (
-              <button className="browse-exercises-btn" onClick={() => navigate("/exercises/all")}>
-                Explore & Add Exercises
-              </button>
-            )}
-          </div>
+          <EmptyState
+            icon={<FitnessCenterIcon />}
+            title="No Exercises in Routine"
+            description="Add exercises to this workout plan to customize sets, target reps, and start active tracking."
+            action={
+              isOwner ? (
+                <Button
+                  variant="primary"
+                  size="md"
+                  iconStart={<AddTwoToneIcon />}
+                  onClick={() => navigate("/exercises/all")}
+                >
+                  Explore & Add Exercises
+                </Button>
+              ) : null
+            }
+          />
         )}
       </div>
     </div>

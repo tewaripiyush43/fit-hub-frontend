@@ -9,6 +9,14 @@ import BarChartIcon from "@mui/icons-material/BarChart";
 import BodyMetricsTracker from "./BodyMetricsTracker";
 import { useUnitPreference } from "../utils/useUnitPreference";
 
+// UI Primitives
+import {
+  StatCard,
+  Badge,
+  Button,
+  EmptyState,
+} from "./ui";
+
 const ProgressAnalytics = () => {
   const user = useSelector((state) => state.auth.user);
   const { weightUnit } = useUnitPreference();
@@ -42,34 +50,66 @@ const ProgressAnalytics = () => {
     return { totalVolume, totalSets, totalCompleted, totalHours, totalMins, completionRate };
   }, [history]);
 
-  // Group workouts by month
+  // Generate trailing 6 months activity (even if some months have 0 sessions)
   const monthlyData = useMemo(() => {
     const grouped = {};
-    history.forEach((log) => {
-      if (!log.date) return;
-      const parts = log.date.split("/");
-      if (parts.length < 2) return;
-      const key = `${parts[2] || new Date().getFullYear()}/${parts[0]}`;
+    (history || []).forEach((log) => {
+      if (!log) return;
+      const rawDate = log.date || log.createdAt || log.timestamp;
+      if (!rawDate) return;
+
+      let d = new Date(rawDate);
+      if (isNaN(d.getTime()) && typeof rawDate === "string" && rawDate.includes("/")) {
+        const parts = rawDate.split("/");
+        if (parts.length === 3) {
+          if (Number(parts[0]) > 12) {
+            d = new Date(Number(parts[2]), Number(parts[1]) - 1, Number(parts[0]));
+          } else {
+            d = new Date(Number(parts[2]), Number(parts[0]) - 1, Number(parts[1]));
+          }
+        }
+      }
+
+      if (isNaN(d.getTime())) return;
+
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, "0");
+      const key = `${year}-${month}`;
       grouped[key] = (grouped[key] || 0) + 1;
     });
 
-    const sorted = Object.entries(grouped)
-      .sort(([a], [b]) => a.localeCompare(b))
-      .slice(-6); // last 6 months
+    // Build array for trailing 6 calendar months leading up to today
+    const now = new Date();
+    const months = [];
+    for (let i = 5; i >= 0; i--) {
+      const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, "0");
+      const key = `${year}-${month}`;
+      const monthName = d.toLocaleString("default", { month: "short" });
+      const count = grouped[key] || 0;
+      months.push({
+        key,
+        label: `${monthName} '${String(year).slice(2)}`,
+        monthShort: monthName,
+        count,
+        isCurrent: i === 0,
+      });
+    }
 
-    const maxVal = Math.max(...sorted.map(([, v]) => v), 1);
-    return sorted.map(([key, count]) => {
-      const [year, month] = key.split("/");
-      const monthName = new Date(Number(year), Number(month) - 1).toLocaleString("default", { month: "short" });
-      return { label: `${monthName} '${String(year).slice(2)}`, count, pct: Math.round((count / maxVal) * 100) };
-    });
+    const maxVal = Math.max(...months.map((m) => m.count), 4);
+
+    return months.map((m) => ({
+      ...m,
+      pct: m.count > 0 ? Math.max(Math.round((m.count / maxVal) * 100), 15) : 0,
+    }));
   }, [history]);
 
   // PR level badges
   const getBadgeLevel = (maxWeight) => {
-    if (maxWeight >= 300) return { label: "Gold", color: "#ffd700" };
-    if (maxWeight >= 200) return { label: "Silver", color: "#c0c0c0" };
-    return { label: "Bronze", color: "#cd7f32" };
+    if (maxWeight >= 300) return { label: "Gold", variant: "warning" };
+    if (maxWeight >= 200) return { label: "Silver", variant: "neutral" };
+    return { label: "Bronze", variant: "primary" };
   };
 
   // Best workout (by volume)
@@ -94,70 +134,74 @@ const ProgressAnalytics = () => {
         </p>
       </div>
 
-      {/* Hero stats row */}
-      <div className="analytics-hero-stats">
-        <div className="hero-stat-card accent">
-          <WhatshotIcon className="hero-stat-icon" />
-          <div className="hero-stat-body">
-            <span className="hero-stat-value">{streak}</span>
-            <span className="hero-stat-label">Day Streak</span>
-          </div>
-        </div>
-        <div className="hero-stat-card">
-          <FitnessCenterIcon className="hero-stat-icon" />
-          <div className="hero-stat-body">
-            <span className="hero-stat-value">{history.length}</span>
-            <span className="hero-stat-label">Sessions Logged</span>
-          </div>
-        </div>
-        <div className="hero-stat-card">
-          <TrendingUpIcon className="hero-stat-icon" />
-          <div className="hero-stat-body">
-            <span className="hero-stat-value">{(stats.totalVolume / 1000).toFixed(1)}k</span>
-            <span className="hero-stat-label">{weightUnit} Lifted Total</span>
-          </div>
-        </div>
-        <div className="hero-stat-card">
-          <TimerIcon className="hero-stat-icon" />
-          <div className="hero-stat-body">
-            <span className="hero-stat-value">{stats.totalHours}h {stats.totalMins}m</span>
-            <span className="hero-stat-label">Active Time</span>
-          </div>
-        </div>
-        <div className="hero-stat-card">
-          <BarChartIcon className="hero-stat-icon" />
-          <div className="hero-stat-body">
-            <span className="hero-stat-value">{stats.completionRate}%</span>
-            <span className="hero-stat-label">Set Completion</span>
-          </div>
-        </div>
+      {/* Hero KPI StatCards */}
+      <div
+        className="analytics-hero-stats"
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+          gap: "16px",
+          marginBottom: "28px",
+        }}
+      >
+        <StatCard
+          icon={<WhatshotIcon style={{ color: "var(--primary)" }} />}
+          label="Day Streak"
+          value={`${streak} Days`}
+        />
+        <StatCard
+          icon={<FitnessCenterIcon style={{ color: "var(--accent)" }} />}
+          label="Sessions Logged"
+          value={history.length}
+        />
+        <StatCard
+          icon={<TrendingUpIcon style={{ color: "var(--warning)" }} />}
+          label="Total Volume Lifted"
+          value={(stats.totalVolume / 1000).toFixed(1)}
+          unit={`k ${weightUnit}`}
+        />
+        <StatCard
+          icon={<TimerIcon style={{ color: "var(--info)" }} />}
+          label="Active Training Time"
+          value={`${stats.totalHours}h ${stats.totalMins}m`}
+        />
+        <StatCard
+          icon={<BarChartIcon style={{ color: "var(--success)" }} />}
+          label="Set Completion Rate"
+          value={`${stats.completionRate}%`}
+        />
       </div>
 
       <div className="analytics-main-grid">
         {/* Monthly activity bar chart */}
         <div className="analytics-card monthly-chart-card">
           <div className="analytics-card-header">
-            <BarChartIcon className="card-icon" />
-            <h3>Monthly Activity</h3>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <BarChartIcon className="card-icon" />
+              <h3>Monthly Activity</h3>
+            </div>
+            <span className="monthly-total-badge">
+              {history.length} {history.length === 1 ? "Session" : "Sessions"}
+            </span>
           </div>
-          {monthlyData.length > 0 ? (
-            <div className="bar-chart">
-              {monthlyData.map(({ label, count, pct }) => (
-                <div className="bar-group" key={label}>
-                  <div className="bar-wrapper">
+          <div className="bar-chart">
+            {monthlyData.map(({ key, label, count, pct, isCurrent }) => (
+              <div
+                className={`bar-group ${isCurrent ? "is-current" : ""}`}
+                key={key || label}
+                title={`${count} workouts logged in ${label}`}
+              >
+                <div className="bar-wrapper">
+                  <div className="bar-track">
                     <div className="bar-fill" style={{ height: `${pct}%` }}>
-                      <span className="bar-value">{count}</span>
+                      {count > 0 && <span className="bar-value">{count}</span>}
                     </div>
                   </div>
-                  <span className="bar-label">{label}</span>
                 </div>
-              ))}
-            </div>
-          ) : (
-            <div className="analytics-empty">
-              <p>No sessions logged yet. Start a workout to see your activity chart!</p>
-            </div>
-          )}
+                <span className="bar-label">{label}</span>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Best workout highlight */}
@@ -169,8 +213,8 @@ const ProgressAnalytics = () => {
           {bestWorkout ? (
             <div className="best-workout-content">
               <h4 className="best-workout-name">{bestWorkout.workoutName}</h4>
-              <span className="best-workout-date">{bestWorkout.date}</span>
-              <div className="best-stats-row">
+              <Badge variant="neutral" size="sm">{bestWorkout.date}</Badge>
+              <div className="best-stats-row" style={{ marginTop: "12px" }}>
                 <div className="best-stat">
                   <span className="best-stat-label">Volume</span>
                   <span className="best-stat-value">{(bestWorkout.totalVolume || 0).toLocaleString()} {weightUnit}</span>
@@ -186,9 +230,11 @@ const ProgressAnalytics = () => {
               </div>
             </div>
           ) : (
-            <div className="analytics-empty">
-              <p>Log a workout session to see your personal best!</p>
-            </div>
+            <EmptyState
+              icon={<EmojiEventsIcon />}
+              title="No Best Session Yet"
+              description="Log a workout session to see your all-time volume and duration records."
+            />
           )}
         </div>
 
@@ -197,7 +243,7 @@ const ProgressAnalytics = () => {
           <div className="analytics-card-header">
             <FitnessCenterIcon className="card-icon" />
             <h3>Personal Records</h3>
-            <span className="pr-count-badge">{prs.length} PRs</span>
+            <Badge variant="accent" size="sm">{prs.length} PRs</Badge>
           </div>
           {prs.length > 0 ? (
             <div className="pr-summary-list">
@@ -207,10 +253,10 @@ const ProgressAnalytics = () => {
                 return (
                   <div className="pr-summary-item" key={i}>
                     <div className="pr-summary-left">
-                      <EmojiEventsIcon style={{ color: badge.color }} className="pr-trophy" />
+                      <EmojiEventsIcon className="pr-trophy" style={{ color: "var(--accent)" }} />
                       <div className="pr-info">
                         <span className="pr-exercise">{pr.exercise}</span>
-                        <span className="pr-badge-label" style={{ color: badge.color }}>{badge.label}</span>
+                        <Badge variant={badge.variant} size="sm">{badge.label}</Badge>
                       </div>
                     </div>
                     <div className="pr-summary-right">
@@ -229,9 +275,11 @@ const ProgressAnalytics = () => {
               })}
             </div>
           ) : (
-            <div className="analytics-empty">
-              <p>No PRs recorded yet. Add your personal records in your Dashboard!</p>
-            </div>
+            <EmptyState
+              icon={<FitnessCenterIcon />}
+              title="No PRs Recorded Yet"
+              description="Add your 1RM personal records in your Profile & Dashboard to track strength targets."
+            />
           )}
         </div>
 
@@ -262,18 +310,23 @@ const ProgressAnalytics = () => {
               })}
 
               {reversedHistory.length > sessionDisplayLimit && (
-                <button
-                  className="sessions-show-more-btn"
+                <Button
+                  variant="outline"
+                  size="md"
+                  fullWidth
                   onClick={() => setSessionDisplayLimit((prev) => prev + 10)}
+                  style={{ marginTop: "8px" }}
                 >
                   Show More Sessions ({reversedHistory.length - sessionDisplayLimit} remaining)
-                </button>
+                </Button>
               )}
             </div>
           ) : (
-            <div className="analytics-empty">
-              <p>Complete a workout to track your session completion rates.</p>
-            </div>
+            <EmptyState
+              icon={<TrendingUpIcon />}
+              title="No Session History"
+              description="Complete a workout to track your session completion rates over time."
+            />
           )}
         </div>
       </div>
