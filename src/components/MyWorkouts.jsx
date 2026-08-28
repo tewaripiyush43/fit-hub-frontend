@@ -38,7 +38,7 @@ const MyWorkouts = () => {
   const [aiGoal, setAiGoal] = useState("General");
   const [aiExerciseCount, setAiExerciseCount] = useState(5);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [loadingMessage, setLoadingMessage] = useState("Connecting to Gemini...");
+  const [loadingMessage, setLoadingMessage] = useState("Connecting to FitHub AI Engine...");
 
   const hasBiometrics = Boolean(user?.age && user?.weight && user?.height);
 
@@ -69,7 +69,7 @@ const MyWorkouts = () => {
     let interval;
     if (isGenerating) {
       const messages = [
-        "Connecting to Gemini...",
+        "Connecting to FitHub AI Engine...",
         "Analyzing your fitness profile...",
         "Structuring custom workout plan...",
         "Mapping exercises to database...",
@@ -190,7 +190,7 @@ const MyWorkouts = () => {
                 Generate custom routines in seconds
               </h3>
               <p className="ai-workout-banner-desc">
-                Get a tailored plan built by Gemini AI, customized to your biometric stats, target muscle areas, and training style.
+                Get a tailored plan built by FitHub AI, customized to your biometric stats, target muscle areas, and training style.
               </p>
             </div>
             <div className="ai-workout-banner-right">
@@ -300,7 +300,7 @@ const MyWorkouts = () => {
                   <AutoAwesomeIcon style={{ color: "var(--accent)" }} /> Generate <span className="title-highlight">AI Workout</span>
                 </h2>
                 <p className="ai-modal-subtitle">
-                  Describe your training goals and routine preferences. Gemini will design an optimal routine mapped directly to our exercise database.
+                  Describe your training goals and routine preferences. FitHub AI will design an optimal routine mapped directly to our exercise database.
                 </p>
               </div>
 

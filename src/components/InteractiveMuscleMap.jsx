@@ -6,8 +6,8 @@ import {
   calculateGranularMuscleRecovery,
   playGymTimerChime,
 } from "../utils/gymExperienceUtils";
-import MuscleWikiFrontSVG from "./MuscleWikiFrontSVG";
-import MuscleWikiBackSVG from "./MuscleWikiBackSVG";
+import AnatomyFrontSVG from "./AnatomyFrontSVG";
+import AnatomyBackSVG from "./AnatomyBackSVG";
 import AccessibilityNewIcon from "@mui/icons-material/AccessibilityNew";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -63,7 +63,7 @@ const InteractiveMuscleMap = ({
   mode = "filter", // 'filter' or 'recovery'
   showQuickChips = true,
   title = "Muscle Anatomy Explorer",
-  subtitle = "Click any muscle on the MuscleWiki-style mannequin to explore biomechanics and exercises",
+  subtitle = "Click any muscle on the 2D anatomical mannequin to explore biomechanics and exercises",
   compact = false,
   onLaunchAICoach = null,
 }) => {
@@ -192,7 +192,7 @@ const InteractiveMuscleMap = ({
           <div className="title-text">
             <h3>
               {title}
-              <span className="badge-beta">MuscleWiki Anatomy</span>
+              <span className="badge-beta">2D Anatomy</span>
             </h3>
             <p>{subtitle}</p>
           </div>
@@ -249,7 +249,7 @@ const InteractiveMuscleMap = ({
           alignItems: "start",
         }}
       >
-        {/* Anatomical SVG Mannequin (Authentic MuscleWiki Line Art) */}
+        {/* Anatomical SVG Mannequin (FitHub Vector Model) */}
         <div
           className="mannequin-container"
           style={{
@@ -275,7 +275,7 @@ const InteractiveMuscleMap = ({
               <span style={{ fontSize: "0.75rem", fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "0.5rem" }}>
                 Anterior (Front)
               </span>
-              <MuscleWikiFrontSVG
+              <AnatomyFrontSVG
                 selectedMuscleId={selectedMuscleId}
                 hoveredMuscleId={hoveredMuscleId}
                 onSelectMuscle={(id) => handleMuscleClick(id, id)}
@@ -291,7 +291,7 @@ const InteractiveMuscleMap = ({
               <span style={{ fontSize: "0.75rem", fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "0.5rem" }}>
                 Posterior (Back)
               </span>
-              <MuscleWikiBackSVG
+              <AnatomyBackSVG
                 selectedMuscleId={selectedMuscleId}
                 hoveredMuscleId={hoveredMuscleId}
                 onSelectMuscle={(id) => handleMuscleClick(id, id)}

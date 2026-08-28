@@ -277,7 +277,7 @@ const AnatomyPage = () => {
             <div>
               <h3>
                 FitHub AI Biomechanics Coach
-                <span className="gemini-tag">GEMINI 2.5 FLASH</span>
+                <span className="ai-badge-tag">FITHUB INTELLIGENCE</span>
               </h3>
               <p>
                 Instant AI analysis on motor unit recruitment, optimal rep ranges, and injury prevention for {activeMuscle.label}

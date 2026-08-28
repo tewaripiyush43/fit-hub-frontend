@@ -1,7 +1,7 @@
 # FitHub
 > AI-powered fitness tracking, intelligent routine generation, and exercise biomechanics platform.
 
-FitHub provides fitness tracking, science-backed workout routine generation via Google Gemini, a 1,300+ animated exercise database with GIF demonstrations, an interactive 2D muscle anatomy map, and healthy macro-balanced nutrition recipes.
+FitHub provides fitness tracking, science-backed workout routine generation via FitHub AI, a 1,300+ animated exercise database with GIF demonstrations, an interactive 2D muscle anatomy map, and healthy macro-balanced nutrition recipes.
 
 ## Key Features & Public Endpoints
 
@@ -20,4 +20,4 @@ FitHub provides fitness tracking, science-backed workout routine generation via 
 
 - **Frontend**: React SPA, Redux Toolkit, Vanilla SCSS design system, Service Worker offline caching.
 - **Backend**: Node.js, Express, MongoDB with weighted compound text indexes, JWT with HttpOnly cookies.
-- **AI Integrations**: Google Gemini structured JSON output schema for personalized workout generation and biomechanical motor unit analysis.
+- **AI Integrations**: FitHub Neural AI Engine with structured JSON schema for personalized workout generation and biomechanical motor unit analysis.

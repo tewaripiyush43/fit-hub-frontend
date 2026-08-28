@@ -1,6 +1,6 @@
 import React from "react";
 
-const MuscleWikiBackSVG = ({
+const AnatomyBackSVG = ({
   selectedMuscleId,
   hoveredMuscleId,
   onSelectMuscle,
@@ -10,7 +10,7 @@ const MuscleWikiBackSVG = ({
   return (
     <svg
       viewBox="0 0 673 1200"
-      className="mannequin-svg musclewiki-vector-model"
+      className="mannequin-svg fithub-anatomy-model"
       xmlns="http://www.w3.org/2000/svg"
       style={{ width: "100%", height: "100%", maxHeight: "560px", overflow: "visible" }}
     >
@@ -77,4 +77,4 @@ const MuscleWikiBackSVG = ({
   );
 };
 
-export default MuscleWikiBackSVG;
+export default AnatomyBackSVG;

@@ -198,7 +198,7 @@ const AICoachChat = () => {
               <div className="coach-info">
                 <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
                   <h3 style={{ margin: 0 }}>FitHub AI Coach</h3>
-                  <Badge variant="accent" size="sm">GEMINI</Badge>
+                  <Badge variant="accent" size="sm">AI COACH</Badge>
                 </div>
                 <span>Real-Time Biomechanics & Nutrition</span>
               </div>

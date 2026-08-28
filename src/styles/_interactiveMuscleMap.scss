@@ -217,8 +217,8 @@
       filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.6));
       overflow: visible;
 
-      /* Authentic MuscleWiki Vector Line Art styling */
-      &.musclewiki-vector-model {
+      /* FitHub Vector Line Art styling */
+      &.fithub-anatomy-model {
         .body-map__model,
         g[id="body"],
         g[id="body-map__model"] {
@@ -914,7 +914,7 @@
           flex-wrap: wrap;
           gap: 0.5rem;
 
-          .gemini-tag {
+          .ai-badge-tag {
             font-size: 0.62rem;
             background: linear-gradient(90deg, #c084fc, #00f0ff);
             color: #000;

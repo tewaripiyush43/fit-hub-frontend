@@ -59,7 +59,7 @@ const QuickCommandPalette = () => {
     {
       id: "ai_generator",
       title: "AI Workout Generator",
-      subtitle: "Generate tailored plans with Gemini AI",
+      subtitle: "Generate tailored plans with FitHub AI",
       icon: <AutoAwesomeIcon style={{ color: "#c084fc" }} />,
       shortcut: "A",
       authRequired: true,
