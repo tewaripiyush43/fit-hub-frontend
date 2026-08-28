@@ -4,14 +4,16 @@ import { store, authActions } from "../store";
 import { errorPopUp } from "../helpers/errorPopUp";
 
 export const getApiBaseUrl = () => {
-  const envUrl = process.env.REACT_APP_BASE_URL;
+  if (process.env.REACT_APP_BASE_URL) {
+    return process.env.REACT_APP_BASE_URL;
+  }
   if (typeof window !== "undefined" && window.location && window.location.hostname) {
     const hostname = window.location.hostname;
-    if (hostname !== "localhost" && hostname !== "127.0.0.1") {
-      return `${window.location.protocol}//${hostname}:9000/api`;
+    if (hostname === "localhost" && hostname === "127.0.0.1") {
+      return "http://localhost:9000/api";
     }
   }
-  return envUrl || "http://localhost:9000/api";
+  return "https://fit-hub-backend-hqed.onrender.com/api";
 };
 
 let refreshPromise = null;
